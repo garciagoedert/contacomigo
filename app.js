@@ -86,6 +86,9 @@ const addExpenseCategoryForm = document.getElementById('add-expense-category-for
 const categorySelect = document.getElementById('category');
 const familyMembersList = document.getElementById('family-members-list');
 const inviteMemberForm = document.getElementById('invite-member-form');
+const investmentOption = document.getElementById('investment-option');
+const isInvestmentCheckbox = document.getElementById('is-investment');
+const transactionTypeRadios = document.querySelectorAll('input[name="type"]');
 
 let currentUserId = null;
 let currentFamilyId = null;
@@ -445,39 +448,95 @@ function renderInvestments(investments) {
         </div>
     `;
     } else {
+        // Ordena para mostrar os mais recentes primeiro
+        investments.sort((a, b) => (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0));
+
         investments.forEach(asset => {
-            const investedValue = asset.quantity * asset.averagePrice;
-            const currentValue = asset.quantity * asset.currentPrice;
-            const profitLoss = currentValue - investedValue;
-            const profitLossColor = profitLoss >= 0 ? 'text-green-500' : 'text-red-500';
-
-            totalInvested += investedValue;
-            currentTotalValue += currentValue;
-
             const el = document.createElement('div');
             el.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm';
-            el.innerHTML = `
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
-                    <p class="font-semibold col-span-2 md:col-span-1">${asset.name}</p>
-                    <div class="text-sm">
-                        <p class="text-gray-500 dark:text-gray-400">Quantidade</p>
-                        <p>${asset.quantity}</p>
+
+            if (asset.isContribution) {
+                // É um aporte direto de uma transação
+                const investedValue = asset.averagePrice;
+                totalInvested += investedValue;
+                currentTotalValue += investedValue; // Aporte tem valor atual igual ao investido
+
+                el.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">${asset.name}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Aporte em ${asset.timestamp ? asset.timestamp.toDate().toLocaleDateString('pt-BR') : ''}</p>
+                        </div>
+                        <div class="flex items-center">
+                             <p class="font-bold text-blue-500 mr-4">${formatCurrency(investedValue)}</p>
+                             <button data-id="${asset.id}" class="delete-investment-btn p-1 text-gray-500 hover:text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="text-sm">
-                        <p class="text-gray-500 dark:text-gray-400">Preço Médio</p>
-                        <p>${formatCurrency(asset.averagePrice)}</p>
+                `;
+            } else {
+                // É um ativo (como ação, cripto, etc.)
+                const investedValue = asset.quantity * asset.averagePrice;
+                const currentValue = asset.quantity * asset.currentPrice;
+                const profitLoss = currentValue - investedValue;
+                const profitLossColor = profitLoss >= 0 ? 'text-green-500' : 'text-red-500';
+
+                totalInvested += investedValue;
+                currentTotalValue += currentValue;
+
+                el.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-center flex-grow">
+                            <p class="font-semibold col-span-2 md:col-span-1">${asset.name}</p>
+                            <div class="text-sm">
+                                <p class="text-gray-500 dark:text-gray-400">Quantidade</p>
+                                <p>${asset.quantity}</p>
+                            </div>
+                            <div class="text-sm">
+                                <p class="text-gray-500 dark:text-gray-400">Preço Médio</p>
+                                <p>${formatCurrency(asset.averagePrice)}</p>
+                            </div>
+                            <div class="text-sm">
+                                <p class="text-gray-500 dark:text-gray-400">Valor Atual</p>
+                                <p>${formatCurrency(currentValue)}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 ml-4">
+                            <button data-id="${asset.id}" class="edit-investment-btn p-1 text-gray-500 hover:text-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" /></svg>
+                            </button>
+                            <button data-id="${asset.id}" class="delete-investment-btn p-1 text-gray-500 hover:text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="text-sm">
-                        <p class="text-gray-500 dark:text-gray-400">Valor Atual</p>
-                        <p>${formatCurrency(currentValue)}</p>
+                    <div class="mt-2 text-right">
+                        <span class="text-sm ${profitLossColor}">${formatCurrency(profitLoss)} (${investedValue > 0 ? ((profitLoss / investedValue) * 100).toFixed(2) : 0}%)</span>
                     </div>
-                </div>
-                <div class="mt-2 text-right">
-                    <span class="text-sm ${profitLossColor}">${formatCurrency(profitLoss)} (${((profitLoss / investedValue) * 100).toFixed(2)}%)</span>
-                </div>
-            `;
+                `;
+            }
             investmentListEl.appendChild(el);
         });
+
+        // Adicionar event listeners para os novos botões
+        document.querySelectorAll('.edit-investment-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const investment = investments.find(inv => inv.id === id);
+                openInvestmentModal(investment);
+            });
+        });
+
+        document.querySelectorAll('.delete-investment-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                if (confirm('Tem certeza que deseja excluir este investimento? Esta ação não pode ser desfeita.')) {
+                    deleteInvestment(id);
+                }
+            });
+        });
+
         // Renderiza o resumo
         const totalProfitLoss = currentTotalValue - totalInvested;
         const totalProfitLossColor = totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500';
@@ -504,7 +563,8 @@ function formatCurrency(value) {
 
 function updateSummary(transactions) {
     const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-    const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    // Apenas despesas que NÃO são investimentos
+    const totalExpense = transactions.filter(t => t.type === 'expense' && !t.isInvestment).reduce((sum, t) => sum + t.amount, 0);
     totalIncomeEl.textContent = formatCurrency(totalIncome);
     totalExpenseEl.textContent = formatCurrency(totalExpense);
     balanceEl.textContent = formatCurrency(totalIncome - totalExpense);
@@ -522,16 +582,30 @@ function renderTransactions(transactions) {
         noTransactionsEl.classList.add('hidden');
         transactions.forEach(t => {
             const isIncome = t.type === 'income';
+            const isInvestment = t.isInvestment;
             const sign = isIncome ? '+' : '-';
-            const amountColor = isIncome ? 'text-green-500' : 'text-red-500';
-            const borderColor = isIncome ? 'border-green-500' : 'border-red-500';
+            let amountColor = isIncome ? 'text-green-500' : 'text-red-500';
+            let borderColor = isIncome ? 'border-green-500' : 'border-red-500';
+            
+            if (isInvestment) {
+                amountColor = 'text-blue-500';
+                borderColor = 'border-blue-500';
+            }
+
             const el = document.createElement('div');
             el.className = `bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm flex items-center justify-between border-l-4 ${borderColor}`;
+            
+            let investmentBadge = '';
+            if (isInvestment) {
+                investmentBadge = `<span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full ml-2">Investimento</span>`;
+            }
+
             el.innerHTML = `
                 <div class="flex-1">
                     <p class="font-semibold">${t.description}</p>
                     <div class="flex items-center mt-1">
                         <span class="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">${t.category || 'Sem Categoria'}</span>
+                        ${investmentBadge}
                         <p class="text-xs text-gray-500 dark:text-gray-400 ml-3">${t.timestamp ? t.timestamp.toDate().toLocaleDateString('pt-BR') : 'Data pendente'}</p>
                     </div>
                 </div>
@@ -688,7 +762,20 @@ function renderExpenseChart(transactions) {
     }
 }
 
-// --- LÓGICA DE DELETAR E EDITAR TRANSAÇÕES ---
+// --- LÓGICA DE DELETAR E EDITAR INVESTIMENTOS E TRANSAÇÕES ---
+async function deleteInvestment(id) {
+    if (!currentFamilyId) return;
+    try {
+        // Adicionalmente, verificar se este investimento veio de uma transação
+        // e talvez desmarcar a transação. Por enquanto, a exclusão é direta.
+        const investmentRef = doc(db, 'families', currentFamilyId, 'investments', id);
+        await deleteDoc(investmentRef);
+    } catch (error) {
+        console.error("Erro ao excluir investimento:", error);
+        alert("Ocorreu um erro ao excluir o investimento.");
+    }
+}
+
 async function deleteTransaction(id) {
     if (!currentFamilyId) return;
     try {
@@ -883,6 +970,18 @@ goalForm.addEventListener('submit', async (e) => {
     }
 });
 
+// --- LÓGICA PARA MOSTRAR OPÇÃO DE INVESTIMENTO ---
+transactionTypeRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        if (radio.value === 'expense') {
+            investmentOption.classList.remove('hidden');
+        } else {
+            investmentOption.classList.add('hidden');
+            isInvestmentCheckbox.checked = false;
+        }
+    });
+});
+
 transactionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!currentFamilyId) return;
@@ -893,6 +992,7 @@ transactionForm.addEventListener('submit', async (e) => {
     const type = transactionForm.type.value;
     const category = transactionForm.category.value;
     const date = transactionForm.date.value;
+    const isInvestment = isInvestmentCheckbox.checked && type === 'expense';
 
     if (!description || isNaN(amount) || amount <= 0 || !date) {
         alert("Por favor, preencha todos os campos corretamente.");
@@ -901,17 +1001,38 @@ transactionForm.addEventListener('submit', async (e) => {
     
     const timestamp = Timestamp.fromDate(new Date(date));
 
-    const transactionData = { description, amount, type, category, timestamp };
+    const transactionData = { description, amount, type, category, timestamp, isInvestment };
 
     try {
+        const batch = writeBatch(db);
+
         if (id) {
+            // Se estiver editando, a lógica pode ser mais complexa (ex: remover do investimento se a flag mudar)
+            // Por simplicidade, vamos focar em adicionar. A edição de um investimento deve ser feita na tela de investimentos.
             const transactionRef = doc(db, 'families', currentFamilyId, 'transactions', id);
-            await updateDoc(transactionRef, transactionData);
+            batch.update(transactionRef, transactionData);
         } else {
-            const transactionsCol = collection(db, 'families', currentFamilyId, 'transactions');
-            await addDoc(transactionsCol, transactionData);
+            const transactionRef = doc(collection(db, 'families', currentFamilyId, 'transactions'));
+            batch.set(transactionRef, transactionData);
+
+            // Se for um investimento, cria um registro correspondente em 'investments'
+            if (isInvestment) {
+                const investmentRef = doc(collection(db, 'families', currentFamilyId, 'investments'));
+                const investmentData = {
+                    name: description,
+                    quantity: 1, // Aporte único
+                    averagePrice: amount,
+                    currentPrice: amount, // Valor atual é o mesmo do aporte inicial
+                    isContribution: true, // Flag para diferenciar de ativos
+                    timestamp: timestamp
+                };
+                batch.set(investmentRef, investmentData);
+            }
         }
+        
+        await batch.commit();
         closeModal();
+
     } catch (error) {
         console.error("Erro ao salvar transação:", error);
         alert("Ocorreu um erro ao salvar a transação. Tente novamente.");
