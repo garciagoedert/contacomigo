@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="imgs/contacomigo.png" type="image/png">
+    <link rel="icon" href="imgs/favicon.png" type="image/png">
 </head>
 <body class="bg-[var(--cor-fundo)] dark:bg-gray-900 text-[var(--cor-texto)] dark:text-gray-200">
 
@@ -85,7 +85,10 @@
             <!-- Sidebar -->
             <aside id="sidebar" class="bg-[#2D3748] text-white w-64 p-4 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-30 flex flex-col">
             <div class="flex items-center justify-center mb-10">
-                <img src="imgs/contacomigo.png" alt="Conta Comigo Logo" class="h-12">
+                <!-- Logo para Desktop -->
+                <img src="imgs/contacomigo1.png" alt="Conta Comigo Logo" class="h-12 hidden md:block">
+                <!-- Logo para Mobile -->
+                <img src="imgs/contacomigo.png" alt="Conta Comigo Logo" class="h-12 md:hidden">
             </div>
             <nav class="flex flex-col space-y-2">
                 <a href="#" id="show-transactions-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 sidebar-active">
@@ -99,6 +102,18 @@
                 <a href="#" id="show-budgets-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
                     <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <span>Orçamentos</span>
+                </a>
+                <a href="#" id="show-goals-view-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <span>Metas</span>
+                </a>
+                <a href="#" id="show-debts-view-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Dívidas</span>
+                </a>
+                <a href="#" id="show-tasks-view-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Tarefas</span>
                 </a>
                 <a href="#" id="show-settings-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
                     <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -117,15 +132,28 @@
             <!-- Conteúdo Principal -->
             <div class="flex-1 flex flex-col">
                 <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                        <!-- Botão de Menu para Mobile -->
-                        <button id="menu-btn" class="md:hidden text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                            </svg>
-                        </button>
-                        <img src="imgs/contacomigolongo.png" alt="Conta Comigo Logo" class="h-12">
-                        <div></div> <!-- Spacer -->
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
+                        <!-- Container para Mobile: Botão de Menu e Logo Centralizada -->
+                        <div class="flex-1 flex justify-center items-center md:hidden">
+                            <!-- Botão de Menu (absoluto para não afetar a centralização) -->
+                            <button id="menu-btn" class="absolute left-4 text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                </svg>
+                            </button>
+                            <!-- Logo Mobile -->
+                            <img src="imgs/contacomigolongo.png" alt="Conta Comigo Logo" class="h-12">
+                        </div>
+                        
+                        <!-- Container para Desktop: Botão à Direita -->
+                        <div class="hidden md:flex flex-1 justify-end">
+                            <button id="add-transaction-btn-desktop" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Nova Transação
+                            </button>
+                        </div>
                     </div>
                 </header>
                 <main class="p-4 sm:p-6 lg:p-8">
@@ -169,17 +197,6 @@
                 </div>
             </section>
 
-            <!-- Metas Financeiras -->
-            <section id="goals" class="mt-6">
-                <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
-                    <h2 class="text-lg font-semibold">Metas Financeiras</h2>
-                    <button id="add-goal-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Adicionar Meta</button>
-                </div>
-                <div id="goal-list" class="space-y-4">
-                    <!-- As metas serão inseridas aqui -->
-                </div>
-            </section>
-
             <!-- Visualização de Investimentos -->
             <section id="investments-view" class="hidden">
                 <div class="flex justify-between items-center mb-4">
@@ -191,6 +208,55 @@
                 </div>
                 <div id="investment-list" class="space-y-4">
                     <!-- Lista de investimentos será inserida aqui -->
+                </div>
+            </section>
+
+            <!-- Visualização de Metas -->
+            <section id="goals-view" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Minhas Metas</h2>
+                    <button id="add-goal-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Adicionar Meta</button>
+                </div>
+                <div id="goal-list" class="space-y-4">
+                    <!-- As metas serão inseridas aqui -->
+                </div>
+            </section>
+
+            <!-- Visualização de Dívidas -->
+            <section id="debts-view" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Minhas Dívidas</h2>
+                    <button id="add-debt-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Adicionar Dívida</button>
+                </div>
+                <div id="debt-list" class="space-y-4">
+                    <!-- As dívidas serão inseridas aqui -->
+                </div>
+            </section>
+
+            <!-- Visualização de Tarefas -->
+            <section id="tasks-view" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Gerenciamento de Tarefas</h2>
+                    <button id="add-task-btn" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Nova Tarefa</button>
+                </div>
+                <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Título</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Responsável</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prazo</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prioridade</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="relative px-6 py-3">
+                                    <span class="sr-only">Editar</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="task-list" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <!-- As tarefas serão inseridas aqui -->
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
@@ -287,8 +353,8 @@
                 </main>
             </div>
         </div>
-        <!-- Botão Flutuante para Adicionar Transação -->
-        <button id="add-transaction-btn" title="Adicionar Nova Transação" class="fixed bottom-6 right-6 bg-[var(--cor-principal)] hover:opacity-90 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)] dark:ring-offset-gray-900">
+        <!-- Botão Flutuante para Adicionar Transação (Apenas Mobile/Tablet) -->
+        <button id="add-transaction-btn-mobile" title="Adicionar Nova Transação" class="md:hidden fixed bottom-6 right-6 bg-[var(--cor-principal)] hover:opacity-90 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)] dark:ring-offset-gray-900">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -475,6 +541,90 @@
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="cancel-budget-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
                     <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar Orçamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar/Editar Dívida -->
+    <div id="debt-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
+            <h3 id="debt-modal-title" class="text-xl font-semibold mb-4">Nova Dívida</h3>
+            <form id="debt-form">
+                <input type="hidden" id="debt-id">
+                <div class="mb-4">
+                    <label for="debt-company" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Empresa / Credor</label>
+                    <input type="text" id="debt-company" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="debt-amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Total (R$)</label>
+                        <input type="number" id="debt-amount" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="debt-due-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de Vencimento</label>
+                        <input type="date" id="debt-due-date" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="debt-negotiation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Detalhes / Negociação</label>
+                    <textarea id="debt-negotiation" rows="3" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancel-debt-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar Dívida</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar/Editar Tarefa -->
+    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
+            <h3 id="task-modal-title" class="text-xl font-semibold mb-4">Nova Tarefa</h3>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <div class="space-y-4">
+                    <div>
+                        <label for="task-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Título</label>
+                        <input type="text" id="task-title" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="task-responsible" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Responsável</label>
+                            <input type="text" id="task-responsible" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="task-due-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prazo</label>
+                            <input type="date" id="task-due-date" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="task-priority" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prioridade</label>
+                            <select id="task-priority" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                <option>Normal</option>
+                                <option>Urgente</option>
+                                <option>Baixa</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="task-status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                            <select id="task-status" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                                <option>Pendente</option>
+                                <option>Em Andamento</option>
+                                <option>Concluída</option>
+                            </select>
+                        </div>
+                    </div>
+                     <div>
+                        <label for="task-client" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cliente/Vínculo</label>
+                        <input type="text" id="task-client" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" id="cancel-task-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar Tarefa</button>
                 </div>
             </form>
         </div>

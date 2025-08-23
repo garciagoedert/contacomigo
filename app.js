@@ -46,7 +46,8 @@ const totalExpenseEl = document.getElementById('total-expense');
 const balanceEl = document.getElementById('balance');
 const transactionListEl = document.getElementById('transaction-list');
 const noTransactionsEl = document.getElementById('no-transactions');
-const addTransactionBtn = document.getElementById('add-transaction-btn');
+const addTransactionBtnMobile = document.getElementById('add-transaction-btn-mobile');
+const addTransactionBtnDesktop = document.getElementById('add-transaction-btn-desktop');
 const transactionsSection = document.getElementById('transactions');
 const showTransactionsViewBtn = document.getElementById('show-transactions-view');
 const modal = document.getElementById('transaction-modal');
@@ -77,10 +78,32 @@ const budgetForm = document.getElementById('budget-form');
 const cancelBudgetBtn = document.getElementById('cancel-budget-btn');
 const summary = document.getElementById('summary');
 const charts = document.getElementById('charts');
-const goals = document.getElementById('goals');
 const menuBtn = document.getElementById('menu-btn');
 const sidebar = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+// Seletores das novas Views
+const goalsView = document.getElementById('goals-view');
+const debtsView = document.getElementById('debts-view');
+const tasksView = document.getElementById('tasks-view');
+const showGoalsViewBtn = document.getElementById('show-goals-view-btn');
+const showDebtsViewBtn = document.getElementById('show-debts-view-btn');
+const showTasksViewBtn = document.getElementById('show-tasks-view-btn');
+
+// Seletores da View de Dívidas
+const debtListEl = document.getElementById('debt-list');
+const addDebtBtn = document.getElementById('add-debt-btn');
+const debtModal = document.getElementById('debt-modal');
+const debtForm = document.getElementById('debt-form');
+const cancelDebtBtn = document.getElementById('cancel-debt-btn');
+
+// Seletores da View de Tarefas
+const taskListEl = document.getElementById('task-list');
+const addTaskBtn = document.getElementById('add-task-btn');
+const taskModal = document.getElementById('task-modal');
+const taskForm = document.getElementById('task-form');
+const cancelTaskBtn = document.getElementById('cancel-task-btn');
+
 
 // Seletores da View de Configurações
 const settingsView = document.getElementById('settings-view');
@@ -107,6 +130,8 @@ let unsubscribeFromInvestments = null;
 let unsubscribeFromBudgets = null;
 let unsubscribeFromCategories = null;
 let unsubscribeFromFamily = null;
+let unsubscribeFromDebts = null;
+let unsubscribeFromTasks = null;
 
 // --- LÓGICA DE APARÊNCIA ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -187,10 +212,12 @@ const showTransactions = (e) => {
     investmentsView.classList.add('hidden');
     budgetsView.classList.add('hidden');
     settingsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
     transactionsSection.classList.remove('hidden');
     summary.classList.remove('hidden');
     charts.classList.remove('hidden');
-    goals.classList.remove('hidden');
     updateActiveLink(showTransactionsViewBtn);
     closeSidebar();
 };
@@ -200,9 +227,11 @@ const showInvestments = (e) => {
     transactionsSection.classList.add('hidden');
     summary.classList.add('hidden');
     charts.classList.add('hidden');
-    goals.classList.add('hidden');
     budgetsView.classList.add('hidden');
     settingsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
     investmentsView.classList.remove('hidden');
     updateActiveLink(showInvestmentsViewBtn);
     closeSidebar();
@@ -213,9 +242,11 @@ const showBudgets = (e) => {
     transactionsSection.classList.add('hidden');
     summary.classList.add('hidden');
     charts.classList.add('hidden');
-    goals.classList.add('hidden');
     investmentsView.classList.add('hidden');
     settingsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
     budgetsView.classList.remove('hidden');
     updateActiveLink(showBudgetsViewBtn);
     closeSidebar();
@@ -226,11 +257,58 @@ const showSettings = (e) => {
     transactionsSection.classList.add('hidden');
     summary.classList.add('hidden');
     charts.classList.add('hidden');
-    goals.classList.add('hidden');
     investmentsView.classList.add('hidden');
     budgetsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
     settingsView.classList.remove('hidden');
     updateActiveLink(showSettingsViewBtn);
+    closeSidebar();
+};
+
+const showGoals = (e) => {
+    e.preventDefault();
+    transactionsSection.classList.add('hidden');
+    summary.classList.add('hidden');
+    charts.classList.add('hidden');
+    investmentsView.classList.add('hidden');
+    budgetsView.classList.add('hidden');
+    settingsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
+    goalsView.classList.remove('hidden');
+    updateActiveLink(showGoalsViewBtn);
+    closeSidebar();
+};
+
+const showDebts = (e) => {
+    e.preventDefault();
+    transactionsSection.classList.add('hidden');
+    summary.classList.add('hidden');
+    charts.classList.add('hidden');
+    investmentsView.classList.add('hidden');
+    budgetsView.classList.add('hidden');
+    settingsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
+    debtsView.classList.remove('hidden');
+    updateActiveLink(showDebtsViewBtn);
+    closeSidebar();
+};
+
+const showTasks = (e) => {
+    e.preventDefault();
+    transactionsSection.classList.add('hidden');
+    summary.classList.add('hidden');
+    charts.classList.add('hidden');
+    investmentsView.classList.add('hidden');
+    budgetsView.classList.add('hidden');
+    settingsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.remove('hidden');
+    updateActiveLink(showTasksViewBtn);
     closeSidebar();
 };
 
@@ -238,6 +316,9 @@ showTransactionsViewBtn.addEventListener('click', showTransactions);
 showInvestmentsViewBtn.addEventListener('click', showInvestments);
 showBudgetsViewBtn.addEventListener('click', showBudgets);
 showSettingsViewBtn.addEventListener('click', showSettings);
+showGoalsViewBtn.addEventListener('click', showGoals);
+showDebtsViewBtn.addEventListener('click', showDebts);
+showTasksViewBtn.addEventListener('click', showTasks);
 
 // --- LÓGICA DE AUTENTICAÇÃO ---
 showRegisterBtn.addEventListener('click', (e) => {
@@ -272,6 +353,8 @@ onAuthStateChanged(auth, async user => {
         if (unsubscribeFromBudgets) unsubscribeFromBudgets();
         if (unsubscribeFromCategories) unsubscribeFromCategories();
         if (unsubscribeFromFamily) unsubscribeFromFamily();
+        if (unsubscribeFromDebts) unsubscribeFromDebts();
+        if (unsubscribeFromTasks) unsubscribeFromTasks();
     }
 });
 
@@ -373,6 +456,20 @@ function setupRealtimeListeners(familyId) {
         const goals = [];
         snapshot.forEach(doc => goals.push({ id: doc.id, ...doc.data() }));
         renderGoals(goals);
+    });
+
+    const debtsCol = collection(db, 'families', familyId, 'debts');
+    unsubscribeFromDebts = onSnapshot(query(debtsCol), (snapshot) => {
+        const debts = [];
+        snapshot.forEach(doc => debts.push({ id: doc.id, ...doc.data() }));
+        renderDebts(debts);
+    });
+
+    const tasksCol = collection(db, 'families', familyId, 'tasks');
+    unsubscribeFromTasks = onSnapshot(query(tasksCol), (snapshot) => {
+        const tasks = [];
+        snapshot.forEach(doc => tasks.push({ id: doc.id, ...doc.data() }));
+        renderTasks(tasks);
     });
 
     const investmentsCol = collection(db, 'families', familyId, 'investments');
@@ -915,4 +1012,355 @@ inviteMemberFormSettings.addEventListener('submit', async (e) => {
     }
 });
 
-// ... Restante do código (lógica de modais, etc.) ...
+// --- LÓGICA DO MODAL DE TRANSAÇÃO ---
+
+// Função para abrir o modal de transação para adicionar ou editar
+function openTransactionModal(transaction = null) {
+    transactionForm.reset();
+    transactionIdInput.value = '';
+    
+    if (transaction) {
+        // Modo de edição
+        modalTitle.textContent = 'Editar Transação';
+        transactionIdInput.value = transaction.id;
+        document.getElementById('description').value = transaction.description;
+        document.getElementById('amount').value = transaction.amount;
+        // Converte o timestamp do Firebase para o formato YYYY-MM-DD
+        document.getElementById('date').value = transaction.timestamp.toDate().toISOString().split('T')[0];
+        document.querySelector(`input[name="type"][value="${transaction.type}"]`).checked = true;
+        categorySelect.value = transaction.category;
+        isInvestmentCheckbox.checked = transaction.isInvestment || false;
+    } else {
+        // Modo de adição
+        modalTitle.textContent = 'Nova Transação';
+        // Define a data atual por padrão
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    }
+
+    toggleInvestmentOption();
+    
+    modal.classList.remove('hidden');
+    // Pequeno timeout para a animação de entrada funcionar
+    setTimeout(() => modalContent.classList.remove('modal-enter'), 10);
+}
+
+// Função para fechar o modal de transação
+function closeTransactionModal() {
+    modalContent.classList.add('modal-enter');
+    // Espera a animação de saída terminar antes de esconder o modal
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+// Mostra a opção de investimento apenas para despesas
+function toggleInvestmentOption() {
+    const selectedType = document.querySelector('input[name="type"]:checked').value;
+    if (selectedType === 'expense') {
+        investmentOption.classList.remove('hidden');
+    } else {
+        investmentOption.classList.add('hidden');
+        isInvestmentCheckbox.checked = false; // Garante que não seja marcado para receitas
+    }
+}
+
+// Adiciona os event listeners
+addTransactionBtnMobile.addEventListener('click', () => openTransactionModal());
+addTransactionBtnDesktop.addEventListener('click', () => openTransactionModal());
+cancelBtn.addEventListener('click', closeTransactionModal);
+modal.addEventListener('click', (e) => {
+    // Fecha o modal se o clique for no overlay (fundo)
+    if (e.target === modal) {
+        closeTransactionModal();
+    }
+});
+transactionTypeRadios.forEach(radio => {
+    radio.addEventListener('change', toggleInvestmentOption);
+});
+
+// Lógica de submissão do formulário de transação
+transactionForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const id = transactionIdInput.value;
+    const description = document.getElementById('description').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const date = document.getElementById('date').value;
+    const type = document.querySelector('input[name="type"]:checked').value;
+    const category = categorySelect.value;
+    const isInvestment = isInvestmentCheckbox.checked;
+
+    if (!description || isNaN(amount) || !date || !category) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    const transactionData = {
+        description,
+        amount,
+        timestamp: Timestamp.fromDate(new Date(date)),
+        type,
+        category,
+        isInvestment,
+        userId: currentUserId
+    };
+
+    try {
+        if (id) {
+            // Atualizar transação existente
+            const transactionRef = doc(db, 'families', currentFamilyId, 'transactions', id);
+            await updateDoc(transactionRef, transactionData);
+        } else {
+            // Adicionar nova transação
+            await addDoc(collection(db, 'families', currentFamilyId, 'transactions'), transactionData);
+        }
+        
+        // Se for uma despesa marcada como investimento, cria um registro correspondente em investimentos
+        if (isInvestment && type === 'expense') {
+             await addDoc(collection(db, 'families', currentFamilyId, 'investments'), {
+                name: `Aporte: ${description}`,
+                averagePrice: amount, // Para aportes, o preço médio é o valor total
+                quantity: 1,
+                currentPrice: amount, // O valor atual é o mesmo do aporte
+                timestamp: Timestamp.fromDate(new Date(date)),
+                isContribution: true, // Marca como um aporte para diferenciar de outros ativos
+                userId: currentUserId
+            });
+        }
+
+        closeTransactionModal();
+    } catch (error) {
+        console.error("Erro ao salvar transação: ", error);
+        alert("Ocorreu um erro ao salvar a transação. Tente novamente.");
+    }
+});
+
+// A função openModalForEdit é chamada pelos botões de edição na lista de transações
+function openModalForEdit(transaction) {
+    openTransactionModal(transaction);
+}
+
+// Função para deletar uma transação
+async function deleteTransaction(id) {
+    if (!currentFamilyId || !id) return;
+    try {
+        await deleteDoc(doc(db, 'families', currentFamilyId, 'transactions', id));
+    } catch (error) {
+        console.error("Erro ao deletar transação:", error);
+        alert("Ocorreu um erro ao deletar a transação.");
+    }
+}
+
+// --- LÓGICA DOS OUTROS MODAIS (Meta, Orçamento, Investimento) ---
+function renderDebts(debts) {
+    debtListEl.innerHTML = '';
+    if (debts.length === 0) {
+        debtListEl.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhuma dívida encontrada.</p>';
+        return;
+    }
+
+    debts.forEach(debt => {
+        const el = document.createElement('div');
+        el.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm';
+        const dueDate = debt.dueDate ? new Date(debt.dueDate).toLocaleDateString('pt-BR') : 'Não definida';
+
+        el.innerHTML = `
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+                <div class="flex-grow mb-4 sm:mb-0">
+                    <p class="font-semibold text-lg">${debt.company}</p>
+                    <p class="font-bold text-xl text-red-500 mt-1">${formatCurrency(debt.amount)}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Vencimento: ${dueDate}</p>
+                    ${debt.negotiation ? `<p class="text-sm text-gray-600 dark:text-gray-300 mt-2"><strong>Detalhes:</strong> ${debt.negotiation}</p>` : ''}
+                </div>
+                <div class="flex space-x-2 self-end sm:self-start">
+                    <button data-id="${debt.id}" class="edit-debt-btn p-1 text-gray-500 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" /></svg>
+                    </button>
+                    <button data-id="${debt.id}" class="delete-debt-btn p-1 text-gray-500 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        debtListEl.appendChild(el);
+    });
+
+    document.querySelectorAll('.edit-debt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const debt = debts.find(d => d.id === id);
+            openDebtModal(debt);
+        });
+    });
+
+    document.querySelectorAll('.delete-debt-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            if (confirm('Tem certeza que deseja excluir esta dívida?')) {
+                await deleteDoc(doc(db, 'families', currentFamilyId, 'debts', id));
+            }
+        });
+    });
+}
+
+function openDebtModal(debt = null) {
+    debtForm.reset();
+    document.getElementById('debt-id').value = '';
+    const modalTitle = document.getElementById('debt-modal-title');
+
+    if (debt) {
+        modalTitle.textContent = 'Editar Dívida';
+        document.getElementById('debt-id').value = debt.id;
+        document.getElementById('debt-company').value = debt.company;
+        document.getElementById('debt-amount').value = debt.amount;
+        document.getElementById('debt-due-date').value = debt.dueDate || '';
+        document.getElementById('debt-negotiation').value = debt.negotiation || '';
+    } else {
+        modalTitle.textContent = 'Nova Dívida';
+    }
+    debtModal.classList.remove('hidden');
+}
+
+function closeDebtModal() {
+    debtModal.classList.add('hidden');
+}
+
+addDebtBtn.addEventListener('click', () => openDebtModal());
+cancelDebtBtn.addEventListener('click', closeDebtModal);
+debtModal.addEventListener('click', (e) => {
+    if (e.target === debtModal) {
+        closeDebtModal();
+    }
+});
+
+debtForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('debt-id').value;
+    const debtData = {
+        company: document.getElementById('debt-company').value,
+        amount: parseFloat(document.getElementById('debt-amount').value),
+        dueDate: document.getElementById('debt-due-date').value,
+        negotiation: document.getElementById('debt-negotiation').value,
+        userId: currentUserId
+    };
+
+    if (id) {
+        await updateDoc(doc(db, 'families', currentFamilyId, 'debts', id), debtData);
+    } else {
+        await addDoc(collection(db, 'families', currentFamilyId, 'debts'), debtData);
+    }
+    closeDebtModal();
+});
+
+function renderTasks(tasks) {
+    taskListEl.innerHTML = '';
+    if (tasks.length === 0) {
+        taskListEl.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhuma tarefa encontrada.</td></tr>';
+        return;
+    }
+
+    tasks.forEach(task => {
+        const row = document.createElement('tr');
+        row.className = "hover:bg-gray-50 dark:hover:bg-gray-700";
+        const dueDate = task.dueDate ? new Date(task.dueDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
+        
+        row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${task.title}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${task.responsible || 'N/A'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${dueDate}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getPriorityClass(task.priority)}">
+                    ${task.priority}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(task.status)}">
+                    ${task.status}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button data-id="${task.id}" class="edit-task-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200">Editar</button>
+            </td>
+        `;
+        taskListEl.appendChild(row);
+    });
+
+    document.querySelectorAll('.edit-task-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const task = tasks.find(t => t.id === id);
+            openTaskModal(task);
+        });
+    });
+}
+
+function getPriorityClass(priority) {
+    switch (priority) {
+        case 'Urgente': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+        case 'Normal': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+        case 'Baixa': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+}
+
+function getStatusClass(status) {
+    switch (status) {
+        case 'Pendente': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+        case 'Em Andamento': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+        case 'Concluída': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+}
+
+function openTaskModal(task = null) {
+    taskForm.reset();
+    document.getElementById('task-id').value = '';
+    const modalTitle = document.getElementById('task-modal-title');
+
+    if (task) {
+        modalTitle.textContent = 'Editar Tarefa';
+        document.getElementById('task-id').value = task.id;
+        document.getElementById('task-title').value = task.title;
+        document.getElementById('task-responsible').value = task.responsible || '';
+        document.getElementById('task-due-date').value = task.dueDate || '';
+        document.getElementById('task-priority').value = task.priority || 'Normal';
+        document.getElementById('task-status').value = task.status || 'Pendente';
+        document.getElementById('task-client').value = task.client || '';
+    } else {
+        modalTitle.textContent = 'Nova Tarefa';
+    }
+    taskModal.classList.remove('hidden');
+}
+
+function closeTaskModal() {
+    taskModal.classList.add('hidden');
+}
+
+addTaskBtn.addEventListener('click', () => openTaskModal());
+cancelTaskBtn.addEventListener('click', closeTaskModal);
+taskModal.addEventListener('click', (e) => {
+    if (e.target === taskModal) {
+        closeTaskModal();
+    }
+});
+
+taskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('task-id').value;
+    const taskData = {
+        title: document.getElementById('task-title').value,
+        responsible: document.getElementById('task-responsible').value,
+        dueDate: document.getElementById('task-due-date').value,
+        priority: document.getElementById('task-priority').value,
+        status: document.getElementById('task-status').value,
+        client: document.getElementById('task-client').value,
+        userId: currentUserId
+    };
+
+    if (id) {
+        await updateDoc(doc(db, 'families', currentFamilyId, 'tasks', id), taskData);
+    } else {
+        await addDoc(collection(db, 'families', currentFamilyId, 'tasks'), taskData);
+    }
+    closeTaskModal();
+});
+
+// (O código para os outros modais viria aqui, se necessário)
