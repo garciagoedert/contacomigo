@@ -755,8 +755,123 @@ function renderTransactions(transactions) {
     }
 }
 
-// --- LÓGICA DOS GRÁFICOS ---
-// ... Funções renderExpenseChart e renderIncomeExpenseChart ...
+// --- LÓGICA DO GRÁFICO ---
+let expenseChart = null;
+let incomeExpenseChart = null;
+
+function renderIncomeExpenseChart(transactions) {
+    const ctx = document.getElementById('income-expense-chart').getContext('2d');
+    const last6Months = [];
+    const now = new Date();
+
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        last6Months.push({
+            label: d.toLocaleString('pt-BR', { month: 'long' }),
+            month: d.getMonth(),
+            year: d.getFullYear(),
+            income: 0,
+            expense: 0
+        });
+    }
+
+    transactions.forEach(t => {
+        const date = t.timestamp.toDate();
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const monthData = last6Months.find(m => m.month === month && m.year === year);
+        if (monthData) {
+            if (t.type === 'income') {
+                monthData.income += t.amount;
+            } else {
+                monthData.expense += t.amount;
+            }
+        }
+    });
+
+    const labels = last6Months.map(m => m.label);
+    const incomeData = last6Months.map(m => m.income);
+    const expenseData = last6Months.map(m => m.expense);
+
+    if (incomeExpenseChart) {
+        incomeExpenseChart.destroy();
+    }
+
+    incomeExpenseChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Receitas',
+                    data: incomeData,
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    borderColor: 'rgba(22, 163, 74, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Despesas',
+                    data: expenseData,
+                    backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                    borderColor: 'rgba(220, 38, 38, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function renderExpenseChart(transactions) {
+    const ctx = document.getElementById('expense-chart').getContext('2d');
+    const expenses = transactions.filter(t => t.type === 'expense');
+
+    const dataByCategory = expenses.reduce((acc, t) => {
+        const category = t.category || 'outros';
+        acc[category] = (acc[category] || 0) + t.amount;
+        return acc;
+    }, {});
+
+    const labels = Object.keys(dataByCategory);
+    const data = Object.values(dataByCategory);
+
+    if (expenseChart) {
+        expenseChart.destroy();
+    }
+
+    if (labels.length > 0) {
+        expenseChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels.map(l => l.charAt(0).toUpperCase() + l.slice(1)), // Capitalize
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        '#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    } else {
+        // Se não houver despesas, pode-se mostrar uma mensagem ou deixar o canvas em branco.
+    }
+}
 
 // --- LÓGICA DOS MODAIS (Transação, Meta, Orçamento, Investimento) ---
 // ... Funções open/close e event listeners para cada modal ...
