@@ -33,3 +33,9 @@ button:disabled {
 ::-webkit-scrollbar-thumb:hover {
     background-color: var(--cor-secundaria);
 }
+
+/* Estilos da nova barra lateral */
+aside nav a.sidebar-active {
+    background-color: #4299E1; /* Azul, como na imagem */
+    color: white;
+}

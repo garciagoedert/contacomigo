@@ -81,47 +81,54 @@
 
     <!-- Tela Principal do Aplicativo (inicialmente oculta) -->
     <div id="app-view" class="hidden">
-        <!-- Cabeçalho -->
-        <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-20">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <div class="relative min-h-screen md:flex">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="bg-[#2D3748] text-white w-64 p-4 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-30 flex flex-col">
+            <div class="flex items-center justify-center mb-10">
                 <img src="imgs/contacomigo.png" alt="Conta Comigo Logo" class="h-12">
-                
-                <!-- Navegação para Desktop -->
-                <nav class="hidden md:flex items-center space-x-4">
-                    <a href="#" id="show-transactions-view-desktop" class="text-sm font-medium text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Transações</a>
-                    <a href="#" id="show-investments-view-desktop" class="text-sm font-medium text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Investimentos</a>
-                    <a href="configuracoes.html" id="settings-btn-desktop" class="text-sm font-medium text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Configurações</a>
-                    <button id="logout-button-desktop" class="text-sm font-medium text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Sair</button>
-                </nav>
-
-                <!-- Botão de Menu para Mobile -->
-                <div class="md:hidden">
-                    <button id="menu-btn" class="text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                    </button>
-                </div>
             </div>
-        </header>
+            <nav class="flex flex-col space-y-2">
+                <a href="#" id="show-transactions-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 sidebar-active">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <span>Transações</span>
+                </a>
+                <a href="#" id="show-investments-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <span>Investimentos</span>
+                </a>
+                <a href="#" id="show-budgets-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Orçamentos</span>
+                </a>
+                <a href="configuracoes.html" id="settings-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span>Configurações</span>
+                </a>
+                <button id="logout-button" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 w-full text-left">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    <span>Sair</span>
+                </button>
+            </nav>
+            </aside>
 
-        <!-- Sidebar para Mobile -->
-        <div id="sidebar" class="fixed inset-y-0 right-0 bg-white dark:bg-gray-800 w-64 z-30 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden">
-            <div class="p-4">
-                <h2 class="text-2xl font-bold text-[var(--cor-principal)] mb-6">Menu</h2>
-                <nav class="flex flex-col space-y-4">
-                    <a href="#" id="show-transactions-view-mobile" class="text-lg text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Transações</a>
-                    <a href="#" id="show-investments-view-mobile" class="text-lg text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Investimentos</a>
-                    <a href="configuracoes.html" id="settings-btn-mobile" class="text-lg text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Configurações</a>
-                    <button id="logout-button-mobile" class="text-lg text-left text-[var(--cor-texto)] dark:text-gray-300 hover:text-[var(--cor-principal)]">Sair</button>
-                </nav>
-            </div>
-        </div>
-        <!-- Overlay para fechar a sidebar -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
+            <!-- Overlay para fechar a sidebar -->
+            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
 
-        <!-- Conteúdo Principal -->
-        <main class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+            <!-- Conteúdo Principal -->
+            <div class="flex-1 flex flex-col">
+                <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                        <!-- Botão de Menu para Mobile -->
+                        <button id="menu-btn" class="md:hidden text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>
+                        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
+                        <div></div> <!-- Spacer -->
+                    </div>
+                </header>
+                <main class="p-4 sm:p-6 lg:p-8">
             <!-- Resumo Financeiro -->
             <section id="summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
@@ -186,8 +193,20 @@
                     <!-- Lista de investimentos será inserida aqui -->
                 </div>
             </section>
-        </main>
 
+            <!-- Visualização de Orçamentos -->
+            <section id="budgets-view" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Orçamento Mensal</h2>
+                    <button id="add-budget-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Gerenciar Orçamento</button>
+                </div>
+                <div id="budget-list" class="space-y-4">
+                    <!-- Orçamentos serão inseridos aqui -->
+                </div>
+            </section>
+                </main>
+            </div>
+        </div>
         <!-- Botão Flutuante para Adicionar Transação -->
         <button id="add-transaction-btn" title="Adicionar Nova Transação" class="fixed bottom-6 right-6 bg-[var(--cor-principal)] hover:opacity-90 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)] dark:ring-offset-gray-900">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -355,6 +374,29 @@
             <div class="flex justify-end mt-6">
                 <button type="button" id="close-settings-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Fechar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar/Editar Orçamento -->
+    <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
+            <h3 id="budget-modal-title" class="text-xl font-semibold mb-4">Gerenciar Orçamento</h3>
+            <form id="budget-form">
+                <div class="mb-4">
+                    <label for="budget-category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria de Despesa</label>
+                    <select id="budget-category" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Opções de categoria de despesa serão preenchidas via JS -->
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="budget-limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Limite Mensal (R$)</label>
+                    <input type="number" id="budget-limit" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm" placeholder="Ex: 500,00">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancel-budget-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar Orçamento</button>
+                </div>
+            </form>
         </div>
     </div>
 

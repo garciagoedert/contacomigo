@@ -40,8 +40,7 @@ const registerForm = document.getElementById('register-form');
 const registerError = document.getElementById('register-error');
 const showRegisterBtn = document.getElementById('show-register-view');
 const showLoginBtn = document.getElementById('show-login-view');
-const logoutButtonDesktop = document.getElementById('logout-button-desktop');
-const logoutButtonMobile = document.getElementById('logout-button-mobile');
+const logoutButton = document.getElementById('logout-button');
 const totalIncomeEl = document.getElementById('total-income');
 const totalExpenseEl = document.getElementById('total-expense');
 const balanceEl = document.getElementById('balance');
@@ -49,8 +48,7 @@ const transactionListEl = document.getElementById('transaction-list');
 const noTransactionsEl = document.getElementById('no-transactions');
 const addTransactionBtn = document.getElementById('add-transaction-btn');
 const transactionsSection = document.getElementById('transactions');
-const showTransactionsViewBtnDesktop = document.getElementById('show-transactions-view-desktop');
-const showTransactionsViewBtnMobile = document.getElementById('show-transactions-view-mobile');
+const showTransactionsViewBtn = document.getElementById('show-transactions-view');
 const modal = document.getElementById('transaction-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalContent = document.getElementById('modal-content');
@@ -62,8 +60,7 @@ const goalModal = document.getElementById('goal-modal');
 const goalForm = document.getElementById('goal-form');
 const cancelGoalBtn = document.getElementById('cancel-goal-btn');
 const goalListEl = document.getElementById('goal-list');
-const showInvestmentsViewBtnDesktop = document.getElementById('show-investments-view-desktop');
-const showInvestmentsViewBtnMobile = document.getElementById('show-investments-view-mobile');
+const showInvestmentsViewBtn = document.getElementById('show-investments-view');
 const investmentsView = document.getElementById('investments-view');
 const addInvestmentBtn = document.getElementById('add-investment-btn');
 const investmentModal = document.getElementById('investment-modal');
@@ -71,6 +68,13 @@ const investmentForm = document.getElementById('investment-form');
 const cancelInvestmentBtn = document.getElementById('cancel-investment-btn');
 const investmentSummaryEl = document.getElementById('investment-summary');
 const investmentListEl = document.getElementById('investment-list');
+const showBudgetsViewBtn = document.getElementById('show-budgets-view');
+const budgetsView = document.getElementById('budgets-view');
+const budgetListEl = document.getElementById('budget-list');
+const addBudgetBtn = document.getElementById('add-budget-btn');
+const budgetModal = document.getElementById('budget-modal');
+const budgetForm = document.getElementById('budget-form');
+const cancelBudgetBtn = document.getElementById('cancel-budget-btn');
 const summary = document.getElementById('summary');
 const charts = document.getElementById('charts');
 const goals = document.getElementById('goals');
@@ -95,6 +99,7 @@ let currentFamilyId = null;
 let unsubscribeFromTransactions = null;
 let unsubscribeFromGoals = null;
 let unsubscribeFromInvestments = null;
+let unsubscribeFromBudgets = null;
 let unsubscribeFromCategories = null;
 let unsubscribeFromFamily = null;
 let incomeCategories = [];
@@ -120,12 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- LÓGICA DA SIDEBAR ---
 function openSidebar() {
-    sidebar.classList.remove('translate-x-full');
+    sidebar.classList.remove('-translate-x-full');
     sidebarOverlay.classList.remove('hidden');
 }
 
 function closeSidebar() {
-    sidebar.classList.add('translate-x-full');
+    sidebar.classList.add('-translate-x-full');
     sidebarOverlay.classList.add('hidden');
 }
 
@@ -133,29 +138,54 @@ menuBtn.addEventListener('click', openSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 
 
-const showTransactions = () => {
+const navLinks = document.querySelectorAll('aside nav a, aside nav button');
+
+function updateActiveLink(activeLink) {
+    navLinks.forEach(link => {
+        link.classList.remove('sidebar-active');
+    });
+    activeLink.classList.add('sidebar-active');
+}
+
+const showTransactions = (e) => {
+    e.preventDefault();
     investmentsView.classList.add('hidden');
+    budgetsView.classList.add('hidden');
     transactionsSection.classList.remove('hidden');
     summary.classList.remove('hidden');
     charts.classList.remove('hidden');
     goals.classList.remove('hidden');
+    updateActiveLink(showTransactionsViewBtn);
     closeSidebar();
 };
 
-const showInvestments = () => {
+const showInvestments = (e) => {
+    e.preventDefault();
     transactionsSection.classList.add('hidden');
     summary.classList.add('hidden');
     charts.classList.add('hidden');
     goals.classList.add('hidden');
+    budgetsView.classList.add('hidden');
     investmentsView.classList.remove('hidden');
+    updateActiveLink(showInvestmentsViewBtn);
     closeSidebar();
 };
 
-showTransactionsViewBtnDesktop.addEventListener('click', showTransactions);
-showTransactionsViewBtnMobile.addEventListener('click', showTransactions);
+const showBudgets = (e) => {
+    e.preventDefault();
+    transactionsSection.classList.add('hidden');
+    summary.classList.add('hidden');
+    charts.classList.add('hidden');
+    goals.classList.add('hidden');
+    investmentsView.classList.add('hidden');
+    budgetsView.classList.remove('hidden');
+    updateActiveLink(showBudgetsViewBtn);
+    closeSidebar();
+};
 
-showInvestmentsViewBtnDesktop.addEventListener('click', showInvestments);
-showInvestmentsViewBtnMobile.addEventListener('click', showInvestments);
+showTransactionsViewBtn.addEventListener('click', showTransactions);
+showInvestmentsViewBtn.addEventListener('click', showInvestments);
+showBudgetsViewBtn.addEventListener('click', showBudgets);
 
 
 showRegisterBtn.addEventListener('click', (e) => {
@@ -187,6 +217,7 @@ onAuthStateChanged(auth, async user => {
         if (unsubscribeFromTransactions) unsubscribeFromTransactions();
         if (unsubscribeFromGoals) unsubscribeFromGoals();
         if (unsubscribeFromInvestments) unsubscribeFromInvestments();
+        if (unsubscribeFromBudgets) unsubscribeFromBudgets();
         if (unsubscribeFromCategories) unsubscribeFromCategories();
         if (unsubscribeFromFamily) unsubscribeFromFamily();
     }
@@ -275,8 +306,7 @@ registerForm.addEventListener('submit', async (e) => {
     }
 });
 
-logoutButtonDesktop.addEventListener('click', () => signOut(auth));
-logoutButtonMobile.addEventListener('click', () => signOut(auth));
+logoutButton.addEventListener('click', () => signOut(auth));
 
 // --- LÓGICA DO FIRESTORE E RENDERIZAÇÃO ---
 function setupRealtimeListeners(familyId) {
@@ -311,6 +341,21 @@ function setupRealtimeListeners(familyId) {
         renderInvestments(investments);
     });
 
+    // Listener para orçamentos
+    const budgetsCol = collection(db, 'families', familyId, 'budgets');
+    const qBudgets = query(budgetsCol);
+    unsubscribeFromBudgets = onSnapshot(qBudgets, (snapshot) => {
+        const budgets = [];
+        snapshot.forEach(doc => budgets.push({ id: doc.id, ...doc.data() }));
+        // Precisamos das transações para renderizar os orçamentos, então chamamos a partir daqui
+        const transactionsCol = collection(db, 'families', familyId, 'transactions');
+        getDocs(query(transactionsCol)).then(transactionsSnapshot => {
+            const transactions = [];
+            transactionsSnapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
+            renderBudgets(budgets, transactions);
+        });
+    });
+
     // Listener para categorias
     const categoriesCol = collection(db, 'families', familyId, 'categories');
     const qCategories = query(categoriesCol);
@@ -339,6 +384,60 @@ function setupRealtimeListeners(familyId) {
             const members = memberDocs.map(d => d.data());
             renderFamilyMembers(members);
         }
+    });
+}
+
+function renderBudgets(budgets, transactions) {
+    budgetListEl.innerHTML = '';
+    if (budgets.length === 0) {
+        budgetListEl.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum orçamento definido para este mês.</p>';
+        return;
+    }
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    // Filtra transações de despesa do mês corrente
+    const currentMonthExpenses = transactions.filter(t => {
+        const date = t.timestamp.toDate();
+        return t.type === 'expense' && date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+    });
+
+    // Agrupa os gastos por categoria
+    const expensesByCategory = currentMonthExpenses.reduce((acc, t) => {
+        acc[t.category] = (acc[t.category] || 0) + t.amount;
+        return acc;
+    }, {});
+
+    budgets.forEach(budget => {
+        const spentAmount = expensesByCategory[budget.category] || 0;
+        const limitAmount = budget.limit;
+        const percentage = (spentAmount / limitAmount) * 100;
+        const remaining = limitAmount - spentAmount;
+        
+        let progressBarColor = 'bg-blue-600';
+        if (percentage > 75 && percentage <= 100) {
+            progressBarColor = 'bg-yellow-500';
+        } else if (percentage > 100) {
+            progressBarColor = 'bg-red-600';
+        }
+
+        const el = document.createElement('div');
+        el.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm';
+        el.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-semibold">${budget.category.charAt(0).toUpperCase() + budget.category.slice(1)}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">${formatCurrency(spentAmount)} / ${formatCurrency(limitAmount)}</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                <div class="${progressBarColor} h-2.5 rounded-full" style="width: ${Math.min(percentage, 100)}%"></div>
+            </div>
+            <p class="text-right text-xs mt-1 ${remaining < 0 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}">
+                ${remaining >= 0 ? `${formatCurrency(remaining)} restantes` : `${formatCurrency(Math.abs(remaining))} acima do limite`}
+            </p>
+        `;
+        budgetListEl.appendChild(el);
     });
 }
 
@@ -844,6 +943,52 @@ function closeGoalModal() {
 addGoalBtn.addEventListener('click', () => openGoalModal());
 cancelGoalBtn.addEventListener('click', closeGoalModal);
 goalModal.addEventListener('click', (e) => e.target === goalModal && closeGoalModal());
+
+// --- LÓGICA DO MODAL DE ORÇAMENTO ---
+function openBudgetModal() {
+    budgetForm.reset();
+    const budgetCategorySelect = document.getElementById('budget-category');
+    budgetCategorySelect.innerHTML = '';
+    expenseCategories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.name.toLowerCase();
+        option.textContent = cat.name;
+        budgetCategorySelect.appendChild(option);
+    });
+    budgetModal.classList.remove('hidden');
+}
+
+function closeBudgetModal() {
+    budgetModal.classList.add('hidden');
+}
+
+addBudgetBtn.addEventListener('click', openBudgetModal);
+cancelBudgetBtn.addEventListener('click', closeBudgetModal);
+budgetModal.addEventListener('click', (e) => e.target === budgetModal && closeBudgetModal());
+
+budgetForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentFamilyId) return;
+
+    const category = document.getElementById('budget-category').value;
+    const limit = parseFloat(document.getElementById('budget-limit').value);
+
+    if (!category || isNaN(limit) || limit < 0) {
+        alert("Por favor, preencha todos os campos corretamente.");
+        return;
+    }
+
+    try {
+        // Usamos o nome da categoria como ID do documento para garantir um orçamento por categoria
+        const budgetRef = doc(db, 'families', currentFamilyId, 'budgets', category);
+        await setDoc(budgetRef, { category, limit });
+        closeBudgetModal();
+    } catch (error) {
+        console.error("Erro ao salvar orçamento:", error);
+        alert("Ocorreu um erro ao salvar o orçamento.");
+    }
+});
+
 
 // --- LÓGICA DO MODAL DE CONFIGURAÇÕES ---
 // A lógica do modal de configurações será removida pois agora é uma página separada.
