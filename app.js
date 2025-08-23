@@ -218,6 +218,8 @@ const showTransactions = (e) => {
     transactionsSection.classList.remove('hidden');
     summary.classList.remove('hidden');
     charts.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.remove('hidden');
+    addTransactionBtnMobile.classList.remove('hidden');
     updateActiveLink(showTransactionsViewBtn);
     closeSidebar();
 };
@@ -233,6 +235,8 @@ const showInvestments = (e) => {
     debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
     investmentsView.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
     updateActiveLink(showInvestmentsViewBtn);
     closeSidebar();
 };
@@ -248,6 +252,8 @@ const showBudgets = (e) => {
     debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
     budgetsView.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
     updateActiveLink(showBudgetsViewBtn);
     closeSidebar();
 };
@@ -263,6 +269,8 @@ const showSettings = (e) => {
     debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
     settingsView.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
     updateActiveLink(showSettingsViewBtn);
     closeSidebar();
 };
@@ -278,6 +286,8 @@ const showGoals = (e) => {
     debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
     goalsView.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
     updateActiveLink(showGoalsViewBtn);
     closeSidebar();
 };
@@ -293,6 +303,8 @@ const showDebts = (e) => {
     goalsView.classList.add('hidden');
     tasksView.classList.add('hidden');
     debtsView.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
     updateActiveLink(showDebtsViewBtn);
     closeSidebar();
 };
@@ -308,6 +320,8 @@ const showTasks = (e) => {
     goalsView.classList.add('hidden');
     debtsView.classList.add('hidden');
     tasksView.classList.remove('hidden');
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
     updateActiveLink(showTasksViewBtn);
     closeSidebar();
 };
@@ -1413,7 +1427,6 @@ function openTaskModal(task = null) {
         document.getElementById('task-due-date').value = task.dueDate || '';
         document.getElementById('task-priority').value = task.priority || 'Normal';
         document.getElementById('task-status').value = task.status || 'Pendente';
-        document.getElementById('task-client').value = task.client || '';
     } else {
         modalTitle.textContent = 'Nova Tarefa';
     }
@@ -1441,7 +1454,6 @@ taskForm.addEventListener('submit', async (e) => {
         dueDate: document.getElementById('task-due-date').value,
         priority: document.getElementById('task-priority').value,
         status: document.getElementById('task-status').value,
-        client: document.getElementById('task-client').value,
         userId: currentUserId
     };
 
