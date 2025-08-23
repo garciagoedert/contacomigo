@@ -575,18 +575,48 @@ function renderGoals(goals) {
         return;
     }
     goals.forEach(goal => {
-        const percentage = (goal.currentAmount / goal.targetAmount) * 100;
+        const percentage = (goal.targetAmount > 0) ? (goal.currentAmount / goal.targetAmount) * 100 : 0;
         const el = document.createElement('div');
         el.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm';
         el.innerHTML = `
-            <div class="flex justify-between items-center mb-2">
-                <span class="font-semibold">${goal.name}</span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">${formatCurrency(goal.currentAmount)} / ${formatCurrency(goal.targetAmount)}</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${Math.min(percentage, 100)}%"></div>
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold">${goal.name}</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">${formatCurrency(goal.currentAmount)} / ${formatCurrency(goal.targetAmount)}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${Math.min(percentage, 100)}%"></div>
+                    </div>
+                </div>
+                <div class="flex space-x-2 ml-4">
+                    <button data-id="${goal.id}" class="edit-goal-btn p-1 text-gray-500 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" /></svg>
+                    </button>
+                    <button data-id="${goal.id}" class="delete-goal-btn p-1 text-gray-500 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                </div>
             </div>`;
         goalListEl.appendChild(el);
+    });
+
+    // Adicionar event listeners para os novos botões
+    document.querySelectorAll('.edit-goal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            const goal = goals.find(g => g.id === id);
+            openGoalModal(goal);
+        });
+    });
+
+    document.querySelectorAll('.delete-goal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            if (confirm('Tem certeza que deseja excluir esta meta?')) {
+                deleteGoal(id);
+            }
+        });
     });
 }
 
@@ -1149,7 +1179,67 @@ async function deleteTransaction(id) {
     }
 }
 
-// --- LÓGICA DOS OUTROS MODAIS (Meta, Orçamento, Investimento) ---
+// --- LÓGICA DO MODAL DE METAS ---
+
+function openGoalModal(goal = null) {
+    goalForm.reset();
+    document.getElementById('goal-id').value = '';
+    const modalTitle = document.getElementById('goal-modal-title');
+
+    if (goal) {
+        modalTitle.textContent = 'Editar Meta';
+        document.getElementById('goal-id').value = goal.id;
+        document.getElementById('goal-name').value = goal.name;
+        document.getElementById('goal-target').value = goal.targetAmount;
+        document.getElementById('goal-current').value = goal.currentAmount;
+    } else {
+        modalTitle.textContent = 'Nova Meta';
+    }
+    goalModal.classList.remove('hidden');
+}
+
+function closeGoalModal() {
+    goalModal.classList.add('hidden');
+}
+
+addGoalBtn.addEventListener('click', () => openGoalModal());
+cancelGoalBtn.addEventListener('click', closeGoalModal);
+goalModal.addEventListener('click', (e) => {
+    if (e.target === goalModal) {
+        closeGoalModal();
+    }
+});
+
+goalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('goal-id').value;
+    const goalData = {
+        name: document.getElementById('goal-name').value,
+        targetAmount: parseFloat(document.getElementById('goal-target').value),
+        currentAmount: parseFloat(document.getElementById('goal-current').value),
+        userId: currentUserId
+    };
+
+    if (id) {
+        await updateDoc(doc(db, 'families', currentFamilyId, 'goals', id), goalData);
+    } else {
+        await addDoc(collection(db, 'families', currentFamilyId, 'goals'), goalData);
+    }
+    closeGoalModal();
+});
+
+async function deleteGoal(id) {
+    if (!currentFamilyId || !id) return;
+    try {
+        await deleteDoc(doc(db, 'families', currentFamilyId, 'goals', id));
+    } catch (error) {
+        console.error("Erro ao deletar meta:", error);
+        alert("Ocorreu um erro ao deletar a meta.");
+    }
+}
+
+
+// --- LÓGICA DOS OUTROS MODAIS (Orçamento, Investimento) ---
 function renderDebts(debts) {
     debtListEl.innerHTML = '';
     if (debts.length === 0) {
