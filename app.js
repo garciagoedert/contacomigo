@@ -600,23 +600,29 @@ function renderInvestments(investments) {
                 currentTotalValue += currentValue;
 
                 el.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-center flex-grow">
-                            <p class="font-semibold col-span-2 md:col-span-1">${asset.name}</p>
-                            <div class="text-sm">
-                                <p class="text-gray-500 dark:text-gray-400">Quantidade</p>
-                                <p>${asset.quantity}</p>
-                            </div>
-                            <div class="text-sm">
-                                <p class="text-gray-500 dark:text-gray-400">Preço Médio</p>
-                                <p>${formatCurrency(asset.averagePrice)}</p>
-                            </div>
-                            <div class="text-sm">
-                                <p class="text-gray-500 dark:text-gray-400">Valor Atual</p>
-                                <p>${formatCurrency(currentValue)}</p>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+                        <div class="flex-grow mb-4 sm:mb-0">
+                            <p class="font-semibold">${asset.name}</p>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 mt-2 text-sm">
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-400">Quantidade</p>
+                                    <p>${asset.quantity}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-400">Preço Médio</p>
+                                    <p>${formatCurrency(asset.averagePrice)}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 dark:text-gray-400">Valor Atual</p>
+                                    <p>${formatCurrency(currentValue)}</p>
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <p class="text-gray-500 dark:text-gray-400">Lucro/Prejuízo</p>
+                                    <p class="${profitLossColor}">${formatCurrency(profitLoss)} (${investedValue > 0 ? ((profitLoss / investedValue) * 100).toFixed(2) : 0}%)</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex space-x-2 ml-4">
+                        <div class="flex space-x-2 self-end sm:self-start">
                             <button data-id="${asset.id}" class="edit-investment-btn p-1 text-gray-500 hover:text-blue-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" /></svg>
                             </button>
@@ -624,9 +630,6 @@ function renderInvestments(investments) {
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                         </div>
-                    </div>
-                    <div class="mt-2 text-right">
-                        <span class="text-sm ${profitLossColor}">${formatCurrency(profitLoss)} (${investedValue > 0 ? ((profitLoss / investedValue) * 100).toFixed(2) : 0}%)</span>
                     </div>
                 `;
             }
@@ -705,23 +708,23 @@ function renderTransactions(transactions) {
             }
 
             const el = document.createElement('div');
-            el.className = `bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm flex items-center justify-between border-l-4 ${borderColor}`;
+            el.className = `bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between border-l-4 ${borderColor}`;
             
             let investmentBadge = '';
             if (isInvestment) {
-                investmentBadge = `<span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full ml-2">Investimento</span>`;
+                investmentBadge = `<span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full">Investimento</span>`;
             }
 
             el.innerHTML = `
-                <div class="flex-1">
+                <div class="flex-1 mb-4 sm:mb-0">
                     <p class="font-semibold">${t.description}</p>
-                    <div class="flex items-center mt-1">
-                        <span class="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">${t.category || 'Sem Categoria'}</span>
-                        ${investmentBadge}
-                        <p class="text-xs text-gray-500 dark:text-gray-400 ml-3">${t.timestamp ? t.timestamp.toDate().toLocaleDateString('pt-BR') : 'Data pendente'}</p>
+                    <div class="flex items-center flex-wrap mt-1">
+                        <span class="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full mr-2 mb-1">${t.category || 'Sem Categoria'}</span>
+                        ${isInvestment ? investmentBadge : ''}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">${t.timestamp ? t.timestamp.toDate().toLocaleDateString('pt-BR') : 'Data pendente'}</p>
                     </div>
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center self-end sm:self-center">
                     <p class="font-bold ${amountColor} mr-4">${sign} ${formatCurrency(t.amount)}</p>
                     <div class="flex space-x-2">
                         <button data-id="${t.id}" class="edit-btn p-1 text-gray-500 hover:text-blue-500">
