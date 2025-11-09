@@ -31,15 +31,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // --- SELETORES DE ELEMENTOS DO DOM ---
-const loginView = document.getElementById('login-view');
-const registerView = document.getElementById('register-view');
 const appView = document.getElementById('app-view');
-const loginForm = document.getElementById('login-form');
-const loginError = document.getElementById('login-error');
-const registerForm = document.getElementById('register-form');
-const registerError = document.getElementById('register-error');
-const showRegisterBtn = document.getElementById('show-register-view');
-const showLoginBtn = document.getElementById('show-login-view');
 const logoutButton = document.getElementById('logout-button');
 const totalIncomeEl = document.getElementById('total-income');
 const totalExpenseEl = document.getElementById('total-expense');
@@ -335,40 +327,16 @@ showDebtsViewBtn.addEventListener('click', showDebts);
 showTasksViewBtn.addEventListener('click', showTasks);
 
 // --- LÓGICA DE AUTENTICAÇÃO ---
-showRegisterBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginView.classList.add('hidden');
-    registerView.classList.remove('hidden');
-});
-
-showLoginBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    registerView.classList.add('hidden');
-    loginView.classList.remove('hidden');
-});
-
 onAuthStateChanged(auth, async user => {
     if (user) {
+        // Usuário está logado, busca informações da família e carrega os dados
         currentUserId = user.uid;
         await setupUserFamily(user);
-        loginView.classList.add('hidden');
-        registerView.classList.add('hidden');
-        appView.classList.remove('hidden');
+        appView.classList.remove('hidden'); // Mostra a aplicação
         setupRealtimeListeners(currentFamilyId);
     } else {
-        currentUserId = null;
-        currentFamilyId = null;
-        registerView.classList.add('hidden');
-        appView.classList.add('hidden');
-        loginView.classList.remove('hidden');
-        if (unsubscribeFromTransactions) unsubscribeFromTransactions();
-        if (unsubscribeFromGoals) unsubscribeFromGoals();
-        if (unsubscribeFromInvestments) unsubscribeFromInvestments();
-        if (unsubscribeFromBudgets) unsubscribeFromBudgets();
-        if (unsubscribeFromCategories) unsubscribeFromCategories();
-        if (unsubscribeFromFamily) unsubscribeFromFamily();
-        if (unsubscribeFromDebts) unsubscribeFromDebts();
-        if (unsubscribeFromTasks) unsubscribeFromTasks();
+        // Usuário não está logado, redireciona para a página de login
+        window.location.href = 'login/index.html';
     }
 });
 
@@ -402,55 +370,11 @@ async function setupUserFamily(user) {
     }
 }
 
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = loginForm.email.value;
-    const password = loginForm.password.value;
-    loginError.textContent = '';
-    loginError.classList.add('hidden');
-
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        console.error("Erro de login:", error.code);
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-            loginError.textContent = "Email ou senha inválidos.";
-        } else {
-            loginError.textContent = "Ocorreu um erro. Tente novamente.";
-        }
-        loginError.classList.remove('hidden');
-    }
+logoutButton.addEventListener('click', () => {
+    signOut(auth).catch(error => {
+        console.error("Erro ao fazer logout:", error);
+    });
 });
-
-registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = registerForm.email.value;
-    const password = registerForm.password.value;
-    registerError.textContent = '';
-    registerError.classList.add('hidden');
-
-    if (password.length < 6) {
-        registerError.textContent = "A senha deve ter no mínimo 6 caracteres.";
-        registerError.classList.remove('hidden');
-        return;
-    }
-
-    try {
-        await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        console.error("Erro de cadastro:", error.code);
-        if (error.code === 'auth/email-already-in-use') {
-            registerError.textContent = "Este email já está em uso.";
-        } else if (error.code === 'auth/invalid-email') {
-            registerError.textContent = "O email fornecido é inválido.";
-        } else {
-            registerError.textContent = "Ocorreu um erro ao criar a conta.";
-        }
-        registerError.classList.remove('hidden');
-    }
-});
-
-logoutButton.addEventListener('click', () => signOut(auth));
 
 // --- LÓGICA DO FIRESTORE E RENDERIZAÇÃO ---
 function setupRealtimeListeners(familyId) {
@@ -915,7 +839,8 @@ function renderIncomeExpenseChart(transactions) {
             month: d.getMonth(),
             year: d.getFullYear(),
             income: 0,
-            expense: 0
+            expense: 0,
+            investment: 0
         });
     }
 
@@ -927,8 +852,12 @@ function renderIncomeExpenseChart(transactions) {
         if (monthData) {
             if (t.type === 'income') {
                 monthData.income += t.amount;
-            } else {
-                monthData.expense += t.amount;
+            } else if (t.type === 'expense') {
+                if (t.isInvestment) {
+                    monthData.investment += t.amount;
+                } else {
+                    monthData.expense += t.amount;
+                }
             }
         }
     });
@@ -936,6 +865,7 @@ function renderIncomeExpenseChart(transactions) {
     const labels = last6Months.map(m => m.label);
     const incomeData = last6Months.map(m => m.income);
     const expenseData = last6Months.map(m => m.expense);
+    const investmentData = last6Months.map(m => m.investment);
 
     if (incomeExpenseChart) {
         incomeExpenseChart.destroy();
@@ -958,6 +888,13 @@ function renderIncomeExpenseChart(transactions) {
                     data: expenseData,
                     backgroundColor: 'rgba(239, 68, 68, 0.8)',
                     borderColor: 'rgba(220, 38, 38, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Investimentos',
+                    data: investmentData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: 'rgba(37, 99, 235, 1)',
                     borderWidth: 1
                 }
             ]

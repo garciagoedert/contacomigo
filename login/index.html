@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conta Comigo - Login</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../imgs/favicon.png" type="image/png">
+</head>
+<body class="bg-[var(--cor-fundo)] dark:bg-gray-900 text-[var(--cor-texto)] dark:text-gray-200">
+
+    <!-- Mensagem de Erro de Configuração -->
+    <div id="config-error-view" class="hidden fixed inset-0 bg-red-100 dark:bg-red-900 z-50 flex items-center justify-center p-4">
+        <div class="text-center text-red-800 dark:text-red-200">
+            <h2 class="text-2xl font-bold mb-2">Erro de Configuração</h2>
+            <p>A variável <strong>firebaseConfig</strong> no seu código está vazia. Por favor, copie a configuração do seu projeto Firebase e cole no local indicado no arquivo HTML.</p>
+        </div>
+    </div>
+
+    <!-- Tela de Login -->
+    <div id="login-view" class="flex items-center justify-center min-h-screen">
+        <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Login</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Acesse sua conta para gerenciar suas finanças.</p>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="login-email" class="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                    <input id="login-email" name="email" type="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="user@example.com">
+                </div>
+                <div>
+                    <label for="login-password" class="text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
+                    <input id="login-password" name="password" type="password" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="••••••••">
+                </div>
+                <p id="login-error" class="text-sm text-red-500 text-center hidden"></p>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)]">
+                    Entrar
+                </button>
+            </form>
+            <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+                Não tem uma conta? <a href="#" id="show-register-view" class="font-medium text-[var(--cor-principal)] hover:opacity-90">Cadastre-se</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Tela de Cadastro (inicialmente oculta) -->
+    <div id="register-view" class="hidden items-center justify-center min-h-screen">
+        <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Criar Conta</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Crie sua conta para começar a usar o app.</p>
+            <form id="register-form" class="space-y-6">
+                <div>
+                    <label for="register-email" class="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                    <input id="register-email" name="email" type="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="user@example.com">
+                </div>
+                <div>
+                    <label for="register-password" class="text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
+                    <input id="register-password" name="password" type="password" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Mínimo 6 caracteres">
+                </div>
+                <p id="register-error" class="text-sm text-red-500 text-center hidden"></p>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)]">
+                    Cadastrar
+                </button>
+            </form>
+            <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+                Já tem uma conta? <a href="#" id="show-login-view" class="font-medium text-[var(--cor-principal)] hover:opacity-90">Faça Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="login.js" type="module"></script>
+</body>
+</html>

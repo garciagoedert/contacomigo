@@ -3,630 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conta Comigo - Gestor Financeiro</title>
+    <title>Bem-vindo ao Conta Comigo</title>
     
-    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
+    <style>
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
-<body class="bg-[var(--cor-fundo)] dark:bg-gray-900 text-[var(--cor-texto)] dark:text-gray-200">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-    <!-- Mensagem de Erro de Configuração -->
-    <div id="config-error-view" class="hidden fixed inset-0 bg-red-100 dark:bg-red-900 z-50 flex items-center justify-center p-4">
-        <div class="text-center text-red-800 dark:text-red-200">
-            <h2 class="text-2xl font-bold mb-2">Erro de Configuração</h2>
-            <p>A variável <strong>firebaseConfig</strong> no seu código está vazia. Por favor, copie a configuração do seu projeto Firebase e cole no local indicado no arquivo HTML.</p>
-        </div>
-    </div>
-
-    <!-- Tela de Login -->
-    <div id="login-view" class="flex items-center justify-center min-h-screen">
-        <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Login</h2>
-            <p class="text-center text-gray-600 dark:text-gray-400">Acesse sua conta para gerenciar suas finanças.</p>
-            <form id="login-form" class="space-y-6">
-                <div>
-                    <label for="login-email" class="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <input id="login-email" name="email" type="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="user@example.com">
-                </div>
-                <div>
-                    <label for="login-password" class="text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
-                    <input id="login-password" name="password" type="password" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="••••••••">
-                </div>
-                <p id="login-error" class="text-sm text-red-500 text-center hidden"></p>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)]">
-                    Entrar
-                </button>
-            </form>
-            <p class="text-center text-sm text-gray-600 dark:text-gray-400">
-                Não tem uma conta? <a href="#" id="show-register-view" class="font-medium text-[var(--cor-principal)] hover:opacity-90">Cadastre-se</a>
-            </p>
-        </div>
-    </div>
-
-    <!-- Tela de Cadastro (inicialmente oculta) -->
-    <div id="register-view" class="hidden items-center justify-center min-h-screen">
-        <div class="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Criar Conta</h2>
-            <p class="text-center text-gray-600 dark:text-gray-400">Crie sua conta para começar a usar o app.</p>
-            <form id="register-form" class="space-y-6">
-                <div>
-                    <label for="register-email" class="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <input id="register-email" name="email" type="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="user@example.com">
-                </div>
-                <div>
-                    <label for="register-password" class="text-sm font-medium text-gray-700 dark:text-gray-300">Senha</label>
-                    <input id="register-password" name="password" type="password" required class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Mínimo 6 caracteres">
-                </div>
-                <p id="register-error" class="text-sm text-red-500 text-center hidden"></p>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)]">
-                    Cadastrar
-                </button>
-            </form>
-            <p class="text-center text-sm text-gray-600 dark:text-gray-400">
-                Já tem uma conta? <a href="#" id="show-login-view" class="font-medium text-[var(--cor-principal)] hover:opacity-90">Faça Login</a>
-            </p>
-        </div>
-    </div>
-
-    <!-- Tela Principal do Aplicativo (inicialmente oculta) -->
-    <div id="app-view" class="hidden">
-        <div class="relative min-h-screen md:flex">
-            <!-- Sidebar -->
-            <aside id="sidebar" class="bg-[#2D3748] text-white w-64 p-4 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-30 flex flex-col">
-            <div class="flex items-center justify-center mb-10">
-                <!-- Logo para Desktop -->
-                <img src="imgs/contacomigo1.png" alt="Conta Comigo Logo" class="h-12 hidden md:block">
-                <!-- Logo para Mobile -->
-                <img src="imgs/contacomigo.png" alt="Conta Comigo Logo" class="h-12 md:hidden">
-            </div>
-            <nav class="flex flex-col space-y-2">
-                <a href="#" id="show-transactions-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 sidebar-active">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    <span>Transações</span>
-                </a>
-                <a href="#" id="show-investments-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    <span>Investimentos</span>
-                </a>
-                <a href="#" id="show-budgets-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Orçamentos</span>
-                </a>
-                <a href="#" id="show-goals-view-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    <span>Metas</span>
-                </a>
-                <a href="#" id="show-debts-view-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Dívidas</span>
-                </a>
-                <a href="#" id="show-tasks-view-btn" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Tarefas</span>
-                </a>
-                <a href="#" id="show-settings-view" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    <span>Configurações</span>
-                </a>
-                <button id="logout-button" class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 w-full text-left">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                    <span>Sair</span>
-                </button>
-            </nav>
-            </aside>
-
-            <!-- Overlay para fechar a sidebar -->
-            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
-
-            <!-- Conteúdo Principal -->
-            <div class="flex-1 flex flex-col">
-                <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
-                        <!-- Container para Mobile: Botão de Menu e Logo Centralizada -->
-                        <div class="flex-1 flex justify-center items-center md:hidden">
-                            <!-- Botão de Menu (absoluto para não afetar a centralização) -->
-                            <button id="menu-btn" class="absolute left-4 text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                                </svg>
-                            </button>
-                            <!-- Logo Mobile -->
-                            <img src="imgs/contacomigolongo.png" alt="Conta Comigo Logo" class="h-12">
-                        </div>
-                        
-                        <!-- Container para Desktop: Botão à Direita -->
-                        <div class="hidden md:flex flex-1 justify-end">
-                            <button id="add-transaction-btn-desktop" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90 hidden">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                </svg>
-                                Nova Transação
-                            </button>
-                        </div>
-                    </div>
-                </header>
-                <main class="p-4 sm:p-6 lg:p-8">
-            <!-- Resumo Financeiro -->
-            <section id="summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Receitas</h3>
-                    <p id="total-income" class="text-2xl font-semibold text-[var(--cor-sucesso)] mt-1">R$ 0,00</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Despesas</h3>
-                    <p id="total-expense" class="text-2xl font-semibold text-red-500 mt-1">R$ 0,00</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Saldo Atual</h3>
-                    <p id="balance" class="text-2xl font-semibold text-[var(--cor-texto)] dark:text-white mt-1">R$ 0,00</p>
-                </div>
-            </section>
-
-            <!-- Gráfico de Despesas -->
-            <section id="charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-4">Distribuição de Despesas</h3>
-                    <div class="max-w-sm mx-auto">
-                        <canvas id="expense-chart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-4">Receitas vs. Despesas (Últimos 6 Meses)</h3>
-                    <div>
-                        <canvas id="income-expense-chart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Lista de Transações -->
-            <section id="transactions">
-                <h2 class="text-lg font-semibold mb-4">Últimas Transações</h2>
-                <div id="transaction-list" class="space-y-3">
-                    <p id="no-transactions" class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhuma transação encontrada.</p>
-                </div>
-            </section>
-
-            <!-- Visualização de Investimentos -->
-            <section id="investments-view" class="hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold">Meus Investimentos</h2>
-                    <button id="add-investment-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Adicionar Ativo</button>
-                </div>
-                <div id="investment-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <!-- Resumo dos investimentos será inserido aqui -->
-                </div>
-                <div id="investment-list" class="space-y-4">
-                    <!-- Lista de investimentos será inserida aqui -->
-                </div>
-            </section>
-
-            <!-- Visualização de Metas -->
-            <section id="goals-view" class="hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold">Minhas Metas</h2>
-                    <button id="add-goal-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Adicionar Meta</button>
-                </div>
-                <div id="goal-list" class="space-y-4">
-                    <!-- As metas serão inseridas aqui -->
-                </div>
-            </section>
-
-            <!-- Visualização de Dívidas -->
-            <section id="debts-view" class="hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold">Minhas Dívidas</h2>
-                    <button id="add-debt-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Adicionar Dívida</button>
-                </div>
-                <div id="debt-list" class="space-y-4">
-                    <!-- As dívidas serão inseridas aqui -->
-                </div>
-            </section>
-
-            <!-- Visualização de Tarefas -->
-            <section id="tasks-view" class="hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold">Gerenciamento de Tarefas</h2>
-                    <button id="add-task-btn" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Nova Tarefa</button>
-                </div>
-                <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Título</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Responsável</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prazo</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Prioridade</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Editar</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="task-list" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            <!-- As tarefas serão inseridas aqui -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Visualização de Orçamentos -->
-            <section id="budgets-view" class="hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold">Orçamento Mensal</h2>
-                    <button id="add-budget-btn" class="text-sm font-medium text-[var(--cor-principal)] hover:opacity-90">+ Gerenciar Orçamento</button>
-                </div>
-                <div id="budget-list" class="space-y-4">
-                    <!-- Orçamentos serão inseridos aqui -->
-                </div>
-            </section>
-
-            <!-- Visualização de Configurações -->
-            <section id="settings-view" class="hidden">
-                <h1 class="text-3xl font-bold mb-8">Configurações</h1>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Menu Lateral de Navegação -->
-                    <aside class="md:col-span-1">
-                        <nav class="space-y-2">
-                            <a href="#aparencia" class="block font-semibold text-[var(--cor-principal)] bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md">Aparência</a>
-                            <a href="#categorias" class="block font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-md">Categorias</a>
-                            <a href="#familia" class="block font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-md">Família</a>
-                        </nav>
-                    </aside>
-        
-                    <!-- Conteúdo das Configurações -->
-                    <div class="md:col-span-2 space-y-12">
-                        
-                        <!-- Seção de Aparência -->
-                        <section id="aparencia">
-                            <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Aparência</h2>
-                            <div class="space-y-6">
-                                <div>
-                                    <label for="theme-toggle" class="block text-lg font-medium mb-2">Tema</label>
-                                    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                        <span>Alternar entre modo claro e escuro</span>
-                                        <button id="theme-toggle-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md">Mudar Tema</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label for="color-picker" class="block text-lg font-medium mb-2">Cor Principal</label>
-                                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                        <p class="mb-3">Escolha a cor de destaque do aplicativo.</p>
-                                        <div id="color-options" class="flex space-x-4">
-                                            <!-- Opções de cores serão inseridas aqui -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-        
-                        <!-- Seção de Categorias -->
-                        <section id="categorias">
-                            <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Gerenciar Categorias</h2>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                <div>
-                                    <h3 class="font-semibold mb-3 text-lg">Receitas</h3>
-                                    <div id="income-categories-list-settings" class="space-y-2 mb-3"></div>
-                                    <form id="add-income-category-form-settings" class="flex">
-                                        <input type="text" id="new-income-category-settings" placeholder="Nova categoria" class="flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-principal)]">
-                                        <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-r-md font-semibold hover:opacity-90">+</button>
-                                    </form>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold mb-3 text-lg">Despesas</h3>
-                                    <div id="expense-categories-list-settings" class="space-y-2 mb-3"></div>
-                                    <form id="add-expense-category-form-settings" class="flex">
-                                        <input type="text" id="new-expense-category-settings" placeholder="Nova categoria" class="flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-principal)]">
-                                        <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-r-md font-semibold hover:opacity-90">+</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </section>
-        
-                        <!-- Seção de Família -->
-                        <section id="familia">
-                            <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Gerenciar Família</h2>
-                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                <h3 class="font-semibold mb-3 text-lg">Membros da Família</h3>
-                                <div id="family-members-list-settings" class="space-y-3 mb-4"></div>
-                                <h3 class="font-semibold mb-3 text-lg">Convidar Novo Membro</h3>
-                                <form id="invite-member-form-settings" class="flex">
-                                    <input type="email" id="invite-email-settings" placeholder="Email do novo membro" required class="flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-principal)]">
-                                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-r-md font-semibold hover:opacity-90">Convidar</button>
-                                </form>
-                            </div>
-                        </section>
-        
-                    </div>
-                </div>
-            </section>
-                </main>
-            </div>
-        </div>
-        <!-- Botão Flutuante para Adicionar Transação (Apenas Mobile/Tablet) -->
-        <button id="add-transaction-btn-mobile" title="Adicionar Nova Transação" class="md:hidden fixed bottom-6 right-6 bg-[var(--cor-principal)] hover:opacity-90 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)] dark:ring-offset-gray-900 hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-        </button>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Transação -->
-    <div id="transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div id="modal-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4 modal-enter">
-            <h3 id="modal-title" class="text-xl font-semibold mb-4">Nova Transação</h3>
-            <form id="transaction-form">
-                <input type="hidden" id="transaction-id">
-                <div class="mb-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                    <input type="text" id="description" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor (R$)</label>
-                        <input type="number" id="amount" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="0,00">
-                    </div>
-                    <div>
-                        <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data</label>
-                        <input type="date" id="date" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</span>
-                        <div class="mt-2 flex space-x-4">
-                            <label class="flex items-center"><input type="radio" name="type" value="income" class="form-radio text-[var(--cor-sucesso)]" checked><span class="ml-2 text-[var(--cor-sucesso)] dark:text-green-400">Receita</span></label>
-                            <label class="flex items-center"><input type="radio" name="type" value="expense" class="form-radio text-red-500"><span class="ml-2 text-red-600 dark:text-red-400">Despesa</span></label>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria</label>
-                        <select id="category" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="alimentacao">Alimentação</option>
-                            <option value="moradia">Moradia</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="lazer">Lazer</option>
-                            <option value="saude">Saúde</option>
-                            <option value="salario">Salário</option>
-                            <option value="outros">Outros</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="investment-option" class="mb-4 hidden">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="is-investment" class="form-checkbox h-5 w-5 text-[var(--cor-principal)] rounded">
-                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Enviar para investimentos?</span>
-                    </label>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Meta -->
-    <div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="goal-modal-title" class="text-xl font-semibold mb-4">Nova Meta</h3>
-            <form id="goal-form">
-                <input type="hidden" id="goal-id">
-                <div class="mb-4">
-                    <label for="goal-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome da Meta</label>
-                    <input type="text" id="goal-name" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="goal-target" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Alvo (R$)</label>
-                        <input type="number" id="goal-target" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="goal-current" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Atual (R$)</label>
-                        <input type="number" id="goal-current" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-goal-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar Meta</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Ativo de Investimento -->
-    <div id="investment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="investment-modal-title" class="text-xl font-semibold mb-4">Novo Ativo</h3>
-            <form id="investment-form">
-                <input type="hidden" id="investment-id">
-                <div class="mb-4">
-                    <label for="asset-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome do Ativo (e.g., Ação, Cripto)</label>
-                    <input type="text" id="asset-name" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="asset-quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                        <input type="number" id="asset-quantity" step="any" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div>
-                        <label for="asset-price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço Médio de Compra (R$)</label>
-                        <input type="number" id="asset-price" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                </div>
-                 <div class="mb-4">
-                    <label for="current-asset-price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço Atual do Ativo (R$)</label>
-                    <input type="number" id="current-asset-price" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-investment-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar Ativo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de Configurações -->
-    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
-            <h3 class="text-xl font-semibold mb-4">Configurações</h3>
-            
-            <!-- Gerenciamento de Categorias -->
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-md absolute top-0 w-full z-10 bg-opacity-80">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div>
-                <h4 class="text-lg font-semibold mb-2">Gerenciar Categorias</h4>
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <h5 class="font-semibold mb-2">Receitas</h5>
-                        <div id="income-categories-list" class="space-y-2"></div>
-                        <form id="add-income-category-form" class="mt-2 flex">
-                            <input type="text" id="new-income-category" placeholder="Nova categoria" class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                            <button type="submit" class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">+</button>
-                        </form>
-                    </div>
-                    <div>
-                        <h5 class="font-semibold mb-2">Despesas</h5>
-                        <div id="expense-categories-list" class="space-y-2"></div>
-                        <form id="add-expense-category-form" class="mt-2 flex">
-                            <input type="text" id="new-expense-category" placeholder="Nova categoria" class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                            <button type="submit" class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">+</button>
-                        </form>
-                    </div>
+                <img src="imgs/contacomigolongo.png" alt="Conta Comigo Logo" class="h-10">
+            </div>
+            <div>
+                <a href="login/index.html" class="text-white bg-[var(--cor-principal)] hover:opacity-90 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white h-screen flex items-center justify-center">
+        <div class="bg-black bg-opacity-50 absolute inset-0"></div>
+        <div class="container mx-auto px-6 text-center z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">Controle suas Finanças com Confiança</h1>
+            <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto">
+                A plataforma completa para organizar suas despesas, planejar seu futuro e alcançar seus objetivos financeiros.
+            </p>
+            <a href="login/index.html" class="mt-8 inline-block px-10 py-4 border-2 border-white rounded-full text-lg font-bold hover:bg-white hover:text-[var(--cor-principal)] transition-colors duration-300">
+                Comece a Usar Gratuitamente
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Por que escolher o Conta Comigo?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">Visão Clara</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Acompanhe todas as suas receitas e despesas em um dashboard intuitivo.</p>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">Metas e Orçamentos</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Crie metas de economia e defina orçamentos para não sair da linha.</p>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">Relatórios Inteligentes</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Entenda para onde seu dinheiro está indo com gráficos e relatórios fáceis de ler.</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Gerenciamento Familiar -->
-            <div class="mt-6">
-                <h4 class="text-lg font-semibold mb-2">Gerenciar Família</h4>
-                <div>
-                    <h5 class="font-semibold mb-2">Membros</h5>
-                    <div id="family-members-list" class="space-y-2"></div>
-                    <form id="invite-member-form" class="mt-2 flex">
-                        <input type="email" id="invite-email" placeholder="Email do novo membro" class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                        <button type="submit" class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">Convidar</button>
-                    </form>
+    <!-- How It Works Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Comece em 3 Passos Simples</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                <div class="flex flex-col items-center">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-[var(--cor-principal)] text-white text-2xl font-bold mb-4">1</div>
+                    <h3 class="text-xl font-semibold mb-2">Crie sua Conta</h3>
+                    <p class="text-gray-600 dark:text-gray-400">O cadastro é rápido, fácil e gratuito. Leva menos de um minuto.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-[var(--cor-principal)] text-white text-2xl font-bold mb-4">2</div>
+                    <h3 class="text-xl font-semibold mb-2">Adicione suas Transações</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Registre suas receitas e despesas para ter uma visão completa da sua vida financeira.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-[var(--cor-principal)] text-white text-2xl font-bold mb-4">3</div>
+                    <h3 class="text-xl font-semibold mb-2">Acompanhe seu Progresso</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Use nossos relatórios para tomar decisões mais inteligentes e alcançar suas metas.</p>
                 </div>
             </div>
-
-            <div class="flex justify-end mt-6">
-                <button type="button" id="close-settings-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Fechar</button>
-            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Modal para Adicionar/Editar Orçamento -->
-    <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="budget-modal-title" class="text-xl font-semibold mb-4">Gerenciar Orçamento</h3>
-            <form id="budget-form">
-                <div class="mb-4">
-                    <label for="budget-category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria de Despesa</label>
-                    <select id="budget-category" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <!-- Opções de categoria de despesa serão preenchidas via JS -->
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label for="budget-limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Limite Mensal (R$)</label>
-                    <input type="number" id="budget-limit" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm" placeholder="Ex: 500,00">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-budget-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar Orçamento</button>
-                </div>
-            </form>
+    <!-- Call to Action Section -->
+    <section class="bg-[var(--cor-principal)] text-white">
+        <div class="container mx-auto px-6 py-20 text-center">
+            <h2 class="text-3xl font-bold mb-4">Pronto para assumir o controle?</h2>
+            <p class="text-lg mb-8">Junte-se a milhares de pessoas que estão transformando suas vidas financeiras.</p>
+            <a href="login/index.html" class="px-10 py-4 border-2 border-white rounded-full text-lg font-bold hover:bg-white hover:text-[var(--cor-principal)] transition-colors duration-300">
+                Criar minha conta agora
+            </a>
         </div>
-    </div>
+    </section>
 
-    <!-- Modal para Adicionar/Editar Dívida -->
-    <div id="debt-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="debt-modal-title" class="text-xl font-semibold mb-4">Nova Dívida</h3>
-            <form id="debt-form">
-                <input type="hidden" id="debt-id">
-                <div class="mb-4">
-                    <label for="debt-company" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Empresa / Credor</label>
-                    <input type="text" id="debt-company" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="debt-amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Total (R$)</label>
-                        <input type="number" id="debt-amount" step="0.01" min="0" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div>
-                        <label for="debt-due-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de Vencimento</label>
-                        <input type="date" id="debt-due-date" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="debt-negotiation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Detalhes / Negociação</label>
-                    <textarea id="debt-negotiation" rows="3" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-debt-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar Dívida</button>
-                </div>
-            </form>
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 Conta Comigo. Todos os direitos reservados.</p>
         </div>
-    </div>
+    </footer>
 
-    <!-- Modal para Adicionar/Editar Tarefa -->
-    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
-            <h3 id="task-modal-title" class="text-xl font-semibold mb-4">Nova Tarefa</h3>
-            <form id="task-form">
-                <input type="hidden" id="task-id">
-                <div class="space-y-4">
-                    <div>
-                        <label for="task-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Título</label>
-                        <input type="text" id="task-title" required class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="task-responsible" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Responsável</label>
-                            <input type="text" id="task-responsible" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label for="task-due-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prazo</label>
-                            <input type="date" id="task-due-date" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="task-priority" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prioridade</label>
-                            <select id="task-priority" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option>Normal</option>
-                                <option>Urgente</option>
-                                <option>Baixa</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="task-status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                            <select id="task-status" class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option>Pendente</option>
-                                <option>Em Andamento</option>
-                                <option>Concluída</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" id="cancel-task-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar Tarefa</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Firebase SDKs -->
-    <script src="app.js" type="module"></script>
 </body>
 </html>
