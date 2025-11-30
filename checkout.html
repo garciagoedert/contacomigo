@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade para Premium - Conta Comigo</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="imgs/favicon.png" type="image/png">
+
+    <style>
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(-45deg, #E91E63, #9C27B0, #3F51B5, #2196F3);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen py-12 px-4">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <img src="imgs/contacomigolongo.png" alt="Conta Comigo" class="h-12 mx-auto mb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Escolha seu Plano Premium</h1>
+            <p class="text-xl text-white/90">Desbloqueie todo o potencial do Conta Comigo</p>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Premium Mensal -->
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 card-hover">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold mb-2">Premium Mensal</h2>
+                    <div class="text-5xl font-bold text-[var(--cor-principal)] mb-2">R$ 9,90</div>
+                    <div class="text-gray-600">por mês</div>
+                </div>
+
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Categorias ilimitadas</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Transações recorrentes</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Exportação PDF/Excel</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Histórico ilimitado</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Suporte prioritário</span>
+                    </li>
+                </ul>
+
+                <button onclick="checkout('premium_monthly')"
+                    class="w-full py-4 bg-[var(--cor-principal)] text-white rounded-lg text-lg font-bold hover:opacity-90 transition-opacity">
+                    Assinar Agora
+                </button>
+                <p class="text-center text-sm text-gray-500 mt-4">14 dias grátis • Cancele quando quiser</p>
+            </div>
+
+            <!-- Premium Anual -->
+            <div
+                class="bg-gradient-to-br from-[var(--cor-principal)] to-purple-600 text-white rounded-2xl shadow-2xl p-8 card-hover relative">
+                <div
+                    class="absolute top-0 right-0 bg-yellow-400 text-gray-900 px-4 py-1 rounded-bl-lg rounded-tr-2xl text-sm font-bold">
+                    ECONOMIZE 25%
+                </div>
+
+                <div class="text-center mb-6 mt-4">
+                    <h2 class="text-2xl font-bold mb-2">Premium Anual</h2>
+                    <div class="text-5xl font-bold mb-2">R$ 89,90</div>
+                    <div class="text-white/90">por ano</div>
+                    <div class="text-sm mt-2 text-white/80">R$ 7,49/mês</div>
+                </div>
+
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span><strong>Tudo do Mensal, mais:</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Economize R$ 28,90/ano</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Melhor custo-benefício</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Pagamento único anual</span>
+                    </li>
+                </ul>
+
+                <button onclick="checkout('premium_yearly')"
+                    class="w-full py-4 bg-white text-[var(--cor-principal)] rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors">
+                    Assinar Agora
+                </button>
+                <p class="text-center text-sm text-white/80 mt-4">14 dias grátis • Cancele quando quiser</p>
+            </div>
+        </div>
+
+        <!-- Garantias -->
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold mb-2">14 Dias Grátis</h3>
+                    <p class="text-gray-600 text-sm">Teste sem compromisso, sem cartão de crédito</p>
+                </div>
+                <div>
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold mb-2">Pagamento Seguro</h3>
+                    <p class="text-gray-600 text-sm">Processado pela Stripe, líder mundial</p>
+                </div>
+                <div>
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold mb-2">Cancele Quando Quiser</h3>
+                    <p class="text-gray-600 text-sm">Sem multas, sem burocracia</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voltar -->
+        <div class="text-center">
+            <a href="app.html" class="text-white hover:underline">← Voltar para o App</a>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+        import { getFirestore, doc, updateDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVLS7bARnU_mH3KlueEeFjDSywN3FCESY",
+            authDomain: "financeapp-6da16.firebaseapp.com",
+            projectId: "financeapp-6da16",
+            storageBucket: "financeapp-6da16.firebasestorage.app",
+            messagingSenderId: "342917624338",
+            appId: "1:342917624338:web:b9977ec338b63f4d50decb",
+            measurementId: "G-KRNK2W5VPX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserId = null;
+
+        // Verificar autenticação
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+            } else {
+                window.location.href = 'login/index.html';
+            }
+        });
+
+        // Stripe Configuration
+        const STRIPE_PUBLIC_KEY = 'pk_test_51SP8ctPR1ClkR4svP2JNrfepI4ozha5JZcR7qp8822i1IC85Uv8Dif3V5yRUJHDjFXoMbH0lGgQPidwgpcqcmxap00jRGFPsS7';
+        const STRIPE_SECRET_KEY = 'YOUR_STRIPE_SECRET_KEY'; // Substitua pela sua chave secreta para testes locais
+
+        const stripe = Stripe(STRIPE_PUBLIC_KEY);
+
+        window.checkout = async function (planType) {
+            if (!currentUserId) {
+                alert('Por favor, faça login primeiro');
+                return;
+            }
+
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = 'Processando...';
+            button.disabled = true;
+
+            try {
+                // Definição dos preços (em centavos)
+                // Premium Mensal: R$ 9,90
+                // Premium Anual: R$ 89,90
+                const priceData = {
+                    premium_monthly: {
+                        unit_amount: 990, // R$ 9,90
+                        product_data: {
+                            name: 'Conta Comigo Premium (Mensal)',
+                            description: 'Acesso ilimitado a todas as features',
+                        },
+                        recurring: { interval: 'month' }
+                    },
+                    premium_yearly: {
+                        unit_amount: 8990, // R$ 89,90
+                        product_data: {
+                            name: 'Conta Comigo Premium (Anual)',
+                            description: 'Acesso ilimitado a todas as features (25% off)',
+                        },
+                        recurring: { interval: 'year' }
+                    }
+                };
+
+                const selectedPrice = priceData[planType];
+
+                // ⚠️ ATENÇÃO: MODO DE DESENVOLVIMENTO
+                // Usando chamada direta à API por problemas de permissão no deploy do backend.
+                // Em produção, resolva as permissões do IAM e use Cloud Functions.
+                const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'payment_method_types[]': 'card',
+                        'line_items[0][price_data][currency]': 'brl',
+                        'line_items[0][price_data][product_data][name]': selectedPrice.product_data.name,
+                        'line_items[0][price_data][product_data][description]': selectedPrice.product_data.description,
+                        'line_items[0][price_data][unit_amount]': selectedPrice.unit_amount,
+                        'line_items[0][price_data][recurring][interval]': selectedPrice.recurring.interval,
+                        'line_items[0][quantity]': '1',
+                        'mode': 'subscription',
+                        'success_url': `${window.location.origin}/app.html?session_id={CHECKOUT_SESSION_ID}&plan=${planType}`,
+                        'cancel_url': `${window.location.href}`,
+                        'client_reference_id': currentUserId,
+                        'customer_email': auth.currentUser.email
+                    })
+                });
+
+                const session = await response.json();
+
+                if (session.error) {
+                    throw new Error(session.error.message);
+                }
+
+                // Redirecionar para o Checkout da Stripe
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+
+            } catch (error) {
+                console.error('Erro no checkout:', error);
+                alert('Erro ao iniciar pagamento: ' + error.message);
+                button.innerText = originalText;
+                button.disabled = false;
+            }
+        };
+    </script>
+</body>
+
+</html>
+```

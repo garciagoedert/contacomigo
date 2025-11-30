@@ -1,118 +1,829 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo ao Conta Comigo</title>
-    
+    <title>Conta Comigo - Controle Financeiro Familiar Gratuito</title>
+    <meta name="description"
+        content="Gerencie suas finanças familiares de forma simples e gratuita. Controle receitas, despesas, investimentos e metas em um só lugar.">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
+
     <style>
-        .hero-bg {
-            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470');
-            background-size: cover;
-            background-position: center;
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .gradient-animate {
+            background: linear-gradient(-45deg, #E91E63, #9C27B0, #3F51B5, #2196F3);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
+
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-    <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow-md absolute top-0 w-full z-10 bg-opacity-80">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div>
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center">
                 <img src="imgs/contacomigolongo.png" alt="Conta Comigo Logo" class="h-10">
             </div>
-            <div>
-                <a href="login/index.html" class="text-white bg-[var(--cor-principal)] hover:opacity-90 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#features" class="hover:text-[var(--cor-principal)] transition-colors">Recursos</a>
+                <a href="#how-it-works" class="hover:text-[var(--cor-principal)] transition-colors">Como Funciona</a>
+                <a href="#testimonials" class="hover:text-[var(--cor-principal)] transition-colors">Depoimentos</a>
+                <a href="#faq" class="hover:text-[var(--cor-principal)] transition-colors">FAQ</a>
             </div>
-        </nav>
-    </header>
+            <div>
+                <a href="login/index.html"
+                    class="px-6 py-2.5 bg-[var(--cor-principal)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+                    Entrar
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
-    <section class="hero-bg text-white h-screen flex items-center justify-center">
-        <div class="bg-black bg-opacity-50 absolute inset-0"></div>
-        <div class="container mx-auto px-6 text-center z-10">
-            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">Controle suas Finanças com Confiança</h1>
-            <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto">
-                A plataforma completa para organizar suas despesas, planejar seu futuro e alcançar seus objetivos financeiros.
-            </p>
-            <a href="login/index.html" class="mt-8 inline-block px-10 py-4 border-2 border-white rounded-full text-lg font-bold hover:bg-white hover:text-[var(--cor-principal)] transition-colors duration-300">
-                Comece a Usar Gratuitamente
-            </a>
+    <section class="gradient-animate text-white min-h-screen flex items-center pt-20">
+        <div class="container mx-auto px-6 py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in">
+                    <div
+                        class="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
+                        ✨ 100% Gratuito Para Sempre
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+                        Controle suas Finanças com <span class="text-yellow-300">Inteligência</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-white/90">
+                        A plataforma completa para organizar suas despesas, investimentos e alcançar seus objetivos
+                        financeiros em família.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="login/index.html"
+                            class="px-8 py-4 bg-white text-[var(--cor-principal)] rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors text-center shadow-xl">
+                            Começar Gratuitamente
+                        </a>
+                        <a href="#how-it-works"
+                            class="px-8 py-4 border-2 border-white rounded-lg text-lg font-bold hover:bg-white/10 transition-colors text-center">
+                            Ver Como Funciona
+                        </a>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-6 mt-12">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold">1000+</div>
+                            <div class="text-sm text-white/80">Usuários Ativos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold">R$ 2M+</div>
+                            <div class="text-sm text-white/80">Gerenciados</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold">4.9★</div>
+                            <div class="text-sm text-white/80">Avaliação</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block fade-in">
+                    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
+                        <div class="space-y-4">
+                            <div class="h-12 bg-white/20 rounded-lg animate-pulse"></div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="h-24 bg-white/20 rounded-lg"></div>
+                                <div class="h-24 bg-white/20 rounded-lg"></div>
+                                <div class="h-24 bg-white/20 rounded-lg"></div>
+                            </div>
+                            <div class="h-48 bg-white/20 rounded-lg"></div>
+                            <div class="space-y-2">
+                                <div class="h-16 bg-white/20 rounded-lg"></div>
+                                <div class="h-16 bg-white/20 rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white dark:bg-gray-800">
+    <section id="features" class="py-20 bg-white dark:bg-gray-800">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12">Por que escolher o Conta Comigo?</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-2">Visão Clara</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Acompanhe todas as suas receitas e despesas em um dashboard intuitivo.</p>
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Tudo que você precisa em um só lugar</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">Recursos poderosos para uma gestão financeira
+                    completa</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl hover-lift">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Controle Total de Transações</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Registre receitas e despesas com categorização
+                        inteligente e visualize tudo em tempo real.</p>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-2">Metas e Orçamentos</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Crie metas de economia e defina orçamentos para não sair da linha.</p>
+
+                <!-- Feature 2 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl hover-lift"
+                    style="transition-delay: 0.1s">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Gestão de Investimentos</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Acompanhe seus ativos, aportes e rentabilidade em um
+                        portfólio completo.</p>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-2">Relatórios Inteligentes</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Entenda para onde seu dinheiro está indo com gráficos e relatórios fáceis de ler.</p>
+
+                <!-- Feature 3 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl hover-lift"
+                    style="transition-delay: 0.2s">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Gestão Familiar</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Compartilhe finanças com sua família e mantenha todos
+                        sincronizados.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl hover-lift"
+                    style="transition-delay: 0.3s">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Metas Financeiras</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Defina objetivos e acompanhe seu progresso com barras
+                        visuais de evolução.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl hover-lift"
+                    style="transition-delay: 0.4s">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Orçamentos Inteligentes</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Crie limites mensais por categoria e receba alertas
+                        visuais de gastos.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl hover-lift"
+                    style="transition-delay: 0.5s">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Relatórios Visuais</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Gráficos interativos para entender para onde seu
+                        dinheiro está indo.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works Section -->
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-20 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Comece em 3 Passos Simples</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">Leva menos de 2 minutos para começar</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-12">
+                    <!-- Step 1 -->
+                    <div class="scroll-reveal flex flex-col md:flex-row items-center gap-8">
+                        <div
+                            class="flex-shrink-0 w-20 h-20 bg-gradient-to-br from-[var(--cor-principal)] to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                            1
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <h3 class="text-2xl font-bold mb-2">Crie sua Conta Gratuita</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Cadastro rápido com email e senha. Sem cartão de
+                                crédito, sem pegadinhas.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="scroll-reveal flex flex-col md:flex-row items-center gap-8"
+                        style="transition-delay: 0.1s">
+                        <div
+                            class="flex-shrink-0 w-20 h-20 bg-gradient-to-br from-[var(--cor-principal)] to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                            2
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <h3 class="text-2xl font-bold mb-2">Adicione suas Transações</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Registre receitas e despesas em segundos.
+                                Categorize automaticamente.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="scroll-reveal flex flex-col md:flex-row items-center gap-8"
+                        style="transition-delay: 0.2s">
+                        <div
+                            class="flex-shrink-0 w-20 h-20 bg-gradient-to-br from-[var(--cor-principal)] to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                            3
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <h3 class="text-2xl font-bold mb-2">Acompanhe e Conquiste</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Visualize relatórios, alcance metas e tome
+                                decisões financeiras inteligentes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">O que nossos usuários dizem</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">Milhares de famílias já transformaram suas finanças
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                            M
+                        </div>
+                        <div class="ml-4">
+                            <div class="font-bold">Maria Silva</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Empresária</div>
+                        </div>
+                    </div>
+                    <div class="flex mb-4 text-yellow-400">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400">"Finalmente consegui organizar as finanças da família. O
+                        sistema de metas me ajudou a economizar R$ 15 mil em 6 meses!"</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl" style="transition-delay: 0.1s">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                            J
+                        </div>
+                        <div class="ml-4">
+                            <div class="font-bold">João Santos</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Desenvolvedor</div>
+                        </div>
+                    </div>
+                    <div class="flex mb-4 text-yellow-400">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400">"Interface simples e intuitiva. Compartilho com minha
+                        esposa e ambos conseguimos acompanhar tudo em tempo real."</p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 p-8 rounded-xl" style="transition-delay: 0.2s">
+                    <div class="flex items-center mb-4">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                            A
+                        </div>
+                        <div class="ml-4">
+                            <div class="font-bold">Ana Costa</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Professora</div>
+                        </div>
+                    </div>
+                    <div class="flex mb-4 text-yellow-400">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400">"Os gráficos me ajudaram a identificar onde estava
+                        gastando demais. Reduzi 30% dos gastos desnecessários!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
     <section class="py-20 bg-gray-50 dark:bg-gray-900">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12">Comece em 3 Passos Simples</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                <div class="flex flex-col items-center">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-[var(--cor-principal)] text-white text-2xl font-bold mb-4">1</div>
-                    <h3 class="text-xl font-semibold mb-2">Crie sua Conta</h3>
-                    <p class="text-gray-600 dark:text-gray-400">O cadastro é rápido, fácil e gratuito. Leva menos de um minuto.</p>
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Escolha o Plano Ideal para Você</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">Comece grátis, faça upgrade quando precisar</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Plano Gratuito -->
+                <div class="scroll-reveal bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-2">Gratuito</h3>
+                    <div class="text-4xl font-bold mb-6">R$ 0<span class="text-lg font-normal text-gray-500">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Transações ilimitadas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Até 10 categorias</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Até 3 membros da família</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Histórico de 12 meses</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Gráficos básicos</span>
+                        </li>
+                    </ul>
+                    <a href="login/index.html"
+                        class="block w-full py-3 bg-gray-200 dark:bg-gray-700 text-center rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        Começar Grátis
+                    </a>
                 </div>
-                <div class="flex flex-col items-center">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-[var(--cor-principal)] text-white text-2xl font-bold mb-4">2</div>
-                    <h3 class="text-xl font-semibold mb-2">Adicione suas Transações</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Registre suas receitas e despesas para ter uma visão completa da sua vida financeira.</p>
+
+                <!-- Plano Premium (Destacado) -->
+                <div class="scroll-reveal bg-gradient-to-br from-[var(--cor-principal)] to-purple-600 text-white p-8 rounded-2xl shadow-2xl transform scale-105 relative"
+                    style="transition-delay: 0.1s">
+                    <div
+                        class="absolute top-0 right-0 bg-yellow-400 text-gray-900 px-4 py-1 rounded-bl-lg rounded-tr-2xl text-sm font-bold">
+                        MAIS POPULAR
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 mt-4">Premium</h3>
+                    <div class="text-4xl font-bold mb-2">R$ 9,90<span class="text-lg font-normal opacity-90">/mês</span>
+                    </div>
+                    <div class="text-sm opacity-90 mb-6">ou R$ 89,90/ano (25% off)</div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span><strong>Tudo do Gratuito, mais:</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Categorias ilimitadas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Transações recorrentes</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Exportação PDF/Excel</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Histórico ilimitado</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Suporte prioritário</span>
+                        </li>
+                    </ul>
+                    <a href="login/index.html"
+                        class="block w-full py-3 bg-white text-[var(--cor-principal)] text-center rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                        Iniciar Trial de 14 Dias
+                    </a>
+                    <p class="text-center text-sm mt-3 opacity-90">Sem cartão de crédito</p>
                 </div>
-                <div class="flex flex-col items-center">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-[var(--cor-principal)] text-white text-2xl font-bold mb-4">3</div>
-                    <h3 class="text-xl font-semibold mb-2">Acompanhe seu Progresso</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Use nossos relatórios para tomar decisões mais inteligentes e alcançar suas metas.</p>
+
+                <!-- Plano Família -->
+                <div class="scroll-reveal bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg"
+                    style="transition-delay: 0.2s">
+                    <h3 class="text-2xl font-bold mb-2">Família</h3>
+                    <div class="text-4xl font-bold mb-2">R$ 14,90<span
+                            class="text-lg font-normal text-gray-500">/mês</span></div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mb-6">ou R$ 139,90/ano</div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span><strong>Tudo do Premium, mais:</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Até 5 membros</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Orçamentos individuais</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Permissões granulares</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Relatórios por membro</span>
+                        </li>
+                    </ul>
+                    <a href="login/index.html"
+                        class="block w-full py-3 bg-[var(--cor-principal)] text-white text-center rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                        Iniciar Trial de 14 Dias
+                    </a>
+                </div>
+            </div>
+
+            <p class="text-center mt-12 text-gray-600 dark:text-gray-400">
+                Todos os planos incluem trial gratuito de 14 dias. Cancele quando quiser, sem multas.
+            </p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Perguntas Frequentes</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">Tudo que você precisa saber</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <!-- FAQ 1 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden">
+                    <button
+                        class="faq-question w-full text-left p-6 font-semibold text-lg flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span>É realmente gratuito?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-400">
+                        Sim! O Conta Comigo é 100% gratuito, sem taxas escondidas, sem limites de uso e sem necessidade
+                        de cartão de crédito. Nosso objetivo é democratizar o acesso à educação financeira.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
+                    style="transition-delay: 0.1s">
+                    <button
+                        class="faq-question w-full text-left p-6 font-semibold text-lg flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span>Meus dados estão seguros?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-400">
+                        Absolutamente! Utilizamos Firebase (Google) para armazenamento, com criptografia de ponta a
+                        ponta. Seus dados financeiros são privados e nunca são compartilhados com terceiros.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
+                    style="transition-delay: 0.2s">
+                    <button
+                        class="faq-question w-full text-left p-6 font-semibold text-lg flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span>Posso usar em família?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-400">
+                        Sim! Você pode convidar membros da família por email. Todos terão acesso aos mesmos dados
+                        financeiros, sincronizados em tempo real.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
+                    style="transition-delay: 0.3s">
+                    <button
+                        class="faq-question w-full text-left p-6 font-semibold text-lg flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span>Funciona no celular?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-400">
+                        Perfeitamente! Nossa plataforma é 100% responsiva e funciona em qualquer dispositivo - celular,
+                        tablet ou computador.
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
+                    style="transition-delay: 0.4s">
+                    <button
+                        class="faq-question w-full text-left p-6 font-semibold text-lg flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span>Preciso conectar minha conta bancária?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-400">
+                        Não! Você registra suas transações manualmente, mantendo total controle e privacidade sobre seus
+                        dados bancários.
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="scroll-reveal bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
+                    style="transition-delay: 0.5s">
+                    <button
+                        class="faq-question w-full text-left p-6 font-semibold text-lg flex justify-between items-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span>Como vocês ganham dinheiro se é grátis?</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-400">
+                        Atualmente, o projeto é mantido como uma ferramenta educacional e de código aberto. No futuro,
+                        poderemos adicionar recursos premium opcionais, mas a versão gratuita sempre existirá.
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Call to Action Section -->
-    <section class="bg-[var(--cor-principal)] text-white">
-        <div class="container mx-auto px-6 py-20 text-center">
-            <h2 class="text-3xl font-bold mb-4">Pronto para assumir o controle?</h2>
-            <p class="text-lg mb-8">Junte-se a milhares de pessoas que estão transformando suas vidas financeiras.</p>
-            <a href="login/index.html" class="px-10 py-4 border-2 border-white rounded-full text-lg font-bold hover:bg-white hover:text-[var(--cor-principal)] transition-colors duration-300">
-                Criar minha conta agora
+    <!-- Final CTA -->
+    <section class="gradient-animate text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Pronto para transformar suas finanças?</h2>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
+                Junte-se a milhares de famílias que já estão no controle do seu dinheiro
+            </p>
+            <a href="login/index.html"
+                class="inline-block px-10 py-4 bg-white text-[var(--cor-principal)] rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors shadow-xl">
+                Começar Gratuitamente Agora
             </a>
+            <p class="mt-4 text-sm opacity-90">✨ Sem cartão de crédito • Grátis para sempre • Configure em 2 minutos</p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-100 dark:bg-gray-900">
-        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
-            <p>&copy; 2025 Conta Comigo. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Column 1 -->
+                <div>
+                    <img src="imgs/contacomigolongo.png" alt="Conta Comigo" class="h-10 mb-4">
+                    <p class="text-sm">Controle financeiro familiar simples, gratuito e poderoso.</p>
+                </div>
+
+                <!-- Column 2 -->
+                <div>
+                    <h4 class="font-bold mb-4">Produto</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#features" class="hover:text-white transition-colors">Recursos</a></li>
+                        <li><a href="#how-it-works" class="hover:text-white transition-colors">Como Funciona</a></li>
+                        <li><a href="#testimonials" class="hover:text-white transition-colors">Depoimentos</a></li>
+                        <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div>
+                    <h4 class="font-bold mb-4">Empresa</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Sobre Nós</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4 -->
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacidade</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Segurança</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2025 Conta Comigo. Todos os direitos reservados.</p>
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-md');
+            } else {
+                navbar.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-md');
+            }
+        });
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('svg');
+
+                // Close all other answers
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if (otherAnswer !== answer) {
+                        otherAnswer.classList.add('hidden');
+                        otherAnswer.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+                    }
+                });
+
+                // Toggle current answer
+                answer.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+    </script>
 </body>
+
 </html>

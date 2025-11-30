@@ -116,6 +116,8 @@ const transactionTypeRadios = document.querySelectorAll('input[name="type"]');
 
 let currentUserId = null;
 let currentFamilyId = null;
+let currentUserPlan = 'free'; // Plano do usuário: 'free', 'premium_monthly', 'premium_yearly'
+let trialEndsAt = null; // Data de fim do trial
 let unsubscribeFromTransactions = null;
 let unsubscribeFromGoals = null;
 let unsubscribeFromInvestments = null;
@@ -127,8 +129,8 @@ let unsubscribeFromTasks = null;
 
 // --- LÓGICA DE APARÊNCIA ---
 document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('theme') === 'dark' || 
-       (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.getItem('theme') === 'dark' ||
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
     } else {
         document.documentElement.classList.remove('dark');
@@ -332,6 +334,7 @@ onAuthStateChanged(auth, async user => {
         // Usuário está logado, busca informações da família e carrega os dados
         currentUserId = user.uid;
         await setupUserFamily(user);
+        await loadUserPlan(user.uid); // Carregar plano do usuário
         appView.classList.remove('hidden'); // Mostra a aplicação
         setupRealtimeListeners(currentFamilyId);
     } else {
@@ -352,12 +355,12 @@ async function setupUserFamily(user) {
         if (!invitationsSnapshot.empty) {
             const invitation = invitationsSnapshot.docs[0];
             currentFamilyId = invitation.data().familyId;
-            
+
             const familyRef = doc(db, 'families', currentFamilyId);
             await updateDoc(familyRef, { members: arrayUnion(user.uid) });
 
             await setDoc(userRef, { familyId: currentFamilyId, email: user.email }, { merge: true });
-            
+
             await deleteDoc(invitation.ref);
         } else {
             const newFamilyRef = await addDoc(collection(db, 'families'), {
@@ -766,7 +769,7 @@ function renderTransactions(transactions) {
             const sign = isIncome ? '+' : '-';
             let amountColor = isIncome ? 'text-green-500' : 'text-red-500';
             let borderColor = isIncome ? 'border-green-500' : 'border-red-500';
-            
+
             if (isInvestment) {
                 amountColor = 'text-blue-500';
                 borderColor = 'border-blue-500';
@@ -774,7 +777,7 @@ function renderTransactions(transactions) {
 
             const el = document.createElement('div');
             el.className = `bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between border-l-4 ${borderColor}`;
-            
+
             let investmentBadge = '';
             if (isInvestment) {
                 investmentBadge = `<span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full">Investimento</span>`;
@@ -999,7 +1002,7 @@ inviteMemberFormSettings.addEventListener('submit', async (e) => {
 function openTransactionModal(transaction = null) {
     transactionForm.reset();
     transactionIdInput.value = '';
-    
+
     if (transaction) {
         // Modo de edição
         modalTitle.textContent = 'Editar Transação';
@@ -1019,7 +1022,7 @@ function openTransactionModal(transaction = null) {
     }
 
     toggleInvestmentOption();
-    
+
     modal.classList.remove('hidden');
     // Pequeno timeout para a animação de entrada funcionar
     setTimeout(() => modalContent.classList.remove('modal-enter'), 10);
@@ -1060,7 +1063,7 @@ transactionTypeRadios.forEach(radio => {
 // Lógica de submissão do formulário de transação
 transactionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const id = transactionIdInput.value;
     const description = document.getElementById('description').value;
     const amount = parseFloat(document.getElementById('amount').value);
@@ -1093,10 +1096,10 @@ transactionForm.addEventListener('submit', async (e) => {
             // Adicionar nova transação
             await addDoc(collection(db, 'families', currentFamilyId, 'transactions'), transactionData);
         }
-        
+
         // Se for uma despesa marcada como investimento, cria um registro correspondente em investimentos
         if (isInvestment && type === 'expense') {
-             await addDoc(collection(db, 'families', currentFamilyId, 'investments'), {
+            await addDoc(collection(db, 'families', currentFamilyId, 'investments'), {
                 name: `Aporte: ${description}`,
                 averagePrice: amount, // Para aportes, o preço médio é o valor total
                 quantity: 1,
@@ -1302,7 +1305,7 @@ function renderTasks(tasks) {
         const row = document.createElement('tr');
         row.className = "hover:bg-gray-50 dark:hover:bg-gray-700";
         const dueDate = task.dueDate ? new Date(task.dueDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
-        
+
         row.innerHTML = `
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${task.title}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${task.responsible || 'N/A'}</td>
