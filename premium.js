@@ -17,30 +17,38 @@ const db = getFirestore(app);
 
 // Variáveis globais do módulo
 let currentUserPlan = 'free';
-let trialEndsAt = null;
+// let trialEndsAt = null; // Legacy trial removed
 
 // Processar retorno do Asaas
 async function handleAsaasRedirect(userId) {
     const urlParams = new URLSearchParams(window.location.search);
-    const subscriptionId = urlParams.get('subscription_id');
-    const plan = urlParams.get('plan');
+    // Suporte a AbacatePay (ID salvo no localStorage)
+    let subscriptionId = urlParams.get('subscription_id') || localStorage.getItem('pending_payment_id');
+    const plan = urlParams.get('plan') || localStorage.getItem('pending_plan');
     const status = urlParams.get('status');
 
     if (subscriptionId && plan && status === 'success') {
         try {
-            // Limpar URL
+            // Limpar URL e Storage
+            localStorage.removeItem('pending_payment_id');
+            localStorage.removeItem('pending_plan');
             window.history.replaceState({}, document.title, window.location.pathname);
 
-            // Calcular trial (14 dias)
-            const trialEnd = new Date();
-            trialEnd.setDate(trialEnd.getDate() + 14);
+            // Calcular validade da assinatura
+            const validUntil = new Date();
+            if (plan.includes('yearly') || plan.includes('anual')) {
+                validUntil.setDate(validUntil.getDate() + 365);
+            } else {
+                // Default to monthly (30 days)
+                validUntil.setDate(validUntil.getDate() + 30);
+            }
 
             await updateDoc(doc(db, 'users', userId), {
                 plan: plan,
                 subscriptionId: subscriptionId,
-                trialEndsAt: Timestamp.fromDate(trialEnd),
+                subscriptionValidUntil: Timestamp.fromDate(validUntil),
                 upgradedAt: Timestamp.now(),
-                status: 'active'
+                subscriptionStatus: 'active'
             });
 
             // Mostrar sucesso
@@ -66,16 +74,27 @@ async function loadUserPlan(userId) {
         const userData = userDoc.data();
 
         currentUserPlan = userData?.plan || 'free';
-        trialEndsAt = userData?.trialEndsAt;
+        const validUntil = userData?.subscriptionValidUntil;
+        const status = userData?.subscriptionStatus;
 
-        // Verificar se trial expirou
-        if (trialEndsAt && trialEndsAt.toDate() < new Date() && currentUserPlan !== 'free') {
-            // Trial expirou, voltar para free
-            currentUserPlan = 'free';
-            await updateDoc(doc(db, 'users', userId), {
-                plan: 'free',
-                trialEndsAt: null
-            });
+        // Verificar se assinatura expirou
+        if (currentUserPlan !== 'free') {
+            const now = new Date();
+            // Se não tem data de validade (dados antigos) ou data já passou
+            if (!validUntil || validUntil.toDate() < now) {
+                console.log("Assinatura expirada ou inválida. Downgrading...");
+
+                // Downgrade para free
+                currentUserPlan = 'free';
+
+                // Atualizar no banco apenas se o status não for 'expired' ainda
+                if (status !== 'expired') {
+                    await updateDoc(doc(db, 'users', userId), {
+                        plan: 'free',
+                        subscriptionStatus: 'expired'
+                    });
+                }
+            }
         }
 
         updateUIForPlan();

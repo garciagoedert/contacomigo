@@ -40,6 +40,8 @@ const registerError = document.getElementById('register-error');
 const showRegisterBtn = document.getElementById('show-register-view');
 const showLoginBtn = document.getElementById('show-login-view');
 
+let isRegisteringPremium = false;
+
 // --- LÓGICA DE NAVEGAÇÃO ENTRE LOGIN E CADASTRO ---
 showRegisterBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -55,8 +57,8 @@ showLoginBtn.addEventListener('click', (e) => {
 
 // --- VERIFICA SE JÁ ESTÁ LOGADO ---
 onAuthStateChanged(auth, user => {
-    if (user) {
-        // Se o usuário já está logado, redireciona para a página principal do app
+    if (user && !isRegisteringPremium) {
+        // Se o usuário já está logado e NÃO está no fluxo de premium, redireciona
         window.location.href = '../app.html';
     }
 });
@@ -84,10 +86,15 @@ loginForm.addEventListener('submit', async (e) => {
 });
 
 // --- LÓGICA DE CADASTRO ---
+// --- LÓGICA DE CADASTRO ---
 registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = registerForm.email.value;
     const password = registerForm.password.value;
+    const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+    const phone = registerForm.phone.value.replace(/\D/g, '');
+    const cpf = registerForm.cpf.value.replace(/\D/g, '');
+
     registerError.textContent = '';
     registerError.classList.add('hidden');
 
@@ -97,12 +104,45 @@ registerForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    // Se for premium, seta a flag para evitar redirect automático do onAuthStateChanged
+    if (selectedPlan === 'premium') {
+        if (!phone || !cpf) {
+            registerError.textContent = "Telefone e CPF são obrigatórios para o plano Premium.";
+            registerError.classList.remove('hidden');
+            return;
+        }
+        isRegisteringPremium = true;
+    }
+
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         await setupUserFamily(user);
-        // O onAuthStateChanged vai cuidar do redirecionamento
+
+        // Se for PREMIUM, inicia o checkout
+        if (selectedPlan === 'premium') {
+            const registerBtn = registerForm.querySelector('button[type="submit"]');
+            const originalText = registerBtn.innerText;
+            registerBtn.innerText = 'Redirecionando para pagamento...';
+            registerBtn.disabled = true;
+
+            try {
+                await startCheckout(user, 'premium_monthly', phone, cpf);
+            } catch (checkoutError) {
+                console.error("Erro no checkout:", checkoutError);
+                registerError.textContent = "Erro ao iniciar pagamento. Redirecionando para o app...";
+                registerError.classList.remove('hidden');
+                // Em caso de erro, redireciona para o app após 3s
+                setTimeout(() => window.location.href = '../app.html', 3000);
+            }
+        } else {
+            // Se for FREE, o onAuthStateChanged vai cuidar do redirecionamento, 
+            // mas como já estamos autenticados aqui, podemos forçar se o listener não tiver disparado ainda
+            // ou apenas deixar o listener disparar (que agora checa !isRegisteringPremium, que é true para free... wait. !false = true. OK.)
+        }
+
     } catch (error) {
+        isRegisteringPremium = false; // Reset em caso de erro
         console.error("Erro de cadastro:", error.code);
         if (error.code === 'auth/email-already-in-use') {
             registerError.textContent = "Este email já está em uso.";
@@ -114,6 +154,43 @@ registerForm.addEventListener('submit', async (e) => {
         registerError.classList.remove('hidden');
     }
 });
+
+// Função de Checkout (Adaptada de checkout.html)
+async function startCheckout(user, planType, cellphone, taxId) {
+    const CLOUD_FUNCTION_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1/createAbacatePayBilling'
+        : 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAbacatePayBilling';
+
+    const response = await fetch(CLOUD_FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            planType: planType,
+            userId: user.uid,
+            userEmail: user.email,
+            userName: user.displayName || 'Novo Cliente Trilha Comigo',
+            returnUrl: `${window.location.origin}/app.html`,
+            cellphone: cellphone,
+            taxId: taxId
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || 'Erro ao criar assinatura');
+    }
+
+    if (data.checkoutUrl) {
+        localStorage.setItem('pending_payment_id', data.billingId);
+        localStorage.setItem('pending_plan', planType);
+        window.location.href = data.checkoutUrl;
+    } else {
+        throw new Error('URL de checkout não recebida');
+    }
+}
 
 // --- FUNÇÃO PARA CONFIGURAR FAMÍLIA DO USUÁRIO ---
 async function setupUserFamily(user) {
@@ -133,12 +210,12 @@ async function setupUserFamily(user) {
         // Aceita o primeiro convite encontrado
         const invitation = invitationsSnapshot.docs[0];
         const familyId = invitation.data().familyId;
-        
+
         const familyRef = doc(db, 'families', familyId);
         await updateDoc(familyRef, { members: arrayUnion(user.uid) });
 
         await setDoc(userRef, { familyId: familyId, email: user.email }, { merge: true });
-        
+
         // Deleta o convite após ser aceito
         await deleteDoc(invitation.ref);
     } else {

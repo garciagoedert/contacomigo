@@ -260,7 +260,7 @@
         });
 
         // Asaas Configuration
-        const CLOUD_FUNCTION_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAsaasSubscription';
+        const CLOUD_FUNCTION_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAbacatePayBilling';
         // Para desenvolvimento local, use: 'http://localhost:5001/financeapp-6da16/us-central1/createAsaasSubscription'
 
         window.checkout = async function (planType) {
@@ -275,8 +275,8 @@
             button.disabled = true;
 
             try {
-                // Chamar Cloud Function para criar assinatura no Asaas
-                const response = await fetch(CLOUD_FUNCTION_URL, {
+                // Chamar Cloud Function para criar assinatura no AbacatePay
+                const response = await fetch(CLOUD_FUNCTION_URL.replace('createAsaasSubscription', 'createAbacatePayBilling'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -296,8 +296,10 @@
                     throw new Error(data.error || 'Erro ao criar assinatura');
                 }
 
-                // Redirecionar para o Checkout do Asaas
+                // Redirecionar para o Checkout do AbacatePay
                 if (data.checkoutUrl) {
+                    localStorage.setItem('pending_payment_id', data.billingId);
+                    localStorage.setItem('pending_plan', planType);
                     window.location.href = data.checkoutUrl;
                 } else {
                     throw new Error('URL de checkout não recebida');

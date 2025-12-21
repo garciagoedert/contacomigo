@@ -88,11 +88,11 @@
     <!-- Navbar -->
     <!-- Navbar -->
     <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
-        <div class="container mx-auto px-6 py-4">
+        <div class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-10 md:h-14 transition-all duration-300">
+                    <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-10 md:h-12 transition-all duration-300">
                 </div>
 
                 <!-- Desktop Menu -->
@@ -888,10 +888,10 @@
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 10) {
                 navbar.classList.add('bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur-md', 'shadow-sm', 'py-2');
-                navbar.classList.remove('py-4');
+                navbar.classList.remove('py-3');
             } else {
                 navbar.classList.remove('bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur-md', 'shadow-sm', 'py-2');
-                navbar.classList.add('py-4');
+                navbar.classList.add('py-3');
             }
         });
 

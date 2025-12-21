@@ -85,7 +85,7 @@
     </div>
 
     <!-- Tela de Cadastro (inicialmente oculta) -->
-    <div id="register-view" class="hidden items-center justify-center min-h-screen p-4">
+    <div id="register-view" class="hidden flex items-center justify-center min-h-screen p-4">
         <div
             class="w-full max-w-md p-8 space-y-6 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl shadow-2xl">
             <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Criar Conta</h2>
@@ -105,6 +105,47 @@
                         class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Mínimo 6 caracteres">
                 </div>
+                <div>
+                    <label for="register-phone"
+                        class="text-sm font-medium text-gray-700 dark:text-gray-300">Telefone</label>
+                    <input id="register-phone" name="phone" type="tel" required
+                        class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="(00) 00000-0000">
+                </div>
+                <div>
+                    <label for="register-cpf" class="text-sm font-medium text-gray-700 dark:text-gray-300">CPF</label>
+                    <input id="register-cpf" name="cpf" type="text" required
+                        class="mt-1 block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="000.000.000-00">
+                </div>
+
+
+                <!-- Seleção de Plano -->
+                <div class="space-y-3">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Escolha seu plano</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="plan" value="free" class="peer sr-only" checked>
+                            <div
+                                class="p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 peer-checked:border-[var(--cor-principal)] peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900/20 transition-all text-center">
+                                <div class="font-bold text-gray-900 dark:text-white">Grátis</div>
+                                <div class="text-xs text-gray-500">Para começar</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="plan" value="premium" class="peer sr-only">
+                            <div
+                                class="p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 peer-checked:border-[var(--cor-principal)] peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900/20 transition-all text-center">
+                                <div
+                                    class="absolute -top-2 -right-2 bg-yellow-400 text-xs px-2 py-0.5 rounded-full font-bold text-gray-900">
+                                    PRO</div>
+                                <div class="font-bold text-gray-900 dark:text-white">Premium</div>
+                                <div class="text-xs text-gray-500">R$ 9,90/mês</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
                 <p id="register-error" class="text-sm text-red-500 text-center hidden"></p>
                 <button type="submit"
                     class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)]">
