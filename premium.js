@@ -19,13 +19,14 @@ const db = getFirestore(app);
 let currentUserPlan = 'free';
 let trialEndsAt = null;
 
-// Processar retorno do Stripe
-async function handleStripeRedirect(userId) {
+// Processar retorno do Asaas
+async function handleAsaasRedirect(userId) {
     const urlParams = new URLSearchParams(window.location.search);
-    const sessionId = urlParams.get('session_id');
+    const subscriptionId = urlParams.get('subscription_id');
     const plan = urlParams.get('plan');
+    const status = urlParams.get('status');
 
-    if (sessionId && plan) {
+    if (subscriptionId && plan && status === 'success') {
         try {
             // Limpar URL
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -34,10 +35,9 @@ async function handleStripeRedirect(userId) {
             const trialEnd = new Date();
             trialEnd.setDate(trialEnd.getDate() + 14);
 
-            // Atualizar usuário
             await updateDoc(doc(db, 'users', userId), {
                 plan: plan,
-                subscriptionId: sessionId,
+                subscriptionId: subscriptionId,
                 trialEndsAt: Timestamp.fromDate(trialEnd),
                 upgradedAt: Timestamp.now(),
                 status: 'active'
@@ -59,8 +59,8 @@ async function handleStripeRedirect(userId) {
 // Função para carregar plano do usuário
 async function loadUserPlan(userId) {
     try {
-        // Verificar se tem retorno do Stripe pendente
-        await handleStripeRedirect(userId);
+        // Verificar se tem retorno do Asaas pendente
+        await handleAsaasRedirect(userId);
 
         const userDoc = await getDoc(doc(db, 'users', userId));
         const userData = userDoc.data();
