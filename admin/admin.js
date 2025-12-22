@@ -19,9 +19,18 @@ const auth = getAuth(app);
 const functions = getFunctions(app, 'us-central1');
 
 // Se estiver rodando localmente, usar emuladores
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log("📍 Rodando localmente: Conectando ao emulador de Funções...");
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+console.log("🌐 Ambiente detectado:");
+console.log("  - Hostname:", window.location.hostname);
+console.log("  - URL completa:", window.location.href);
+console.log("  - É localhost?", isLocalhost);
+
+if (isLocalhost) {
+    console.log("📍 Conectando ao EMULADOR LOCAL de Funções (localhost:5001)");
     connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+} else {
+    console.log("☁️ Conectando às FUNÇÕES DE PRODUÇÃO (us-central1)");
 }
 
 // Elements
@@ -56,19 +65,62 @@ logoutBtn.addEventListener('click', () => {
 
 async function loadDashboardData() {
     try {
-        const getAdminData = httpsCallable(functions, 'getAdminData');
-        const result = await getAdminData();
-        const data = result.data;
+        console.log('📊 Iniciando carregamento de dados do dashboard...');
+
+        // Garantir que o usuário está autenticado
+        if (!auth.currentUser) {
+            console.error('❌ Nenhum usuário autenticado encontrado!');
+            alert('Erro: Você precisa estar logado para acessar o dashboard.');
+            window.location.href = '../login/index.html';
+            return;
+        }
+
+        console.log('🔐 Usuário autenticado:', auth.currentUser.email);
+        console.log('🔑 UID:', auth.currentUser.uid);
+
+        // Aguardar o token de autenticação estar pronto
+        console.log('⏳ Aguardando token de autenticação...');
+        const token = await auth.currentUser.getIdToken(true);
+        console.log('✅ Token obtido:', token.substring(0, 20) + '...');
+
+        // Chamar a função diretamente (não através do proxy)
+        const functionUrl = 'https://us-central1-financeapp-6da16.cloudfunctions.net/getAdminData';
+        console.log('📞 Chamando função diretamente:', functionUrl);
+
+        const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ token }) // Enviar token também no body como fallback
+        });
+
+        console.log('📡 Resposta HTTP status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Erro HTTP:', errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Dados recebidos:', data);
 
         renderStats(data.stats);
         renderTable(data.users);
 
         loadingOverlay.classList.add('hidden');
     } catch (error) {
-        console.error("Erro ao carregar dashboard:", error);
+        console.error("❌ Erro ao carregar dashboard:");
+        console.error("  - Mensagem:", error.message);
+        console.error("  - Objeto completo:", error);
+
+        loadingOverlay.classList.add('hidden');
         alert('Erro ao carregar dados: ' + error.message);
 
-        if (error.message.includes('permission-denied')) {
+        if (error.message.includes('permission-denied') || error.message.includes('403')) {
+            alert('Acesso negado. Você não tem permissão de administrador.');
             window.location.href = '../app.html';
         }
     }

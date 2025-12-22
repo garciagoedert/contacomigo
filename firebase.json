@@ -1,4 +1,25 @@
 {
+    "hosting": {
+        "public": ".",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**",
+            "functions/**",
+            "*.md",
+            ".env.example"
+        ],
+        "rewrites": [
+            {
+                "source": "/api/getAdminData",
+                "function": "getAdminData"
+            },
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ]
+    },
     "functions": [
         {
             "source": "functions",
