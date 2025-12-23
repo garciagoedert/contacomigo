@@ -337,6 +337,7 @@ onAuthStateChanged(auth, async user => {
         await loadUserPlan(user.uid); // Carregar plano do usuário
         appView.classList.remove('hidden'); // Mostra a aplicação
         setupRealtimeListeners(currentFamilyId);
+        processRecurringTransactions(currentFamilyId); // Processa recorrência ao iniciar
     } else {
         // Usuário não está logado, redireciona para a página de login
         window.location.href = 'login/index.html';
@@ -369,6 +370,11 @@ async function setupUserFamily(user) {
             });
             currentFamilyId = newFamilyRef.id;
             await setDoc(userRef, { familyId: currentFamilyId, email: user.email });
+            await createDefaultCategories(currentFamilyId); // Muriel Strategy: Default Categories
+
+            if (window.Analytics) {
+                window.Analytics.track('Sign_Up', { method: 'email' });
+            }
         }
     }
 }
@@ -378,6 +384,35 @@ logoutButton.addEventListener('click', () => {
         console.error("Erro ao fazer logout:", error);
     });
 });
+
+// --- FUNÇÃO AUXILIAR: MURIEL STRATEGY (CATEGORIAS PADRÃO) ---
+async function createDefaultCategories(familyId) {
+    const categoriesRef = collection(db, 'families', familyId, 'categories');
+    const batch = writeBatch(db);
+
+    const defaultIncome = [
+        'Salário', 'Renda Extra', 'Investimentos', 'Outros'
+    ];
+
+    const defaultExpense = [
+        'Moradia', 'Alimentação', 'Transporte', 'Saúde', 'Educação', // Essenciais
+        'Lazer', 'Restaurantes', 'Compras', // Estilo de Vida
+        'Investimentos', 'Assinaturas' // Futuro/Recorrente
+    ];
+
+    defaultIncome.forEach(name => {
+        const docRef = doc(categoriesRef);
+        batch.set(docRef, { name, type: 'income', createdAt: serverTimestamp() });
+    });
+
+    defaultExpense.forEach(name => {
+        const docRef = doc(categoriesRef);
+        batch.set(docRef, { name, type: 'expense', createdAt: serverTimestamp() });
+    });
+
+    await batch.commit();
+    console.log("Categorias padrão criadas com sucesso (Estratégia Muriel)");
+}
 
 // --- LÓGICA DO FIRESTORE E RENDERIZAÇÃO ---
 function setupRealtimeListeners(familyId) {
@@ -763,7 +798,21 @@ function renderTransactions(transactions) {
         noTransactionsEl.classList.remove('hidden');
     } else {
         noTransactionsEl.classList.add('hidden');
-        transactions.forEach(t => {
+
+        let displayTransactions = transactions;
+
+        // Verificar limite de histórico (Premium Feature)
+        if (!window.hasFeatureAccess('unlimited_history')) {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            displayTransactions = transactions.filter(t => {
+                const tDate = t.timestamp ? t.timestamp.toDate() : new Date();
+                return tDate >= thirtyDaysAgo;
+            });
+        }
+
+        displayTransactions.forEach(t => {
             const isIncome = t.type === 'income';
             const isInvestment = t.isInvestment;
             const sign = isIncome ? '+' : '-';
@@ -963,6 +1012,14 @@ function renderExpenseChart(transactions) {
 // --- LÓGICA DOS FORMULÁRIOS DE CONFIGURAÇÕES ---
 addIncomeCategoryFormSettings.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Verificar limite de categorias (Premium Feature)
+    const currentCategories = incomeCategoriesListSettings.children.length;
+    if (!window.hasFeatureAccess('unlimited_categories') && currentCategories >= 5) {
+        window.showUpgradeModal('Categorias Ilimitadas');
+        return;
+    }
+
     const input = document.getElementById('new-income-category-settings');
     const newCategoryName = input.value.trim();
     if (newCategoryName && currentFamilyId) {
@@ -973,6 +1030,14 @@ addIncomeCategoryFormSettings.addEventListener('submit', async (e) => {
 
 addExpenseCategoryFormSettings.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Verificar limite de categorias (Premium Feature)
+    const currentCategories = expenseCategoriesListSettings.children.length;
+    if (!window.hasFeatureAccess('unlimited_categories') && currentCategories >= 5) {
+        window.showUpgradeModal('Categorias Ilimitadas');
+        return;
+    }
+
     const input = document.getElementById('new-expense-category-settings');
     const newCategoryName = input.value.trim();
     if (newCategoryName && currentFamilyId) {
@@ -985,6 +1050,7 @@ inviteMemberFormSettings.addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = document.getElementById('invite-email-settings');
     const email = input.value.trim();
+
     if (email && currentFamilyId) {
         await addDoc(collection(db, 'invitations'), {
             familyId: currentFamilyId,
@@ -995,6 +1061,97 @@ inviteMemberFormSettings.addEventListener('submit', async (e) => {
         alert('Convite enviado!');
     }
 });
+
+// --- FEATURE: PROCESSAR TRANSAÇÕES RECORRENTES ---
+async function processRecurringTransactions(familyId) {
+    if (!familyId) return;
+    // Verifica apenas se o usuário tiver acesso (embora a lógica seja executada p/ todos, só quem é premium cria recorrência)
+    if (!window.hasFeatureAccess('recurring_transactions')) {
+        // Se usuário deixou de ser premium, não processa
+        return;
+    }
+
+    const transactionsRef = collection(db, 'families', familyId, 'transactions');
+    const q = query(transactionsRef, where('isRecurring', '==', true), where('nextDueDate', '<=', Timestamp.now().toDate().toISOString().split('T')[0]));
+
+    // Simplificação: processamento client-side básico ao abrir o app
+    // Idealmente seria backend. Aqui buscamos transações recorrentes passadas.
+    // Como o Firestore requer índices compostos para filtrar, vamos buscar as recorrentes e filtrar no cliente por data
+    const recurringQuery = query(transactionsRef, where('isRecurring', '==', true));
+    const querySnapshot = await getDocs(recurringQuery);
+
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const batch = writeBatch(db);
+    let hasUpdates = false;
+
+    querySnapshot.forEach((docSnap) => {
+        const t = docSnap.data();
+        if (t.nextDueDate && t.nextDueDate <= today) {
+            // Criar nova transação
+            const newDate = new Date(t.nextDueDate);
+            // Ajustar próxima data
+            let nextDate = new Date(newDate);
+
+            if (t.frequency === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
+            else if (t.frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+            else if (t.frequency === 'yearly') nextDate.setFullYear(nextDate.getFullYear() + 1);
+
+            // Nova transação
+            const newTransactionRef = doc(collection(db, 'families', familyId, 'transactions'));
+            batch.set(newTransactionRef, {
+                ...t,
+                timestamp: Timestamp.fromDate(newDate),
+                isRecurring: false, // A cópia não é a "mãe" recorrente
+                originalRecurringId: docSnap.id,
+                userId: currentUserId // Quem abriu o app 'criou' a recorrência
+            });
+
+            // Atualizar transação original com nova data
+            batch.update(docSnap.ref, {
+                nextDueDate: nextDate.toISOString().split('T')[0],
+                lastProcessedAt: Timestamp.now()
+            });
+            hasUpdates = true;
+        }
+    });
+
+    if (hasUpdates) {
+        await batch.commit();
+        console.log('Transações recorrentes processadas.');
+    }
+}
+
+// --- FEATURE: EXPORTAR RELATÓRIO ---
+window.exportReport = async function () {
+    if (!window.hasFeatureAccess('export_reports')) {
+        window.showUpgradeModal('Exportação de Relatórios');
+        return;
+    }
+
+    // Gerar CSV das transações visíveis
+    if (!currentFamilyId) return;
+
+    const transactionsRef = collection(db, 'families', currentFamilyId, 'transactions');
+    const snapshot = await getDocs(transactionsRef);
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Data,Descrição,Categoria,Valor,Tipo\n"; // Cabeçalho
+
+    snapshot.forEach(doc => {
+        const t = doc.data();
+        const date = t.timestamp ? t.timestamp.toDate().toLocaleDateString('pt-BR') : '';
+        const row = `${date},"${t.description}",${t.category},${t.amount},${t.type === 'income' ? 'Receita' : 'Despesa'}`;
+        csvContent += row + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "trilha_comigo_relatorio.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 // --- LÓGICA DO MODAL DE TRANSAÇÃO ---
 
@@ -1060,6 +1217,20 @@ transactionTypeRadios.forEach(radio => {
     radio.addEventListener('change', toggleInvestmentOption);
 });
 
+// Toggle recurrence details
+const isRecurringCheckbox = document.getElementById('is-recurring');
+const recurrenceDetails = document.getElementById('recurrence-details');
+
+if (isRecurringCheckbox) {
+    isRecurringCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            recurrenceDetails.classList.remove('hidden');
+        } else {
+            recurrenceDetails.classList.add('hidden');
+        }
+    });
+}
+
 // Lógica de submissão do formulário de transação
 transactionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -1072,8 +1243,18 @@ transactionForm.addEventListener('submit', async (e) => {
     const category = categorySelect.value;
     const isInvestment = isInvestmentCheckbox.checked;
 
+    // Recurrence Data
+    const isRecurring = document.getElementById('is-recurring').checked;
+    const frequency = document.getElementById('recurrence-frequency').value;
+
     if (!description || isNaN(amount) || !date || !category) {
         alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    // Check recurrence permission
+    if (isRecurring && !window.hasFeatureAccess('recurring_transactions')) {
+        window.showUpgradeModal('Transações Recorrentes');
         return;
     }
 
@@ -1084,8 +1265,19 @@ transactionForm.addEventListener('submit', async (e) => {
         type,
         category,
         isInvestment,
-        userId: currentUserId
+        userId: currentUserId,
+        isRecurring: isRecurring || false
     };
+
+    if (isRecurring) {
+        transactionData.frequency = frequency;
+        // Calcular próxima data
+        const nextDate = new Date(date);
+        if (frequency === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
+        else if (frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+        else if (frequency === 'yearly') nextDate.setFullYear(nextDate.getFullYear() + 1);
+        transactionData.nextDueDate = nextDate.toISOString().split('T')[0];
+    }
 
     try {
         if (id) {
@@ -1107,6 +1299,15 @@ transactionForm.addEventListener('submit', async (e) => {
                 timestamp: Timestamp.fromDate(new Date(date)),
                 isContribution: true, // Marca como um aporte para diferenciar de outros ativos
                 userId: currentUserId
+            });
+        }
+
+        // Tracking Event
+        if (window.Analytics) {
+            window.Analytics.track('Add_Transaction', {
+                amount: amount,
+                category: category,
+                type: type
             });
         }
 
