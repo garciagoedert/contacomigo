@@ -103,11 +103,7 @@ exports.createAbacatePayBilling = functions
 
                 console.log("✅ Billing criado com sucesso:", billingData.data.id);
 
-                // O AbacatePay retorna a URL de pagamento dentro de data.url
-                res.json({
-                    billingId: billingData.data.id,
-                    checkoutUrl: billingData.data.url,
-                });
+
 
             } catch (error) {
                 console.error('Erro ao processar pagamento:', error);
@@ -116,109 +112,179 @@ exports.createAbacatePayBilling = functions
         });
     });
 
-// Função para obter dados do Admin Dashboard - VERSÃO COMPLETA COM AUTH E FIRESTORE
-exports.getAdminData = functions.https.onRequest((req, res) => {
-    // Configurar CORS para permitir requisições do frontend
-    cors(req, res, async () => {
-        console.log('========================================');
-        console.log('🔍 getAdminData: VERSÃO COMPLETA INICIADA!');
-        console.log('🔍 getAdminData: Timestamp:', new Date().toISOString());
-        console.log('🔍 getAdminData: Method:', req.method);
-        console.log('🔍 getAdminData: Origin:', req.headers.origin);
-        console.log('========================================');
+const { getPluggyClient } = require('./pluggy');
 
-        try {
+// --- OPEN BANKING (PLUGGY) FUNCTIONS ---
+
+// 1. Criar Token para o Widget "Pluggy Connect"
+exports.createPluggyConnectToken = functions
+    .runWith({ invoker: 'public' })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
             // Aceitar apenas POST
             if (req.method !== 'POST') {
-                console.error('❌ Method not allowed:', req.method);
-                return res.status(405).json({ error: 'Method not allowed' });
+                return res.status(405).send('Method Not Allowed');
             }
 
-            // Verificar token de autenticação (header ou body)
-            let token;
-            const authHeader = req.headers.authorization;
-
-            if (authHeader && authHeader.startsWith('Bearer ')) {
-                token = authHeader.split('Bearer ')[1];
-                console.log('🔑 Token recebido do header');
-            } else if (req.body && req.body.token) {
-                token = req.body.token;
-                console.log('🔑 Token recebido do body');
-            } else {
-                console.error('❌ No authorization token provided');
-                return res.status(401).json({ error: 'Unauthorized: No token provided' });
-            }
-
-            // Verificar token com Firebase Admin
-            let decodedToken;
             try {
-                decodedToken = await admin.auth().verifyIdToken(token);
-                console.log('✅ Token verificado para usuário:', decodedToken.uid);
-                console.log('✅ Email:', decodedToken.email);
+                const client = getPluggyClient();
+                // Cria um item vazio ou atualiza um existente seitemId for passado
+                // Para simplificar, vamos criar um token de criação
+                const data = await client.createConnectToken();
+
+                res.json({ accessToken: data.accessToken });
             } catch (error) {
-                console.error('❌ Erro ao verificar token:', error);
-                return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+                console.error("Erro ao criar token Pluggy:", error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+    });
+
+// 2. Sincronizar Transações (Webhook ou Manual)
+exports.syncPluggyTransactions = functions
+    .runWith({ invoker: 'public', timeoutSeconds: 300 }) // Timeout maior para sync
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+            const { itemId, familyId } = req.body;
+
+            if (!itemId || !familyId) {
+                return res.status(400).json({ error: "Missing itemId or familyId" });
             }
 
-            console.log('✅ Usuário autenticado, buscando dados do Firestore...');
+            try {
+                const client = getPluggyClient();
+                const now = new Date();
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(now.getDate() - 30);
 
-            // Buscar todos os usuários do Firestore
-            const usersSnapshot = await admin.firestore().collection('users').get();
-            console.log('📊 Total de documentos encontrados:', usersSnapshot.size);
+                // 1. Buscar Contas
+                const accounts = await client.fetchAccounts(itemId);
 
-            // Processar dados dos usuários
-            let totalUsers = 0;
-            let activePremiumUsers = 0;
-            let totalMRR = 0;
-            const users = [];
+                // 2. Buscar Transações dos últimos 30 dias para todas as contas
+                let allTransactions = [];
+                for (const account of accounts.results) {
+                    const transactions = await client.fetchTransactions(account.id, {
+                        from: thirtyDaysAgo.toISOString().split('T')[0],
+                        to: now.toISOString().split('T')[0]
+                    });
 
-            usersSnapshot.forEach(doc => {
-                const userData = doc.data();
-                totalUsers++;
-
-                // Verificar se é premium ativo
-                const isPremium = userData.plan && userData.plan !== 'free';
-                const isActive = userData.validUntil && new Date(userData.validUntil) > new Date();
-
-                if (isPremium && isActive) {
-                    activePremiumUsers++;
-
-                    // Calcular MRR (assumindo plano mensal de R$ 9,90)
-                    if (userData.plan === 'premium_monthly') {
-                        totalMRR += 9.90;
-                    }
+                    // Enriquecer com ID da conta
+                    const enriched = transactions.results.map(t => ({ ...t, accountId: account.id, bankName: account.bankData?.name || 'Bank' }));
+                    allTransactions = allTransactions.concat(enriched);
                 }
 
-                // Adicionar usuário à lista
-                users.push({
-                    uid: doc.id,
-                    email: userData.email || 'N/A',
-                    name: userData.name || userData.displayName || 'N/A',
-                    plan: userData.plan || 'free',
-                    status: isActive ? 'Ativo' : 'Inativo',
-                    validUntil: userData.validUntil || null
+                console.log(`Função Sync: Encontradas ${allTransactions.length} transações.`);
+
+                // 3. Salvar no Firestore
+                const batch = admin.firestore().batch();
+                const transactionRef = admin.firestore().collection('families', familyId, 'transactions');
+
+                let count = 0;
+                allTransactions.forEach(t => {
+                    // Evitar duplicatas usando o ID da Pluggy como ID do doc (ou parte dele)
+                    const docId = `pluggy_${t.id}`;
+                    const docRef = transactionRef.doc(docId);
+
+                    // Mapeamento Pluggy -> FinanceApp
+                    const amount = Math.abs(t.amount); // Pluggy usa negativo para gastos, nosso app usa type='expense'
+                    const type = t.amount < 0 ? 'expense' : 'income';
+
+                    batch.set(docRef, {
+                        // Dados do App
+                        description: t.description,
+                        amount: amount,
+                        type: type,
+                        category: t.category || 'Outros', // Pluggy já traz categoria, mas pode precisar de DE-PARA
+                        date: t.date, // YYYY-MM-DD
+                        timestamp: admin.firestore.Timestamp.fromDate(new Date(t.date)),
+
+                        // Metadados Pluggy
+                        pluggyId: t.id,
+                        pluggyAccountId: t.accountId,
+                        pluggyBankName: t.bankName,
+                        pluggyStatus: t.status,
+                        source: 'open_banking',
+                        createdAt: admin.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true }); // Merge para não sobrescrever se já existir e só atualizar campos
+
+                    count++;
                 });
-            });
 
-            const responseData = {
-                stats: {
-                    totalUsers,
-                    activePremiumUsers,
-                    totalMRR: parseFloat(totalMRR.toFixed(2))
-                },
-                users
-            };
+                await batch.commit();
 
-            console.log('✅ Dados processados:');
-            console.log('   - Total de usuários:', totalUsers);
-            console.log('   - Premium ativos:', activePremiumUsers);
-            console.log('   - MRR:', totalMRR.toFixed(2));
-            console.log('========================================');
+                res.json({
+                    success: true,
+                    message: `${count} transações sincronizadas.`,
+                    count
+                });
 
-            return res.status(200).json(responseData);
-        } catch (error) {
-            console.error('❌ getAdminData: Erro:', error);
-            return res.status(500).json({ error: 'Erro ao processar dados: ' + error.message });
-        }
+            } catch (error) {
+                console.error("Erro no Sync Pluggy:", error);
+                res.status(500).json({ error: error.message });
+            }
+        });
     });
-});
+
+
+// --- AI FINANCIAL COACH (GEMINI) ---
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+exports.generateWeeklyInsights = functions
+    .runWith({ invoker: 'public', timeoutSeconds: 60 })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+            try {
+                const { transactions, goals } = req.body;
+
+                // Configurar Gemini
+                const API_KEY = process.env.GOOGLE_GENAI_API_KEY || functions.config().google?.genai_api_key;
+                if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
+
+                const genAI = new GoogleGenerativeAI(API_KEY);
+                const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+
+                // Preparar Prompt Otimizado
+                const prompt = `
+                Você é um Coach Financeiro Pessoal experiente, direto e motivador.
+                Analise os dados financeiros abaixo (últimos 30 dias) e forneça insights acionáveis.
+
+                DADOS:
+                - Transações: ${JSON.stringify(transactions)}
+                - Metas do Usuário: ${JSON.stringify(goals)}
+
+                TAREFA:
+                Retorne uma resposta em formato JSON estrito com a seguinte estrutura:
+                {
+                    "summary": "Uma frase de impacto sobre o mês atual (ex: 'Você gastou 20% a menos em iFood!')",
+                    "tips": ["Dica prática 1", "Dica prática 2", "Dica prática 3"],
+                    "alert": "Um alerta importante se houver (ou null)",
+                    "mood": "positive" | "neutral" | "warning"
+                }
+                
+                Seja conciso. Use emojis. Fale português do Brasil.
+                `;
+
+                const result = await model.generateContent(prompt);
+                const responseText = result.response.text();
+
+                // Limpeza básica para garantir JSON (às vezes o modelo coloca markdown ```json)
+                const cleanedText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+                const insights = JSON.parse(cleanedText);
+
+                res.json(insights);
+
+            } catch (error) {
+                console.error("Erro no AI Coach:", error);
+                res.status(500).json({
+                    error: "Falha ao gerar insights.",
+                    details: error.message
+                });
+            }
+        });
+    });
+
+
