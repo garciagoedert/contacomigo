@@ -112,6 +112,16 @@
                         </svg>
                         <span>Tarefas</span>
                     </a>
+                    <a href="#" id="show-calculator-view-btn"
+                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <span>Calculadora</span>
+                    </a>
                     <a href="#" id="show-settings-view"
                         class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
                         <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -312,6 +322,89 @@
                                     <!-- As tarefas serão inseridas aqui -->
                                 </tbody>
                             </table>
+                        </div>
+                    </section>
+
+                    <!-- Visualização de Calculadora de Investimentos -->
+                    <section id="calculator-view" class="hidden">
+                        <h2 class="text-lg font-semibold mb-4">Calculadora de Juros Compostos</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Inputs -->
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                                <h3 class="text-md font-medium mb-4">Parâmetros</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="calc-initial"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Investimento
+                                            Inicial (R$)</label>
+                                        <input type="number" id="calc-initial" value="1000" min="0" step="0.01"
+                                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="calc-monthly"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Aporte
+                                            Mensal (R$)</label>
+                                        <input type="number" id="calc-monthly" value="100" min="0" step="0.01"
+                                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="calc-rate"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Taxa
+                                                de Juros Anual (%)</label>
+                                            <div class="flex">
+                                                <input type="number" id="calc-rate" value="10" step="0.01"
+                                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                                <button id="btn-fetch-cdi"
+                                                    class="mt-1 px-3 py-2 bg-gray-200 dark:bg-gray-600 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md hover:bg-gray-300 dark:hover:bg-gray-500 text-xs font-bold"
+                                                    title="Usar Taxa SELIC/CDI Atual">CDI/SELIC</button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="calc-time"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tempo
+                                                (Anos)</label>
+                                            <input type="number" id="calc-time" value="10" min="1" step="1"
+                                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                    </div>
+                                    <button id="btn-calculate"
+                                        class="w-full py-2 px-4 bg-[var(--cor-principal)] text-white font-semibold rounded-md shadow hover:opacity-90 transition-opacity">Calcular</button>
+                                </div>
+                            </div>
+
+                            <!-- Resultados -->
+                            <div
+                                class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-col justify-center">
+                                <h3 class="text-md font-medium mb-4">Resultado Esperado</h3>
+                                <div class="space-y-4">
+                                    <div
+                                        class="flex justify-between items-center pb-2 border-b border-gray-100 dark:border-gray-700">
+                                        <span class="text-gray-600 dark:text-gray-400">Total Investido</span>
+                                        <span id="calc-result-invested" class="font-bold text-lg">R$ 0,00</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center pb-2 border-b border-gray-100 dark:border-gray-700">
+                                        <span class="text-gray-600 dark:text-gray-400">Total em Juros</span>
+                                        <span id="calc-result-interest" class="font-bold text-lg text-green-500">R$
+                                            0,00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-2">
+                                        <span class="text-gray-800 dark:text-white font-bold text-lg">Valor Total
+                                            Final</span>
+                                        <span id="calc-result-total"
+                                            class="font-bold text-2xl text-[var(--cor-principal)]">R$ 0,00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico -->
+                        <div class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                            <h3 class="text-md font-medium mb-4">Evolução Patrimonial</h3>
+                            <div class="h-80 w-full">
+                                <canvas id="calculator-chart"></canvas>
+                            </div>
                         </div>
                     </section>
 

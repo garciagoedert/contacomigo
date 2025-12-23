@@ -109,6 +109,21 @@ const addExpenseCategoryFormSettings = document.getElementById('add-expense-cate
 const familyMembersListSettings = document.getElementById('family-members-list-settings');
 const inviteMemberFormSettings = document.getElementById('invite-member-form-settings');
 
+// Seletores da Calculadora
+const calculatorView = document.getElementById('calculator-view');
+const showCalculatorViewBtn = document.getElementById('show-calculator-view-btn');
+const calcInitial = document.getElementById('calc-initial');
+const calcMonthly = document.getElementById('calc-monthly');
+const calcRate = document.getElementById('calc-rate');
+const calcTime = document.getElementById('calc-time');
+const btnCalculate = document.getElementById('btn-calculate');
+const btnFetchCDI = document.getElementById('btn-fetch-cdi');
+const calcResultInvested = document.getElementById('calc-result-invested');
+const calcResultInterest = document.getElementById('calc-result-interest');
+const calcResultTotal = document.getElementById('calc-result-total');
+const calculatorChartCanvas = document.getElementById('calculator-chart');
+let calculatorChart = null;
+
 const categorySelect = document.getElementById('category');
 const investmentOption = document.getElementById('investment-option');
 const isInvestmentCheckbox = document.getElementById('is-investment');
@@ -125,7 +140,10 @@ let unsubscribeFromBudgets = null;
 let unsubscribeFromCategories = null;
 let unsubscribeFromFamily = null;
 let unsubscribeFromDebts = null;
+
 let unsubscribeFromTasks = null;
+let unsubscribeFromCalculator = null; // Placeholder se precisar de real-time
+
 
 // --- LÓGICA DE APARÊNCIA ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -208,7 +226,9 @@ const showTransactions = (e) => {
     settingsView.classList.add('hidden');
     goalsView.classList.add('hidden');
     debtsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
+    calculatorView.classList.add('hidden');
     transactionsSection.classList.remove('hidden');
     summary.classList.remove('hidden');
     charts.classList.remove('hidden');
@@ -227,7 +247,10 @@ const showInvestments = (e) => {
     settingsView.classList.add('hidden');
     goalsView.classList.add('hidden');
     debtsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
+    calculatorView.classList.add('hidden');
     investmentsView.classList.remove('hidden');
     addTransactionBtnDesktop.classList.add('hidden');
     addTransactionBtnMobile.classList.add('hidden');
@@ -244,7 +267,10 @@ const showBudgets = (e) => {
     settingsView.classList.add('hidden');
     goalsView.classList.add('hidden');
     debtsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
+    calculatorView.classList.add('hidden');
     budgetsView.classList.remove('hidden');
     addTransactionBtnDesktop.classList.add('hidden');
     addTransactionBtnMobile.classList.add('hidden');
@@ -261,7 +287,10 @@ const showSettings = (e) => {
     budgetsView.classList.add('hidden');
     goalsView.classList.add('hidden');
     debtsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
+    calculatorView.classList.add('hidden');
     settingsView.classList.remove('hidden');
     addTransactionBtnDesktop.classList.add('hidden');
     addTransactionBtnMobile.classList.add('hidden');
@@ -278,7 +307,9 @@ const showGoals = (e) => {
     budgetsView.classList.add('hidden');
     settingsView.classList.add('hidden');
     debtsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
     tasksView.classList.add('hidden');
+    calculatorView.classList.add('hidden');
     goalsView.classList.remove('hidden');
     addTransactionBtnDesktop.classList.add('hidden');
     addTransactionBtnMobile.classList.add('hidden');
@@ -295,7 +326,9 @@ const showDebts = (e) => {
     budgetsView.classList.add('hidden');
     settingsView.classList.add('hidden');
     goalsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
     tasksView.classList.add('hidden');
+    calculatorView.classList.add('hidden');
     debtsView.classList.remove('hidden');
     addTransactionBtnDesktop.classList.add('hidden');
     addTransactionBtnMobile.classList.add('hidden');
@@ -320,6 +353,25 @@ const showTasks = (e) => {
     closeSidebar();
 };
 
+const showCalculator = (e) => {
+    e.preventDefault();
+    transactionsSection.classList.add('hidden');
+    summary.classList.add('hidden');
+    charts.classList.add('hidden');
+    investmentsView.classList.add('hidden');
+    budgetsView.classList.add('hidden');
+    settingsView.classList.add('hidden');
+    goalsView.classList.add('hidden');
+    debtsView.classList.add('hidden');
+    tasksView.classList.add('hidden');
+    calculatorView.classList.remove('hidden');
+
+    addTransactionBtnDesktop.classList.add('hidden');
+    addTransactionBtnMobile.classList.add('hidden');
+    updateActiveLink(showCalculatorViewBtn);
+    closeSidebar();
+};
+
 showTransactionsViewBtn.addEventListener('click', showTransactions);
 showInvestmentsViewBtn.addEventListener('click', showInvestments);
 showBudgetsViewBtn.addEventListener('click', showBudgets);
@@ -327,6 +379,7 @@ showSettingsViewBtn.addEventListener('click', showSettings);
 showGoalsViewBtn.addEventListener('click', showGoals);
 showDebtsViewBtn.addEventListener('click', showDebts);
 showTasksViewBtn.addEventListener('click', showTasks);
+showCalculatorViewBtn.addEventListener('click', showCalculator);
 
 // --- LÓGICA DE AUTENTICAÇÃO ---
 onAuthStateChanged(auth, async user => {
@@ -483,8 +536,8 @@ function setupRealtimeListeners(familyId) {
     });
 
     const familyRef = doc(db, 'families', familyId);
-    unsubscribeFromFamily = onSnapshot(familyRef, async (doc) => {
-        const family = doc.data();
+    unsubscribeFromFamily = onSnapshot(familyRef, async (familySnapshot) => {
+        const family = familySnapshot.data();
         if (family && family.members) {
             const memberPromises = family.members.map(id => getDoc(doc(db, 'users', id)));
             const memberDocs = await Promise.all(memberPromises);
@@ -1606,4 +1659,162 @@ taskForm.addEventListener('submit', async (e) => {
     closeTaskModal();
 });
 
-// (O código para os outros modais viria aqui, se necessário)
+// --- LÓGICA DA CALCULADORA DE INVESTIMENTOS ---
+
+btnCalculate.addEventListener('click', () => {
+    const initial = parseFloat(calcInitial.value) || 0;
+    const monthly = parseFloat(calcMonthly.value) || 0;
+    const rateYear = parseFloat(calcRate.value) || 0;
+    const years = parseInt(calcTime.value) || 0;
+
+    calculateCompoundInterest(initial, monthly, rateYear, years);
+});
+
+btnFetchCDI.addEventListener('click', async () => {
+    try {
+        btnFetchCDI.textContent = "Buscando...";
+        btnFetchCDI.disabled = true;
+
+        // API do Banco Central para Taxa Selic (meta) diária, convertida para anual aprox
+        // Endpoint: https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json
+        const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json');
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            const selicMeta = parseFloat(data[0].valor); // Isso costuma ser a meta anualizada se for a série 432
+            // Série 432: Meta Selic definida pelo Copom (% a.a.)
+
+            calcRate.value = selicMeta;
+            alert(`Taxa Selic atualizada: ${selicMeta}% a.a.`);
+        } else {
+            alert('Não foi possível obter a taxa automaticamente.');
+        }
+    } catch (error) {
+        console.error("Erro ao buscar Selic:", error);
+        alert('Erro ao conectar com API do Banco Central.');
+    } finally {
+        btnFetchCDI.textContent = "CDI/SELIC";
+        btnFetchCDI.disabled = false;
+    }
+});
+
+function calculateCompoundInterest(initial, monthly, rateYear, years) {
+    const rateMonth = Math.pow(1 + (rateYear / 100), 1 / 12) - 1;
+    const totalMonths = years * 12;
+
+    let totalObj = initial;
+    let investedObj = initial;
+
+    // Arrays para o gráfico
+    const labels = [];
+    const investedData = [];
+    const interestData = [];
+    const totalData = [];
+
+    // Ponto zero
+    labels.push(0);
+    investedData.push(initial);
+    totalData.push(initial);
+    interestData.push(0);
+
+    for (let i = 1; i <= totalMonths; i++) {
+        // Juros sobre o total acumulado
+        totalObj = totalObj * (1 + rateMonth);
+        // Adiciona aporte mensal
+        totalObj += monthly;
+        investedObj += monthly;
+
+        // Adiciona dados para o gráfico a cada ano (12 meses)
+        if (i % 12 === 0) {
+            labels.push(i / 12); // Ano
+            investedData.push(investedObj);
+            totalData.push(totalObj);
+            interestData.push(totalObj - investedObj);
+        }
+    }
+
+    // Atualiza resultados na tela
+    calcResultInvested.textContent = formatCurrency(investedObj);
+    calcResultTotal.textContent = formatCurrency(totalObj);
+    calcResultInterest.textContent = formatCurrency(totalObj - investedObj);
+
+    // Renderiza Gráfico
+    renderCalculatorChart(labels, investedData, totalData);
+}
+
+function renderCalculatorChart(labels, investedData, totalData) {
+    if (calculatorChart) {
+        calculatorChart.destroy();
+    }
+
+    const ctx = calculatorChartCanvas.getContext('2d');
+    const isDark = document.documentElement.classList.contains('dark');
+    const textColor = isDark ? '#e5e7eb' : '#374151';
+
+    calculatorChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels, // Anos
+            datasets: [
+                {
+                    label: 'Total Acumulado',
+                    data: totalData,
+                    borderColor: '#4F46E5', // Indigo
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Total Investido',
+                    data: investedData,
+                    borderColor: '#10B981', // Green
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderDash: [5, 5]
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: textColor }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: (context) => {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Anos', color: textColor },
+                    ticks: { color: textColor },
+                    grid: { color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' }
+                },
+                y: {
+                    ticks: {
+                        color: textColor,
+                        callback: (value) => {
+                            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumSignificantDigits: 3 }).format(value);
+                        }
+                    },
+                    grid: { color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' }
+                }
+            }
+        }
+    });
+}
