@@ -287,4 +287,67 @@ exports.generateWeeklyInsights = functions
         });
     });
 
+// --- AI CHATBOT (GEMINI) ---
+exports.chatWithCoach = functions
+    .runWith({ invoker: 'public', timeoutSeconds: 60 })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
+            try {
+                const { message, financialContext } = req.body;
+
+                // Configurar Gemini
+                const API_KEY = process.env.GOOGLE_GENAI_API_KEY || functions.config().google?.genai_api_key;
+                if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
+
+                const genAI = new GoogleGenerativeAI(API_KEY);
+                const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+
+                // Preparar Prompt de Chat
+                let systemPrompt = `
+                Você é o Coach Financeiro do usuário. Um assistente amigável, motivador e expert em finanças pessoais.
+                
+                CONTEXTO FINANCEIRO DO USUÁRIO (RASCUNHO):
+                `;
+
+                if (financialContext) {
+                    if (financialContext.transactions && financialContext.transactions.length > 0) {
+                        systemPrompt += `\n- Últimas Transações: ${JSON.stringify(financialContext.transactions)}`;
+                    } else {
+                        systemPrompt += `\n- Sem transações recentes disponíveis.`;
+                    }
+
+                    if (financialContext.goals && financialContext.goals.length > 0) {
+                        systemPrompt += `\n- Metas Definidas: ${JSON.stringify(financialContext.goals)}`;
+                    }
+                }
+
+                systemPrompt += `
+                
+                SUA MISSÃO:
+                Responder à mensagem do usuário: "${message}"
+                
+                DIRETRIZES:
+                1. Use o contexto financeiro acima para dar respostas personalizadas SÓ se a pergunta pedir.
+                2. Se o usuário perguntar "Quanto gastei com X?", some os valores das transações do contexto.
+                3. Seja conciso (máximo 2-3 parágrafos curtos).
+                4. Use emojis.
+                5. Se não tiver dados suficientes no contexto para responder com precisão, avise educadamente.
+                6. Fale sempre em Português do Brasil.
+                `;
+
+                const result = await model.generateContent(systemPrompt);
+                const responseText = result.response.text();
+
+                res.json({ reply: responseText });
+
+            } catch (error) {
+                console.error("Erro no Chat Coach:", error);
+                res.status(500).json({
+                    error: "Falha ao processar mensagem.",
+                    details: error.message
+                });
+            }
+        });
+    });

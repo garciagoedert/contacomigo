@@ -121,7 +121,7 @@ async function loadDashboardData() {
 
         if (error.message.includes('permission-denied') || error.message.includes('403')) {
             alert('Acesso negado. Você não tem permissão de administrador.');
-            window.location.href = '../app.html';
+            window.location.href = '../dashboard.html';
         }
     }
 }

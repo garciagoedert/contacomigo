@@ -1,5 +1,5 @@
 // Importações do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, Timestamp, writeBatch, getDoc, where, getDocs, setDoc, arrayUnion, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -26,7 +26,7 @@ if (!firebaseConfig.apiKey) {
 }
 
 // --- INICIALIZAÇÃO DO FIREBASE ---
-const app = initializeApp(firebaseConfig);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -131,6 +131,8 @@ const transactionTypeRadios = document.querySelectorAll('input[name="type"]');
 
 let currentUserId = null;
 let currentFamilyId = null;
+let transactions = [];
+let goals = [];
 let currentUserPlan = 'free'; // Plano do usuário: 'free', 'premium_monthly', 'premium_yearly'
 let trialEndsAt = null; // Data de fim do trial
 let unsubscribeFromTransactions = null;
@@ -156,10 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAndApplyColor();
 });
 
-themeToggleBtn.addEventListener('click', () => {
-    const isDarkMode = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-});
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+        const isDarkMode = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+}
 
 const colors = [
     { name: 'Padrão', value: '#4F46E5' },
@@ -179,7 +183,9 @@ colors.forEach(color => {
         localStorage.setItem('mainColor', color.value);
         updateActiveColor();
     });
-    colorOptionsContainer.appendChild(colorCircle);
+    if (colorOptionsContainer) {
+        colorOptionsContainer.appendChild(colorCircle);
+    }
 });
 
 function updateActiveColor() {
@@ -199,7 +205,10 @@ function loadAndApplyColor() {
     updateActiveColor();
 }
 
-// --- LÓGICA DE NAVEGAÇÃO E SIDEBAR ---
+
+
+// --- LÓGICA DE SIDEBAR (Mobile) ---
+// openSidebar e closeSidebar mantidos para o menu mobile
 function openSidebar() {
     sidebar.classList.remove('-translate-x-full');
     sidebarOverlay.classList.remove('hidden');
@@ -210,187 +219,34 @@ function closeSidebar() {
     sidebarOverlay.classList.add('hidden');
 }
 
-menuBtn.addEventListener('click', openSidebar);
-sidebarOverlay.addEventListener('click', closeSidebar);
+if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
 
-const navLinks = document.querySelectorAll('aside nav a, aside nav button');
-function updateActiveLink(activeLink) {
-    navLinks.forEach(link => link.classList.remove('sidebar-active'));
-    activeLink.classList.add('sidebar-active');
-}
+// Navegação agora é via links HTML diretos (MPA)
 
-const showTransactions = (e) => {
-    e.preventDefault();
-    investmentsView.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.add('hidden');
-    transactionsSection.classList.remove('hidden');
-    summary.classList.remove('hidden');
-    charts.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.remove('hidden');
-    addTransactionBtnMobile.classList.remove('hidden');
-    updateActiveLink(showTransactionsViewBtn);
-    closeSidebar();
-};
-
-const showInvestments = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.add('hidden');
-    investmentsView.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showInvestmentsViewBtn);
-    closeSidebar();
-};
-
-const showBudgets = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    investmentsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.add('hidden');
-    budgetsView.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showBudgetsViewBtn);
-    closeSidebar();
-};
-
-const showSettings = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    investmentsView.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.add('hidden');
-    settingsView.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showSettingsViewBtn);
-    closeSidebar();
-};
-
-const showGoals = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    investmentsView.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.add('hidden');
-    goalsView.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showGoalsViewBtn);
-    closeSidebar();
-};
-
-const showDebts = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    investmentsView.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.add('hidden');
-    debtsView.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showDebtsViewBtn);
-    closeSidebar();
-};
-
-const showTasks = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    investmentsView.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.remove('hidden');
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showTasksViewBtn);
-    closeSidebar();
-};
-
-const showCalculator = (e) => {
-    e.preventDefault();
-    transactionsSection.classList.add('hidden');
-    summary.classList.add('hidden');
-    charts.classList.add('hidden');
-    investmentsView.classList.add('hidden');
-    budgetsView.classList.add('hidden');
-    settingsView.classList.add('hidden');
-    goalsView.classList.add('hidden');
-    debtsView.classList.add('hidden');
-    tasksView.classList.add('hidden');
-    calculatorView.classList.remove('hidden');
-
-    addTransactionBtnDesktop.classList.add('hidden');
-    addTransactionBtnMobile.classList.add('hidden');
-    updateActiveLink(showCalculatorViewBtn);
-    closeSidebar();
-};
-
-showTransactionsViewBtn.addEventListener('click', showTransactions);
-showInvestmentsViewBtn.addEventListener('click', showInvestments);
-showBudgetsViewBtn.addEventListener('click', showBudgets);
-showSettingsViewBtn.addEventListener('click', showSettings);
-showGoalsViewBtn.addEventListener('click', showGoals);
-showDebtsViewBtn.addEventListener('click', showDebts);
-showTasksViewBtn.addEventListener('click', showTasks);
-showCalculatorViewBtn.addEventListener('click', showCalculator);
 
 // --- LÓGICA DE AUTENTICAÇÃO ---
 onAuthStateChanged(auth, async user => {
     if (user) {
-        // Usuário está logado, busca informações da família e carrega os dados
-        currentUserId = user.uid;
-        await setupUserFamily(user);
-        await loadUserPlan(user.uid); // Carregar plano do usuário
-        appView.classList.remove('hidden'); // Mostra a aplicação
-        setupRealtimeListeners(currentFamilyId);
-        processRecurringTransactions(currentFamilyId); // Processa recorrência ao iniciar
+        try {
+            // Usuário está logado, busca informações da família e carrega os dados
+            currentUserId = user.uid;
+            await setupUserFamily(user);
+
+            // Tenta carregar o plano, mas não bloqueia se falhar (função global window.loadUserPlan)
+            if (typeof window.loadUserPlan === 'function') {
+                await window.loadUserPlan(user.uid);
+            } else {
+                console.warn("loadUserPlan não encontrado globalmente. Verifique imports.");
+            }
+
+            appView.classList.remove('hidden'); // Mostra a aplicação
+            setupRealtimeListeners(currentFamilyId);
+            processRecurringTransactions(currentFamilyId); // Processa recorrência ao iniciar
+        } catch (error) {
+            console.error("Erro fatal na inicialização do app:", error);
+            alert("Erro ao carregar aplicação. Verifique o console.");
+        }
     } else {
         // Usuário não está logado, redireciona para a página de login
         window.location.href = 'login/index.html';
@@ -432,11 +288,13 @@ async function setupUserFamily(user) {
     }
 }
 
-logoutButton.addEventListener('click', () => {
-    signOut(auth).catch(error => {
-        console.error("Erro ao fazer logout:", error);
+if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+        signOut(auth).catch(error => {
+            console.error("Erro ao fazer logout:", error);
+        });
     });
-});
+}
 
 // --- FUNÇÃO AUXILIAR: MURIEL STRATEGY (CATEGORIAS PADRÃO) ---
 async function createDefaultCategories(familyId) {
@@ -473,7 +331,7 @@ function setupRealtimeListeners(familyId) {
 
     const transactionsCol = collection(db, 'families', familyId, 'transactions');
     unsubscribeFromTransactions = onSnapshot(query(transactionsCol), (snapshot) => {
-        const transactions = [];
+        transactions = [];
         snapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
         transactions.sort((a, b) => b.timestamp?.toMillis() - a.timestamp?.toMillis());
         renderTransactions(transactions);
@@ -482,7 +340,7 @@ function setupRealtimeListeners(familyId) {
 
     const goalsCol = collection(db, 'families', familyId, 'goals');
     unsubscribeFromGoals = onSnapshot(query(goalsCol), (snapshot) => {
-        const goals = [];
+        goals = [];
         snapshot.forEach(doc => goals.push({ id: doc.id, ...doc.data() }));
         renderGoals(goals);
     });
@@ -548,6 +406,7 @@ function setupRealtimeListeners(familyId) {
 }
 
 function renderBudgets(budgets, transactions) {
+    if (!budgetListEl) return;
     budgetListEl.innerHTML = '';
     if (budgets.length === 0) {
         budgetListEl.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhum orçamento definido.</p>';
@@ -588,6 +447,7 @@ function renderBudgets(budgets, transactions) {
 }
 
 function renderFamilyMembers(members) {
+    if (!familyMembersListSettings) return;
     familyMembersListSettings.innerHTML = '';
     members.forEach(member => {
         const el = document.createElement('div');
@@ -598,6 +458,7 @@ function renderFamilyMembers(members) {
 }
 
 function renderGoals(goals) {
+    if (!goalListEl) return;
     goalListEl.innerHTML = '';
     if (goals.length === 0) {
         goalListEl.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhuma meta definida.</p>';
@@ -650,8 +511,9 @@ function renderGoals(goals) {
 }
 
 function renderCategories(incomeCategories, expenseCategories) {
-    incomeCategoriesListSettings.innerHTML = '';
-    expenseCategoriesListSettings.innerHTML = '';
+    if (incomeCategoriesListSettings) incomeCategoriesListSettings.innerHTML = '';
+    if (expenseCategoriesListSettings) expenseCategoriesListSettings.innerHTML = '';
+    if (!incomeCategoriesListSettings && !expenseCategoriesListSettings) return;
     incomeCategories.forEach(cat => {
         const el = document.createElement('div');
         el.className = 'flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-2 rounded-md';
@@ -675,6 +537,7 @@ function renderCategories(incomeCategories, expenseCategories) {
 }
 
 function updateCategoryDropdown(incomeCategories, expenseCategories) {
+    if (!categorySelect) return;
     const currentSelection = categorySelect.value;
     categorySelect.innerHTML = '';
     categorySelect.innerHTML += '<optgroup label="Receitas">';
@@ -697,6 +560,7 @@ function updateCategoryDropdown(incomeCategories, expenseCategories) {
 }
 
 function renderInvestments(investments) {
+    if (!investmentListEl) return;
     investmentListEl.innerHTML = '';
     let totalInvested = 0;
     let currentTotalValue = 0;
@@ -837,14 +701,18 @@ function formatCurrency(value) {
 function updateSummary(transactions) {
     const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const totalExpense = transactions.filter(t => t.type === 'expense' && !t.isInvestment).reduce((sum, t) => sum + t.amount, 0);
-    totalIncomeEl.textContent = formatCurrency(totalIncome);
-    totalExpenseEl.textContent = formatCurrency(totalExpense);
-    balanceEl.textContent = formatCurrency(totalIncome - totalExpense);
+
+    if (totalIncomeEl) totalIncomeEl.textContent = formatCurrency(totalIncome);
+    if (totalExpenseEl) totalExpenseEl.textContent = formatCurrency(totalExpense);
+    if (balanceEl) balanceEl.textContent = formatCurrency(totalIncome - totalExpense);
+
+    // Charts logic handles missing elements internally ideally, but let's check
     renderExpenseChart(transactions);
     renderIncomeExpenseChart(transactions);
 }
 
 function renderTransactions(transactions) {
+    if (!transactionListEl) return;
     transactionListEl.innerHTML = '';
     if (transactions.length === 0) {
         transactionListEl.appendChild(noTransactionsEl);
@@ -933,7 +801,9 @@ let expenseChart = null;
 let incomeExpenseChart = null;
 
 function renderIncomeExpenseChart(transactions) {
-    const ctx = document.getElementById('income-expense-chart').getContext('2d');
+    const canvasElement = document.getElementById('income-expense-chart');
+    if (!canvasElement) return;
+    const ctx = canvasElement.getContext('2d');
     const last6Months = [];
     const now = new Date();
 
@@ -1016,7 +886,9 @@ function renderIncomeExpenseChart(transactions) {
 }
 
 function renderExpenseChart(transactions) {
-    const ctx = document.getElementById('expense-chart').getContext('2d');
+    const canvasElement = document.getElementById('expense-chart');
+    if (!canvasElement) return;
+    const ctx = canvasElement.getContext('2d');
     const expenses = transactions.filter(t => t.type === 'expense');
 
     const dataByCategory = expenses.reduce((acc, t) => {
@@ -1063,57 +935,64 @@ function renderExpenseChart(transactions) {
 // ... Funções open/close e event listeners para cada modal ...
 
 // --- LÓGICA DOS FORMULÁRIOS DE CONFIGURAÇÕES ---
-addIncomeCategoryFormSettings.addEventListener('submit', async (e) => {
-    e.preventDefault();
+if (addIncomeCategoryFormSettings) {
+    addIncomeCategoryFormSettings.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    // Verificar limite de categorias (Premium Feature)
-    const currentCategories = incomeCategoriesListSettings.children.length;
-    if (!window.hasFeatureAccess('unlimited_categories') && currentCategories >= 5) {
-        window.showUpgradeModal('Categorias Ilimitadas');
-        return;
-    }
+        // Verificar limite de categorias (Premium Feature)
+        const currentCategories = incomeCategoriesListSettings.children.length;
+        if (!window.hasFeatureAccess('unlimited_categories') && currentCategories >= 5) {
+            window.showUpgradeModal('Categorias Ilimitadas');
+            return;
+        }
 
-    const input = document.getElementById('new-income-category-settings');
-    const newCategoryName = input.value.trim();
-    if (newCategoryName && currentFamilyId) {
-        await addDoc(collection(db, 'families', currentFamilyId, 'categories'), { name: newCategoryName, type: 'income' });
-        input.value = '';
-    }
-});
+        const input = document.getElementById('new-income-category-settings');
+        const newCategoryName = input.value.trim();
+        if (newCategoryName && currentFamilyId) {
+            await addDoc(collection(db, 'families', currentFamilyId, 'categories'), { name: newCategoryName, type: 'income' });
+            input.value = '';
+        }
+    });
+}
 
-addExpenseCategoryFormSettings.addEventListener('submit', async (e) => {
-    e.preventDefault();
+if (addExpenseCategoryFormSettings) {
+    addExpenseCategoryFormSettings.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    // Verificar limite de categorias (Premium Feature)
-    const currentCategories = expenseCategoriesListSettings.children.length;
-    if (!window.hasFeatureAccess('unlimited_categories') && currentCategories >= 5) {
-        window.showUpgradeModal('Categorias Ilimitadas');
-        return;
-    }
+        // Verificar limite de categorias (Premium Feature)
+        const currentCategories = expenseCategoriesListSettings.children.length;
+        if (!window.hasFeatureAccess('unlimited_categories') && currentCategories >= 5) {
+            window.showUpgradeModal('Categorias Ilimitadas');
+            return;
+        }
 
-    const input = document.getElementById('new-expense-category-settings');
-    const newCategoryName = input.value.trim();
-    if (newCategoryName && currentFamilyId) {
-        await addDoc(collection(db, 'families', currentFamilyId, 'categories'), { name: newCategoryName, type: 'expense' });
-        input.value = '';
-    }
-});
+        const input = document.getElementById('new-expense-category-settings');
+        const newCategoryName = input.value.trim();
+        if (newCategoryName && currentFamilyId) {
+            await addDoc(collection(db, 'families', currentFamilyId, 'categories'), { name: newCategoryName, type: 'expense' });
+            input.value = '';
+        }
+    });
+}
 
-inviteMemberFormSettings.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = document.getElementById('invite-email-settings');
-    const email = input.value.trim();
+if (inviteMemberFormSettings) {
+    inviteMemberFormSettings.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('invite-email-settings');
+        const email = input.value.trim();
 
-    if (email && currentFamilyId) {
-        await addDoc(collection(db, 'invitations'), {
-            familyId: currentFamilyId,
-            email: email,
-            invitedBy: auth.currentUser.email
-        });
-        input.value = '';
-        alert('Convite enviado!');
-    }
-});
+        if (email && currentFamilyId) {
+            await addDoc(collection(db, 'invitations'), {
+                familyId: currentFamilyId,
+                email: email,
+                invitedBy: auth.currentUser.email
+            });
+            input.value = '';
+            alert('Convite enviado!');
+        }
+
+    });
+}
 
 // --- FEATURE: PROCESSAR TRANSAÇÕES RECORRENTES ---
 async function processRecurringTransactions(familyId) {
@@ -1449,6 +1328,7 @@ async function deleteGoal(id) {
 
 // --- LÓGICA DOS OUTROS MODAIS (Orçamento, Investimento) ---
 function renderDebts(debts) {
+    if (!debtListEl) return;
     debtListEl.innerHTML = '';
     if (debts.length === 0) {
         debtListEl.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400">Nenhuma dívida encontrada.</p>';
@@ -1549,6 +1429,7 @@ debtForm.addEventListener('submit', async (e) => {
 });
 
 function renderTasks(tasks) {
+    if (!taskListEl) return;
     taskListEl.innerHTML = '';
     if (tasks.length === 0) {
         taskListEl.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhuma tarefa encontrada.</td></tr>';
@@ -2205,4 +2086,89 @@ window.exportReport = async function () {
         alert('Erro ao exportar relatório.');
     }
 };
+
+
+// --- AI CHAT LOGIC ---
+
+async function handleChatSubmit(event) {
+    event.preventDefault();
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    // 1. Mostrar mensagem do usuário
+    appendMessage(message, 'user');
+    input.value = '';
+
+    // 2. Mostrar indicador de digitando
+    const loadingId = appendMessage('Digitando...', 'ai', true);
+
+    try {
+        // 3. Obter contexto financeiro (simplificado para não estourar tokens)
+        const recentTransactions = transactions.slice(0, 50); // Últimas 50
+        const userGoals = goals;
+
+        // 4. Enviar para Backend
+        const response = await fetch('https://us-central1-financeapp-6da16.cloudfunctions.net/chatWithCoach', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message,
+                financialContext: {
+                    transactions: recentTransactions,
+                    goals: userGoals
+                }
+            })
+        });
+
+        const data = await response.json();
+
+        // 5. Remover loading e mostrar resposta
+        removeMessage(loadingId);
+        if (data.reply) {
+            appendMessage(data.reply, 'ai');
+        } else {
+            appendMessage('Desculpe, não consegui entender. Tente novamente.', 'ai');
+        }
+
+    } catch (error) {
+        console.error('Erro no Chat:', error);
+        removeMessage(loadingId);
+        appendMessage('Ocorreu um erro ao falar com o Coach. Tente mais tarde.', 'ai');
+    }
+}
+
+function appendMessage(text, sender, isLoading = false) {
+    const history = document.getElementById('chat-history');
+    const div = document.createElement('div');
+    const id = 'msg-' + Date.now();
+    div.id = id;
+
+    div.className = `flex items-start space-x-3 ${sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`;
+
+    // Markdown parsing simples para negrito e quebras de linha
+    let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+    div.innerHTML = `
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${sender === 'ai' ? 'bg-gradient-to-br from-purple-500 to-blue-600' : 'bg-slate-700'}">
+            <i class="fas ${sender === 'ai' ? 'fa-robot' : 'fa-user'} text-white"></i>
+        </div>
+        <div class="${sender === 'ai' ? 'bg-slate-700/50 text-slate-200' : 'bg-purple-600 text-white'} p-4 rounded-2xl ${sender === 'ai' ? 'rounded-tl-none' : 'rounded-tr-none'} max-w-[80%] border ${sender === 'ai' ? 'border-slate-600/50' : 'border-purple-500'}">
+            <p>${isLoading ? '<span class="animate-pulse">...</span>' : formattedText}</p>
+        </div>
+    `;
+
+    history.appendChild(div);
+    history.scrollTop = history.scrollHeight;
+    return id;
+}
+
+function removeMessage(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+}
+
+
+window.handleChatSubmit = handleChatSubmit;
+
 

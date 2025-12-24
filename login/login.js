@@ -1,5 +1,5 @@
 // Importações do Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, where, getDocs, updateDoc, arrayUnion, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -26,7 +26,7 @@ if (!firebaseConfig.apiKey) {
 }
 
 // --- INICIALIZAÇÃO DO FIREBASE ---
-const app = initializeApp(firebaseConfig);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -59,7 +59,7 @@ showLoginBtn.addEventListener('click', (e) => {
 onAuthStateChanged(auth, user => {
     if (user && !isRegisteringPremium) {
         // Se o usuário já está logado e NÃO está no fluxo de premium, redireciona
-        window.location.href = '../app.html';
+        window.location.href = '../dashboard.html';
     }
 });
 
@@ -133,7 +133,7 @@ registerForm.addEventListener('submit', async (e) => {
                 registerError.textContent = "Erro ao iniciar pagamento. Redirecionando para o app...";
                 registerError.classList.remove('hidden');
                 // Em caso de erro, redireciona para o app após 3s
-                setTimeout(() => window.location.href = '../app.html', 3000);
+                setTimeout(() => window.location.href = '../dashboard.html', 3000);
             }
         } else {
             // Se for FREE, o onAuthStateChanged vai cuidar do redirecionamento, 
@@ -171,7 +171,7 @@ async function startCheckout(user, planType, cellphone, taxId) {
             userId: user.uid,
             userEmail: user.email,
             userName: user.displayName || 'Novo Cliente Trilha Comigo',
-            returnUrl: `${window.location.origin}/app.html`,
+            returnUrl: `${window.location.origin}/dashboard.html`,
             cellphone: cellphone,
             taxId: taxId
         })
