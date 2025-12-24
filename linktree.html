@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilha Comigo - Links</title>
+    <meta name="description" content="Acesse nossos canais oficiais. App de Gestão Financeira e Newsletter Semanal.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="icon" href="imgs/favicon.png" type="image/png">
+
+    <style>
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .gradient-animate {
+            background: linear-gradient(-45deg, #E91E63, #9C27B0, #3F51B5, #2196F3);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="gradient-animate min-h-screen flex flex-col items-center justify-center p-6 text-white text-center">
+
+    <main class="w-full max-w-md flex flex-col items-center gap-8 fade-in">
+
+        <!-- Logo -->
+        <div class="bg-white/10 backdrop-blur-md p-4 rounded-3xl shadow-xl border border-white/20">
+            <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-24 md:h-28 object-contain drop-shadow-lg">
+        </div>
+
+        <!-- Bio -->
+        <div class="space-y-3">
+            <h1 class="text-3xl font-bold tracking-tight">Trilha Comigo</h1>
+            <p class="text-white/90 text-lg leading-relaxed">
+                App de Gestão Financeira + Newsletter Semanal 💰<br>
+                <span class="text-sm opacity-80">Organize seu orçamento e aprenda a investir melhor.</span>
+            </p>
+        </div>
+
+        <!-- Links -->
+        <div class="w-full space-y-4">
+            <!-- App Link -->
+            <a href="login/index.html"
+                class="group block w-full py-4 px-6 bg-white text-[var(--cor-principal)] text-indigo-700 rounded-xl font-bold text-lg shadow-xl hover-lift transition-all hover:bg-indigo-50 flex items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Acessar App
+            </a>
+
+            <!-- Newsletter Link -->
+            <a href="https://trilhacomigo.beehiiv.com/"
+                class="group block w-full py-4 px-6 bg-white/20 backdrop-blur-md border border-white/40 text-white rounded-xl font-bold text-lg shadow-xl hover-lift transition-all hover:bg-white/30 flex items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                Ler Newsletter
+            </a>
+
+            <!-- Site Link (Optional) -->
+            <a href="index.html"
+                class="group block w-full py-3 px-6 bg-transparent text-white/80 rounded-xl font-medium text-sm hover:text-white transition-all flex items-center justify-center gap-2">
+                Ir para o site oficial
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-xs text-white/50">
+            © 2025 Trilha Comigo
+        </footer>
+
+    </main>
+</body>
+
+</html>
