@@ -411,6 +411,25 @@
                         <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Enviar para investimentos?</span>
                     </label>
                 </div>
+
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="is-recurring"
+                            class="form-checkbox h-5 w-5 text-[var(--cor-principal)] rounded">
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Transação Recorrente?</span>
+                    </label>
+                </div>
+
+                <div id="recurrence-details" class="mb-4 hidden">
+                    <label for="recurrence-frequency"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frequência</label>
+                    <select id="recurrence-frequency"
+                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="monthly">Mensal</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="yearly">Anual</option>
+                    </select>
+                </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="cancel-btn"
                         class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
