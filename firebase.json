@@ -31,5 +31,13 @@
                 "firebase-debug.*.log"
             ]
         }
-    ]
+    ],
+    "emulators": {
+        "hosting": {
+            "port": 8000
+        },
+        "ui": {
+            "enabled": true
+        }
+    }
 }

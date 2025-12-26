@@ -243,6 +243,9 @@ onAuthStateChanged(auth, async user => {
             appView.classList.remove('hidden'); // Mostra a aplicação
             setupRealtimeListeners(currentFamilyId);
             processRecurringTransactions(currentFamilyId); // Processa recorrência ao iniciar
+            if (document.getElementById('ai-coach')) {
+                updateAICoach();
+            }
         } catch (error) {
             console.error("Erro fatal na inicialização do app:", error);
             alert("Erro ao carregar aplicação. Verifique o console.");
@@ -1136,18 +1139,22 @@ function toggleInvestmentOption() {
 }
 
 // Adiciona os event listeners
-addTransactionBtnMobile.addEventListener('click', () => openTransactionModal());
-addTransactionBtnDesktop.addEventListener('click', () => openTransactionModal());
-cancelBtn.addEventListener('click', closeTransactionModal);
-modal.addEventListener('click', (e) => {
-    // Fecha o modal se o clique for no overlay (fundo)
-    if (e.target === modal) {
-        closeTransactionModal();
-    }
-});
-transactionTypeRadios.forEach(radio => {
-    radio.addEventListener('change', toggleInvestmentOption);
-});
+if (addTransactionBtnMobile) addTransactionBtnMobile.addEventListener('click', () => openTransactionModal());
+if (addTransactionBtnDesktop) addTransactionBtnDesktop.addEventListener('click', () => openTransactionModal());
+if (cancelBtn) cancelBtn.addEventListener('click', closeTransactionModal);
+if (modal) {
+    modal.addEventListener('click', (e) => {
+        // Fecha o modal se o clique for no overlay (fundo)
+        if (e.target === modal) {
+            closeTransactionModal();
+        }
+    });
+}
+if (transactionTypeRadios) {
+    transactionTypeRadios.forEach(radio => {
+        radio.addEventListener('change', toggleInvestmentOption);
+    });
+}
 
 // Toggle recurrence details
 const isRecurringCheckbox = document.getElementById('is-recurring');
@@ -1164,91 +1171,94 @@ if (isRecurringCheckbox) {
 }
 
 // Lógica de submissão do formulário de transação
-transactionForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+// Lógica de submissão do formulário de transação
+if (transactionForm) {
+    transactionForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    const id = transactionIdInput.value;
-    const description = document.getElementById('description').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const date = document.getElementById('date').value;
-    const type = document.querySelector('input[name="type"]:checked').value;
-    const category = categorySelect.value;
-    const isInvestment = isInvestmentCheckbox.checked;
+        const id = transactionIdInput.value;
+        const description = document.getElementById('description').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+        const date = document.getElementById('date').value;
+        const type = document.querySelector('input[name="type"]:checked').value;
+        const category = categorySelect.value;
+        const isInvestment = isInvestmentCheckbox.checked;
 
-    // Recurrence Data
-    const isRecurring = document.getElementById('is-recurring').checked;
-    const frequency = document.getElementById('recurrence-frequency').value;
+        // Recurrence Data
+        const isRecurring = document.getElementById('is-recurring').checked;
+        const frequency = document.getElementById('recurrence-frequency').value;
 
-    if (!description || isNaN(amount) || !date || !category) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-        return;
-    }
-
-    // Check recurrence permission
-    if (isRecurring && !window.hasFeatureAccess('recurring_transactions')) {
-        window.showUpgradeModal('Transações Recorrentes');
-        return;
-    }
-
-    const transactionData = {
-        description,
-        amount,
-        timestamp: Timestamp.fromDate(new Date(date)),
-        type,
-        category,
-        isInvestment,
-        userId: currentUserId,
-        isRecurring: isRecurring || false
-    };
-
-    if (isRecurring) {
-        transactionData.frequency = frequency;
-        // Calcular próxima data
-        const nextDate = new Date(date);
-        if (frequency === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
-        else if (frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
-        else if (frequency === 'yearly') nextDate.setFullYear(nextDate.getFullYear() + 1);
-        transactionData.nextDueDate = nextDate.toISOString().split('T')[0];
-    }
-
-    try {
-        if (id) {
-            // Atualizar transação existente
-            const transactionRef = doc(db, 'families', currentFamilyId, 'transactions', id);
-            await updateDoc(transactionRef, transactionData);
-        } else {
-            // Adicionar nova transação
-            await addDoc(collection(db, 'families', currentFamilyId, 'transactions'), transactionData);
+        if (!description || isNaN(amount) || !date || !category) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
         }
 
-        // Se for uma despesa marcada como investimento, cria um registro correspondente em investimentos
-        if (isInvestment && type === 'expense') {
-            await addDoc(collection(db, 'families', currentFamilyId, 'investments'), {
-                name: `Aporte: ${description}`,
-                averagePrice: amount, // Para aportes, o preço médio é o valor total
-                quantity: 1,
-                currentPrice: amount, // O valor atual é o mesmo do aporte
-                timestamp: Timestamp.fromDate(new Date(date)),
-                isContribution: true, // Marca como um aporte para diferenciar de outros ativos
-                userId: currentUserId
-            });
+        // Check recurrence permission
+        if (isRecurring && !window.hasFeatureAccess('recurring_transactions')) {
+            window.showUpgradeModal('Transações Recorrentes');
+            return;
         }
 
-        // Tracking Event
-        if (window.Analytics) {
-            window.Analytics.track('Add_Transaction', {
-                amount: amount,
-                category: category,
-                type: type
-            });
+        const transactionData = {
+            description,
+            amount,
+            timestamp: Timestamp.fromDate(new Date(date)),
+            type,
+            category,
+            isInvestment,
+            userId: currentUserId,
+            isRecurring: isRecurring || false
+        };
+
+        if (isRecurring) {
+            transactionData.frequency = frequency;
+            // Calcular próxima data
+            const nextDate = new Date(date);
+            if (frequency === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
+            else if (frequency === 'weekly') nextDate.setDate(nextDate.getDate() + 7);
+            else if (frequency === 'yearly') nextDate.setFullYear(nextDate.getFullYear() + 1);
+            transactionData.nextDueDate = nextDate.toISOString().split('T')[0];
         }
 
-        closeTransactionModal();
-    } catch (error) {
-        console.error("Erro ao salvar transação: ", error);
-        alert("Ocorreu um erro ao salvar a transação. Tente novamente.");
-    }
-});
+        try {
+            if (id) {
+                // Atualizar transação existente
+                const transactionRef = doc(db, 'families', currentFamilyId, 'transactions', id);
+                await updateDoc(transactionRef, transactionData);
+            } else {
+                // Adicionar nova transação
+                await addDoc(collection(db, 'families', currentFamilyId, 'transactions'), transactionData);
+            }
+
+            // Se for uma despesa marcada como investimento, cria um registro correspondente em investimentos
+            if (isInvestment && type === 'expense') {
+                await addDoc(collection(db, 'families', currentFamilyId, 'investments'), {
+                    name: `Aporte: ${description}`,
+                    averagePrice: amount, // Para aportes, o preço médio é o valor total
+                    quantity: 1,
+                    currentPrice: amount, // O valor atual é o mesmo do aporte
+                    timestamp: Timestamp.fromDate(new Date(date)),
+                    isContribution: true, // Marca como um aporte para diferenciar de outros ativos
+                    userId: currentUserId
+                });
+            }
+
+            // Tracking Event
+            if (window.Analytics) {
+                window.Analytics.track('Add_Transaction', {
+                    amount: amount,
+                    category: category,
+                    type: type
+                });
+            }
+
+            closeTransactionModal();
+        } catch (error) {
+            console.error("Erro ao salvar transação: ", error);
+            alert("Ocorreu um erro ao salvar a transação. Tente novamente.");
+        }
+    });
+}
 
 // A função openModalForEdit é chamada pelos botões de edição na lista de transações
 function openModalForEdit(transaction) {
@@ -1289,31 +1299,35 @@ function closeGoalModal() {
     goalModal.classList.add('hidden');
 }
 
-addGoalBtn.addEventListener('click', () => openGoalModal());
-cancelGoalBtn.addEventListener('click', closeGoalModal);
-goalModal.addEventListener('click', (e) => {
-    if (e.target === goalModal) {
+if (addGoalBtn) addGoalBtn.addEventListener('click', () => openGoalModal());
+if (cancelGoalBtn) cancelGoalBtn.addEventListener('click', closeGoalModal);
+if (goalModal) {
+    goalModal.addEventListener('click', (e) => {
+        if (e.target === goalModal) {
+            closeGoalModal();
+        }
+    });
+}
+
+if (goalForm) {
+    goalForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('goal-id').value;
+        const goalData = {
+            name: document.getElementById('goal-name').value,
+            targetAmount: parseFloat(document.getElementById('goal-target').value),
+            currentAmount: parseFloat(document.getElementById('goal-current').value),
+            userId: currentUserId
+        };
+
+        if (id) {
+            await updateDoc(doc(db, 'families', currentFamilyId, 'goals', id), goalData);
+        } else {
+            await addDoc(collection(db, 'families', currentFamilyId, 'goals'), goalData);
+        }
         closeGoalModal();
-    }
-});
-
-goalForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('goal-id').value;
-    const goalData = {
-        name: document.getElementById('goal-name').value,
-        targetAmount: parseFloat(document.getElementById('goal-target').value),
-        currentAmount: parseFloat(document.getElementById('goal-current').value),
-        userId: currentUserId
-    };
-
-    if (id) {
-        await updateDoc(doc(db, 'families', currentFamilyId, 'goals', id), goalData);
-    } else {
-        await addDoc(collection(db, 'families', currentFamilyId, 'goals'), goalData);
-    }
-    closeGoalModal();
-});
+    });
+}
 
 async function deleteGoal(id) {
     if (!currentFamilyId || !id) return;
@@ -1401,32 +1415,36 @@ function closeDebtModal() {
     debtModal.classList.add('hidden');
 }
 
-addDebtBtn.addEventListener('click', () => openDebtModal());
-cancelDebtBtn.addEventListener('click', closeDebtModal);
-debtModal.addEventListener('click', (e) => {
-    if (e.target === debtModal) {
+if (addDebtBtn) addDebtBtn.addEventListener('click', () => openDebtModal());
+if (cancelDebtBtn) cancelDebtBtn.addEventListener('click', closeDebtModal);
+if (debtModal) {
+    debtModal.addEventListener('click', (e) => {
+        if (e.target === debtModal) {
+            closeDebtModal();
+        }
+    });
+}
+
+if (debtForm) {
+    debtForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('debt-id').value;
+        const debtData = {
+            company: document.getElementById('debt-company').value,
+            amount: parseFloat(document.getElementById('debt-amount').value),
+            dueDate: document.getElementById('debt-due-date').value,
+            negotiation: document.getElementById('debt-negotiation').value,
+            userId: currentUserId
+        };
+
+        if (id) {
+            await updateDoc(doc(db, 'families', currentFamilyId, 'debts', id), debtData);
+        } else {
+            await addDoc(collection(db, 'families', currentFamilyId, 'debts'), debtData);
+        }
         closeDebtModal();
-    }
-});
-
-debtForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('debt-id').value;
-    const debtData = {
-        company: document.getElementById('debt-company').value,
-        amount: parseFloat(document.getElementById('debt-amount').value),
-        dueDate: document.getElementById('debt-due-date').value,
-        negotiation: document.getElementById('debt-negotiation').value,
-        userId: currentUserId
-    };
-
-    if (id) {
-        await updateDoc(doc(db, 'families', currentFamilyId, 'debts', id), debtData);
-    } else {
-        await addDoc(collection(db, 'families', currentFamilyId, 'debts'), debtData);
-    }
-    closeDebtModal();
-});
+    });
+}
 
 function renderTasks(tasks) {
     if (!taskListEl) return;
@@ -1512,72 +1530,80 @@ function closeTaskModal() {
     taskModal.classList.add('hidden');
 }
 
-addTaskBtn.addEventListener('click', () => openTaskModal());
-cancelTaskBtn.addEventListener('click', closeTaskModal);
-taskModal.addEventListener('click', (e) => {
-    if (e.target === taskModal) {
+if (addTaskBtn) addTaskBtn.addEventListener('click', () => openTaskModal());
+if (cancelTaskBtn) cancelTaskBtn.addEventListener('click', closeTaskModal);
+if (taskModal) {
+    taskModal.addEventListener('click', (e) => {
+        if (e.target === taskModal) {
+            closeTaskModal();
+        }
+    });
+}
+
+if (taskForm) {
+    taskForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('task-id').value;
+        const taskData = {
+            title: document.getElementById('task-title').value,
+            responsible: document.getElementById('task-responsible').value,
+            dueDate: document.getElementById('task-due-date').value,
+            priority: document.getElementById('task-priority').value,
+            status: document.getElementById('task-status').value,
+            userId: currentUserId
+        };
+
+        if (id) {
+            await updateDoc(doc(db, 'families', currentFamilyId, 'tasks', id), taskData);
+        } else {
+            await addDoc(collection(db, 'families', currentFamilyId, 'tasks'), taskData);
+        }
         closeTaskModal();
-    }
-});
-
-taskForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('task-id').value;
-    const taskData = {
-        title: document.getElementById('task-title').value,
-        responsible: document.getElementById('task-responsible').value,
-        dueDate: document.getElementById('task-due-date').value,
-        priority: document.getElementById('task-priority').value,
-        status: document.getElementById('task-status').value,
-        userId: currentUserId
-    };
-
-    if (id) {
-        await updateDoc(doc(db, 'families', currentFamilyId, 'tasks', id), taskData);
-    } else {
-        await addDoc(collection(db, 'families', currentFamilyId, 'tasks'), taskData);
-    }
-    closeTaskModal();
-});
+    });
+}
 
 // --- LÓGICA DA CALCULADORA DE INVESTIMENTOS ---
 
-btnCalculate.addEventListener('click', () => {
-    const initial = parseFloat(calcInitial.value) || 0;
-    const monthly = parseFloat(calcMonthly.value) || 0;
-    const rateYear = parseFloat(calcRate.value) || 0;
-    const years = parseInt(calcTime.value) || 0;
+if (btnCalculate) {
+    btnCalculate.addEventListener('click', () => {
+        const initial = parseFloat(calcInitial.value) || 0;
+        const monthly = parseFloat(calcMonthly.value) || 0;
+        const rateYear = parseFloat(calcRate.value) || 0;
+        const years = parseInt(calcTime.value) || 0;
 
-    calculateCompoundInterest(initial, monthly, rateYear, years);
-});
+        calculateCompoundInterest(initial, monthly, rateYear, years);
+    });
+}
 
-btnFetchCDI.addEventListener('click', async () => {
-    try {
-        btnFetchCDI.textContent = "Buscando...";
-        btnFetchCDI.disabled = true;
+if (btnFetchCDI) {
+    btnFetchCDI.addEventListener('click', async () => {
+        try {
+            btnFetchCDI.textContent = "Buscando...";
+            btnFetchCDI.disabled = true;
 
-        // API do Banco Central para Taxa Selic (meta) diária, convertida para anual aprox
-        // Endpoint: https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json
-        const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json');
-        const data = await response.json();
+            // API do Banco Central para Taxa Selic (meta) diária, convertida para anual aprox
+            // Endpoint: https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json
+            const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json');
+            const data = await response.json();
 
-        if (data && data.length > 0) {
-            const selicMeta = parseFloat(data[0].valor); // Isso costuma ser a meta anualizada se for a série 432
-            // Série 432: Meta Selic definida pelo Copom (% a.a.)
+            if (data && data.length > 0) {
+                const selicMeta = parseFloat(data[0].valor); // Isso costuma ser a meta anualizada se for a série 432
+                // Série 432: Meta Selic definida pelo Copom (% a.a.)
 
-            calcRate.value = selicMeta;
-            alert(`Taxa Selic atualizada: ${selicMeta}% a.a.`);
-        } else {
-            alert('Não foi possível obter a taxa automaticamente.');
+                calcRate.value = selicMeta;
+                alert(`Taxa Selic atualizada: ${selicMeta}% a.a.`);
+            } else {
+                alert('Não foi possível obter a taxa automaticamente.');
+            }
+        } catch (error) {
+            console.error("Erro ao buscar Selic:", error);
+            alert('Erro ao conectar com API do Banco Central.');
+        } finally {
+            btnFetchCDI.textContent = "CDI/SELIC";
+            btnFetchCDI.disabled = false;
         }
-    } catch (error) {
-        console.error("Erro ao buscar Selic:", error);
-        alert('Erro ao conectar com API do Banco Central.');
-    } finally {
-        btnFetchCDI.textContent = "CDI/SELIC";
-        btnFetchCDI.disabled = false;
-    }
-});
+    });
+}
 
 function calculateCompoundInterest(initial, monthly, rateYear, years) {
     const rateMonth = Math.pow(1 + (rateYear / 100), 1 / 12) - 1;
@@ -2021,6 +2047,9 @@ async function updateAICoach() {
 if (refreshCoachBtn) {
     refreshCoachBtn.addEventListener('click', updateAICoach);
 }
+
+// Auto-load if coach section exists
+
 
 window.updateAICoach = updateAICoach;
 
