@@ -6,7 +6,7 @@
 const Analytics = {
     settings: {
         facebookPixelId: 'YOUR_PIXEL_ID_HERE', // TODO: Bruno preencher
-        googleTagId: 'YOUR_GTM_ID_HERE',       // TODO: Bruno preencher
+        googleTagId: 'G-KRNK2W5VPX',
         debug: true // Set to false in production
     },
 
