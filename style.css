@@ -39,3 +39,7 @@ aside nav a.sidebar-active {
     background-color: #4299E1; /* Azul, como na imagem */
     color: white;
 }
+
+.gradient-animate {
+    background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+}
