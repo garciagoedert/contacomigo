@@ -171,7 +171,55 @@ function renderTable(users) {
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                 ${validUntilDate}
             </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                ${(user.plan !== 'free' && user.status !== 'cancelled_by_admin') ?
+                `<button onclick="window.cancelSubscription('${user.uid}')" class="text-yellow-600 hover:text-yellow-900 bg-yellow-100 hover:bg-yellow-200 px-3 py-1 rounded-md transition-colors text-xs">Cancelar Assinatura</button>`
+                : '<span class="text-xs text-gray-400 italic px-3">Sem assinatura</span>'}
+                
+                <button onclick="window.deleteUser('${user.uid}')" class="text-red-600 hover:text-red-900 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-md transition-colors text-xs">Excluir</button>
+            </td>
         `;
         usersTableBody.appendChild(tr);
     });
 }
+
+// --- ACTIONS ---
+
+window.cancelSubscription = async (uid) => {
+    if (!confirm('Tem certeza que deseja cancelar a assinatura deste usuário? Ele voltará para o plano Free.')) return;
+
+    try {
+        loadingOverlay.classList.remove('hidden');
+        const cancelUserSubscription = httpsCallable(functions, 'cancelUserSubscription');
+        const result = await cancelUserSubscription({ uid });
+
+        alert(result.data.message);
+        loadDashboardData(); // Recarregar tabela
+    } catch (error) {
+        console.error('Erro ao cancelar:', error);
+        alert('Erro ao cancelar assinatura: ' + error.message);
+    } finally {
+        loadingOverlay.classList.add('hidden');
+    }
+};
+
+window.deleteUser = async (uid) => {
+    if (!confirm('ATENÇÃO: Isso excluirá PERMANENTEMENTE o usuário e todos os seus dados. Deseja continuar?')) return;
+
+    // Double confirmation for deletion
+    if (!confirm('Esta ação é IRREVERSÍVEL. Confirma a exclusão total?')) return;
+
+    try {
+        loadingOverlay.classList.remove('hidden');
+        const deleteUserAccount = httpsCallable(functions, 'deleteUserAccount');
+        const result = await deleteUserAccount({ uid });
+
+        alert(result.data.message);
+        loadDashboardData(); // Recarregar tabela
+    } catch (error) {
+        console.error('Erro ao deletar:', error);
+        alert('Erro ao deletar usuário: ' + error.message);
+    } finally {
+        loadingOverlay.classList.add('hidden');
+    }
+};

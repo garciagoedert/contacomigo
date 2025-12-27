@@ -351,3 +351,146 @@ exports.chatWithCoach = functions
             }
         });
     });
+// --- ADMIN PANEL FUNCTIONS ---
+
+// Middleware para verificar se o usuário é ADMIN
+const checkAdminRole = async (context) => {
+    // Se não houver autenticação
+    if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'Requer autenticação.');
+    }
+
+    // Verificar se o token tem a claim de admin ou verificar no Firestore
+    const uid = context.auth.uid;
+    const userDoc = await admin.firestore().collection('users').doc(uid).get();
+
+    if (!userDoc.exists || userDoc.data().role !== 'admin') {
+        throw new functions.https.HttpsError('permission-denied', 'Requer privilégios de administrador.');
+    }
+
+    return true;
+};
+
+exports.getAdminData = functions
+    .runWith({ invoker: 'public' }) // Permitir chamada pública (a validação é feita dentro com o token)
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            // Aceitar apenas POST
+            if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+            try {
+                // Como é uma requisição HTTP normal, precisamos verificar o token manualmente
+                const idToken = req.headers.authorization?.split('Bearer ')[1] || req.body.token;
+
+                if (!idToken) {
+                    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+                }
+
+                // Verificar token e obter UID
+                const decodedToken = await admin.auth().verifyIdToken(idToken);
+                const uid = decodedToken.uid;
+
+                // Verificar Role de Admin no Firestore
+                const userDoc = await admin.firestore().collection('users').doc(uid).get();
+                if (!userDoc.exists || userDoc.data().role !== 'admin') {
+                    return res.status(403).json({ error: 'Permission Denied: User is not an admin' });
+                }
+
+                // --- INICIO DA LÓGICA DO DASHBOARD ---
+
+                const usersSnapshot = await admin.firestore().collection('users').get();
+
+                let totalUsers = 0;
+                let activePremiumUsers = 0;
+                let totalMRR = 0;
+                const usersList = [];
+
+                usersSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    totalUsers++;
+
+                    // Check Premium Logic
+                    const isPremium = data.plan === 'premium_monthly' || data.plan === 'premium_yearly';
+                    if (isPremium && data.subscriptionStatus === 'active') {
+                        activePremiumUsers++;
+                        // Simple MRR calc
+                        if (data.plan === 'premium_monthly') totalMRR += 9.90;
+                        if (data.plan === 'premium_yearly') totalMRR += (89.90 / 12);
+                    }
+
+                    usersList.push({
+                        uid: doc.id,
+                        name: data.firstName || data.displayName || 'Sem Nome',
+                        email: data.email,
+                        plan: data.plan || 'free',
+                        status: data.subscriptionStatus || 'unknown',
+                        validUntil: data.validUntil ? data.validUntil.toDate() : null
+                    });
+                });
+
+                // Ordenar por data (opcional, aqui pego os últimos por padrão ou sem ordem)
+                // Vamos retornar apenas os últimos 50 para não pesar
+                const recentUsers = usersList.slice(0, 50);
+
+                res.json({
+                    stats: {
+                        totalUsers,
+                        activePremiumUsers,
+                        totalMRR
+                    },
+                    users: recentUsers
+                });
+
+            } catch (error) {
+                console.error("Erro no getAdminData:", error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+    });
+
+exports.cancelUserSubscription = functions
+    .runWith({ invoker: 'public' })
+    .https.onCall(async (data, context) => {
+        await checkAdminRole(context);
+
+        const targetUid = data.uid;
+        if (!targetUid) throw new functions.https.HttpsError('invalid-argument', 'UID do usuário é obrigatório.');
+
+        try {
+            await admin.firestore().collection('users').doc(targetUid).update({
+                plan: 'free',
+                subscriptionStatus: 'cancelled_by_admin',
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            return { success: true, message: 'Assinatura cancelada com sucesso.' };
+        } catch (error) {
+            console.error('Erro ao cancelar assinatura:', error);
+            throw new functions.https.HttpsError('internal', 'Erro ao atualizar usuário.');
+        }
+    });
+
+exports.deleteUserAccount = functions
+    .runWith({ invoker: 'public' })
+    .https.onCall(async (data, context) => {
+        await checkAdminRole(context);
+
+        const targetUid = data.uid;
+        if (!targetUid) throw new functions.https.HttpsError('invalid-argument', 'UID do usuário é obrigatório.');
+
+        try {
+            // 1. Deletar do Authentication
+            await admin.auth().deleteUser(targetUid);
+
+            // 2. Deletar documento do Firestore
+            await admin.firestore().collection('users').doc(targetUid).delete();
+
+            // Opcional: Deletar subcoleções (Ex: transactions)
+            // O Firestore não deleta subcoleções automaticamente. 
+            // Para um app real, use um script recursivo ou extension do Firebase.
+
+            return { success: true, message: 'Usuário excluído permanentemente.' };
+        } catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+            throw new functions.https.HttpsError('internal', 'Erro ao excluir conta.');
+        }
+    });
