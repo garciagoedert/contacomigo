@@ -146,6 +146,11 @@ let unsubscribeFromDebts = null;
 let unsubscribeFromTasks = null;
 let unsubscribeFromCalculator = null; // Placeholder se precisar de real-time
 
+// --- LÓGICA DE URL DO BACKEND ---
+const FUNCTIONS_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1'
+    : 'https://us-central1-financeapp-6da16.cloudfunctions.net';
+
 
 // --- LÓGICA DE APARÊNCIA ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -1982,7 +1987,7 @@ async function updateAICoach() {
         const snGoals = await getDocs(qGoals);
         const goals = snGoals.docs.map(d => d.data());
 
-        const response = await fetch('https://us-central1-financeapp-6da16.cloudfunctions.net/generateWeeklyInsights', {
+        const response = await fetch(`${FUNCTIONS_BASE_URL}/generateWeeklyInsights`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1991,7 +1996,10 @@ async function updateAICoach() {
             })
         });
 
-        if (!response.ok) throw new Error('Falha na API do Coach');
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.details || errorData.error || 'Falha na API do Coach');
+        }
 
         const insights = await response.json();
 
@@ -2138,7 +2146,7 @@ async function handleChatSubmit(event) {
         const userGoals = goals;
 
         // 4. Enviar para Backend
-        const response = await fetch('https://us-central1-financeapp-6da16.cloudfunctions.net/chatWithCoach', {
+        const response = await fetch(`${FUNCTIONS_BASE_URL}/chatWithCoach`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -2201,3 +2209,262 @@ function removeMessage(id) {
 window.handleChatSubmit = handleChatSubmit;
 
 
+
+// --- LÓGICA DO MODAL DE INVESTIMENTO ---
+
+function openInvestmentModal(investment = null) {
+    investmentForm.reset();
+    document.getElementById('investment-id').value = '';
+    const modalTitle = document.getElementById('investment-modal-title');
+    const isNewPurchaseCheckbox = document.getElementById('is-new-purchase');
+
+    // Define data padrão como hoje
+    document.getElementById('asset-date').value = new Date().toISOString().split('T')[0];
+
+    if (investment) {
+        modalTitle.textContent = 'Editar Ativo';
+        document.getElementById('investment-id').value = investment.id;
+        document.getElementById('asset-name').value = investment.name;
+        document.getElementById('asset-quantity').value = investment.quantity;
+        document.getElementById('asset-price').value = investment.averagePrice;
+        document.getElementById('current-asset-price').value = investment.currentPrice;
+
+        if (investment.timestamp) {
+            document.getElementById('asset-date').value = investment.timestamp.toDate().toISOString().split('T')[0];
+        }
+
+        // Se está editando, geralmente não queremos criar uma nova transação duplicada
+        // A menos que o usuário explicitamente queira. Por segurança, desmarcamos e desabilitamos?
+        // Ou deixamos livre? Vamos deixar livre, mas desmarcado.
+        isNewPurchaseCheckbox.checked = false;
+    } else {
+        modalTitle.textContent = 'Novo Ativo';
+        isNewPurchaseCheckbox.checked = false;
+    }
+    investmentModal.classList.remove('hidden');
+}
+
+function closeInvestmentModal() {
+    investmentModal.classList.add('hidden');
+}
+
+if (addInvestmentBtn) addInvestmentBtn.addEventListener('click', () => openInvestmentModal());
+if (cancelInvestmentBtn) cancelInvestmentBtn.addEventListener('click', closeInvestmentModal);
+if (investmentModal) {
+    investmentModal.addEventListener('click', (e) => {
+        if (e.target === investmentModal) {
+            closeInvestmentModal();
+        }
+    });
+}
+
+if (investmentForm) {
+    investmentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('investment-id').value;
+        const name = document.getElementById('asset-name').value;
+        const quantity = parseFloat(document.getElementById('asset-quantity').value);
+        const averagePrice = parseFloat(document.getElementById('asset-price').value);
+        const currentPrice = parseFloat(document.getElementById('current-asset-price').value);
+        const date = document.getElementById('asset-date').value;
+        const isNewPurchase = document.getElementById('is-new-purchase').checked;
+        const totalValue = quantity * averagePrice;
+
+        const investmentData = {
+            name,
+            quantity,
+            averagePrice,
+            currentPrice,
+            timestamp: Timestamp.fromDate(new Date(date)),
+            userId: currentUserId,
+            // isContribution: false // É um ativo, não apenas um aporte
+        };
+
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'families', currentFamilyId, 'investments', id), investmentData);
+            } else {
+                await addDoc(collection(db, 'families', currentFamilyId, 'investments'), investmentData);
+
+                // Se for nova compra, cria transação
+                if (isNewPurchase) {
+                    await addDoc(collection(db, 'families', currentFamilyId, 'transactions'), {
+                        description: `Investimento: ${name}`,
+                        amount: totalValue,
+                        type: 'expense',
+                        category: 'Investimentos',
+                        userId: currentUserId,
+                        timestamp: Timestamp.fromDate(new Date(date)),
+                        isInvestment: true,
+                        isRecurring: false
+                    });
+
+                    // Tracking
+                    if (window.Analytics) {
+                        window.Analytics.track('Investment_Purchase', { amount: totalValue, asset: name });
+                    }
+                }
+            }
+            closeInvestmentModal();
+        } catch (error) {
+            console.error("Erro ao salvar investimento:", error);
+            alert("Erro ao salvar investimento.");
+        }
+    });
+}
+
+// --- FILTER STATE & LOGIC ---
+let globalTransactions = []; // Store all transactions
+let filterState = {
+    mode: 'month', // 'month', 'week', 'day'
+    date: new Date()
+};
+
+function initFilters() {
+    const modeSelect = document.getElementById('filter-mode');
+    const dateInput = document.getElementById('filter-date');
+    const prevBtn = document.getElementById('prev-date-btn');
+    const nextBtn = document.getElementById('next-date-btn');
+
+    if (!modeSelect || !dateInput) return; // Not on a page with filters
+
+    // Set initial date input value
+    updateDateInputType();
+
+    // Event Listeners
+    modeSelect.addEventListener('change', (e) => {
+        filterState.mode = e.target.value;
+        updateDateInputType();
+        renderApp();
+    });
+
+    dateInput.addEventListener('change', (e) => {
+        if (e.target.value) {
+            if (filterState.mode === 'week') {
+                // Input type week returns "YYYY-Www"
+                // Need to parse that, but for now simple date logic often better
+                // Actually standard date input is easier to handle for "Pick a day in the week"
+                // But let's stick to type='week' if we can, or just use date and find the week.
+                // Simplest: Input always affects the 'date' state.
+                // For 'week', input value is string "2023-W01".
+                if (e.target.type === 'week') {
+                    const [year, week] = e.target.value.split('-W');
+                    // Calculate date from week... tricky cross browser
+                    // Let's rely on the date object state.
+                    // Actually, simplified: Let's use 'date' type for Day/Week reference, 'month' for Month.
+                } else {
+                    filterState.date = new Date(e.target.value + 'T00:00:00');
+                }
+            } else {
+                // Month "YYYY-MM" or Date "YYYY-MM-DD"
+                // Ensure timezone don't mess up (append T00:00 or modify logic)
+                // For "month" input, value is "YYYY-MM". New Date("YYYY-MM") = UTC.
+                let val = e.target.value;
+                if (filterState.mode === 'month') val += '-01'; // Force 1st day
+                filterState.date = new Date(val + 'T12:00:00'); // Noon to avoid timezone shifts
+            }
+            renderApp();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        shiftDate(-1);
+        renderApp();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        shiftDate(1);
+        renderApp();
+    });
+}
+
+function updateDateInputType() {
+    const dateInput = document.getElementById('filter-date');
+    const label = document.getElementById('current-filter-label');
+    if (!dateInput) return;
+
+    const d = filterState.date;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+
+    if (filterState.mode === 'month') {
+        dateInput.type = 'month';
+        dateInput.value = `${yyyy}-${mm}`;
+        label.textContent = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    } else if (filterState.mode === 'week') {
+        dateInput.type = 'date'; // Easier to just pick a date and calculate week from it
+        dateInput.value = `${yyyy}-${mm}-${dd}`;
+        // Calculate week range
+        const { start, end } = getWeekRange(d);
+        label.textContent = `${start.getDate()}/${start.getMonth() + 1} - ${end.getDate()}/${end.getMonth() + 1}`;
+    } else {
+        dateInput.type = 'date';
+        dateInput.value = `${yyyy}-${mm}-${dd}`;
+        label.textContent = d.toLocaleDateString('pt-BR');
+    }
+}
+
+function shiftDate(amount) {
+    const d = new Date(filterState.date);
+    if (filterState.mode === 'month') {
+        d.setMonth(d.getMonth() + amount);
+    } else if (filterState.mode === 'week') {
+        d.setDate(d.getDate() + (amount * 7));
+    } else {
+        d.setDate(d.getDate() + amount);
+    }
+    filterState.date = d;
+    updateDateInputType();
+}
+
+function getWeekRange(date) {
+    const d = new Date(date);
+    const day = d.getDay(); // 0 is Sunday
+    const diff = d.getDate() - day; // adjust when day is sunday
+    // If we want Monday start: const diff = d.getDate() - day + (day == 0 ? -6:1);
+    // Let's assume Sunday start for simplicity or adjust as needed.
+    const start = new Date(d.setDate(diff));
+    const end = new Date(new Date(start).setDate(start.getDate() + 6));
+    return { start, end };
+}
+
+function applyDateFilter(transactions) {
+    return transactions.filter(t => {
+        if (!t.timestamp) return false;
+        const tDate = t.timestamp.toDate();
+        const fDate = filterState.date;
+
+        if (filterState.mode === 'month') {
+            return tDate.getMonth() === fDate.getMonth() && tDate.getFullYear() === fDate.getFullYear();
+        } else if (filterState.mode === 'day') {
+            return tDate.getDate() === fDate.getDate() &&
+                tDate.getMonth() === fDate.getMonth() &&
+                tDate.getFullYear() === fDate.getFullYear();
+        } else if (filterState.mode === 'week') {
+            const { start, end } = getWeekRange(fDate);
+            // Reset hours for comparison
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+            return tDate >= start && tDate <= end;
+        }
+        return true;
+    });
+}
+
+function renderApp() {
+    const filteredTransactions = applyDateFilter(globalTransactions);
+
+    // Update Dashboard Elements
+    updateSummary(filteredTransactions);
+    renderTransactions(filteredTransactions); // On dashboard/transactions list
+    // Charts usually take raw transactions, so we should allow them to update too
+    renderExpenseChart(filteredTransactions);
+    renderIncomeExpenseChart(filteredTransactions);
+
+    // Also update AI coach maybe? No, AI coach takes 'recent 50', maybe should stay unrelated to filter or respect it?
+    // User asked for "dashboard... filtro por data" so charts and summary definitely.
+}
+
+// Modify the listener to use this
+// Need to find where onSnapshot is called in app.js and redirect it.

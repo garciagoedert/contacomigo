@@ -278,10 +278,18 @@ exports.generateWeeklyInsights = functions
                 res.json(insights);
 
             } catch (error) {
-                console.error("Erro no AI Coach:", error);
-                res.status(500).json({
-                    error: "Falha ao gerar insights.",
-                    details: error.message
+                console.error("Erro no AI Coach (usando fallback):", error.message);
+
+                // Fallback gracioso para não quebrar o app
+                res.json({
+                    summary: "O Coach está indisponível temporariamente, mas aqui vão dicas gerais: mantenha seus gastos essenciais abaixo de 50% da renda!",
+                    tips: [
+                        "Revise suas assinaturas mensais não utilizadas.",
+                        "Tente aplicar a regra 50/30/20.",
+                        "Evite compras por impulso, espere 24h."
+                    ],
+                    alert: "Modo Offline (API Key Restrita)",
+                    mood: "neutral"
                 });
             }
         });
