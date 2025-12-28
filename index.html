@@ -391,8 +391,9 @@
                                 // but for now let's try a direct fetch to the function.
 
                                 // NOTE: Replace with your actual project location if different
-                                // Using relative path via Firebase Rewrites to avoid CORS and Project ID issues
-                                const FUNCTION_URL = '/api/subscribeToNewsletter';
+                                // Using absolute URL to bypass Hosting Rewrites and resolve Custom Domain routing issues
+                                // CORS is handled by the backend
+                                const FUNCTION_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/subscribeToNewsletter';
 
                                 const response = await fetch(FUNCTION_URL, {
                                     method: 'POST',
