@@ -91,3 +91,6 @@ functions/.env
 
 # Firebase
 .firebase/
+
+# Firebase Runtime Config
+functions/.runtimeconfig.json
