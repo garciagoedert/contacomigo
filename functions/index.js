@@ -245,7 +245,7 @@ exports.generateWeeklyInsights = functions
                 if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
 
                 const genAI = new GoogleGenerativeAI(API_KEY);
-                const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+                const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
                 // Preparar Prompt Otimizado
                 const prompt = `
@@ -310,7 +310,7 @@ exports.chatWithCoach = functions
                 if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
 
                 const genAI = new GoogleGenerativeAI(API_KEY);
-                const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+                const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
                 // Preparar Prompt de Chat
                 let systemPrompt = `

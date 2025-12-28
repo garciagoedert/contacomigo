@@ -146,6 +146,11 @@ let unsubscribeFromDebts = null;
 let unsubscribeFromTasks = null;
 let unsubscribeFromCalculator = null; // Placeholder se precisar de real-time
 
+// Seletores do Coach Collapsible
+const coachHeader = document.getElementById('coach-header');
+const coachCollapsible = document.getElementById('coach-collapsible');
+const coachChevron = document.getElementById('coach-chevron');
+
 // --- LÓGICA DE URL DO BACKEND ---
 const FUNCTIONS_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1'
@@ -161,6 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.classList.remove('dark');
     }
     loadAndApplyColor();
+
+    // Listener do Coach Collapsible
+    if (coachHeader && coachCollapsible && coachChevron) {
+        coachHeader.addEventListener('click', () => {
+            // Toggle da classe hidden e rotação do chevron
+            coachCollapsible.classList.toggle('hidden');
+            coachChevron.classList.toggle('rotate-180');
+        });
+    }
 });
 
 if (themeToggleBtn) {
