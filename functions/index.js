@@ -502,3 +502,161 @@ exports.deleteUserAccount = functions
             throw new functions.https.HttpsError('internal', 'Erro ao excluir conta.');
         }
     });
+
+// --- NEWSLETTER SYSTEM ---
+// --- NEWSLETTER SYSTEM ---
+// Removido
+
+
+// 1. Subscribe to Newsletter (Beehiiv Integration)
+const axios = require('axios');
+
+exports.subscribeToNewsletter = functions
+    .runWith({ invoker: 'public' })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+            const { email } = req.body;
+            if (!email) return res.status(400).json({ error: 'Email is required' });
+
+            // Beehiiv Configuration
+            // User provided V1: 7d32b4e7-9f81-43c2-8320-4466f07542c4 (Using as API Key/Token)
+            // User provided V2: pub_7d32b4e7-9f81-43c2-8320-4466f07542c4 (Publication ID)
+            const BEEHIIV_PUB_ID = 'pub_7d32b4e7-9f81-43c2-8320-4466f07542c4';
+            const BEEHIIV_API_KEY = 'iNf9ojb0ODcl2yMRtw8jf31QELPxd4IsRuUytGJTv9zmTGLS05z7oRPOCQBnMMCh';
+            const BEEHIIV_URL = `https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`;
+
+            try {
+                console.log(`Tentando inscrever ${email} no Beehiiv...`);
+
+                const response = await axios.post(BEEHIIV_URL, {
+                    email: email,
+                    reactivate_existing: true,
+                    send_welcome_email: true,
+                    utm_source: 'financeapp_website',
+                    utm_medium: 'organic',
+                    utm_campaign: 'homepage_hero'
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${BEEHIIV_API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                console.log('✅ Sucesso Beehiiv:', response.data);
+
+                // Save to Firestore for redundancy (Non-blocking)
+                try {
+                    await admin.firestore().collection('newsletter_subscribers').doc(email).set({
+                        email,
+                        status: 'active',
+                        source: 'beehiiv_api',
+                        createdAt: new Date(), // using Date() instead of serverTimestamp to avoid SDK issues
+                        beehiivId: response.data.data?.id || null
+                    });
+                } catch (dbError) {
+                    console.warn('⚠️ Falha ao salvar backup no Firestore (ignorando, pois Beehiiv foi sucesso):', dbError.message);
+                }
+
+                res.json({ success: true, message: 'Inscrição realizada com sucesso!' });
+
+            } catch (error) {
+                console.error('❌ Erro Beehiiv:', error.response?.data || error.message);
+
+                // Return a clean error to frontend
+                res.status(500).json({
+                    error: 'Falha na inscrição',
+                    details: error.response?.data?.errors || error.message
+                });
+            }
+        });
+    });
+// 2. Send Newsletter (Admin Only) - USANDO RESEND
+exports.sendNewsletter = functions
+    .runWith({ invoker: 'public', timeoutSeconds: 540 }) // Long timeout for bulk sending
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+            try {
+                // Verify Admin Token
+                const idToken = req.headers.authorization?.split('Bearer ')[1] || req.body.token;
+                if (!idToken) return res.status(401).json({ error: 'Unauthorized' });
+
+                const decodedToken = await admin.auth().verifyIdToken(idToken);
+                const userDoc = await admin.firestore().collection('users').doc(decodedToken.uid).get();
+                if (!userDoc.exists || userDoc.data().role !== 'admin') {
+                    return res.status(403).json({ error: 'Permission Denied' });
+                }
+
+                const { subject, htmlContent } = req.body;
+                if (!subject || !htmlContent) {
+                    return res.status(400).json({ error: 'Assunto e conteúdo HTML são obrigatórios.' });
+                }
+
+                // Resend Config (via Firebase Config)
+                // firebase functions:config:set resend.api_key="re_123456"
+                const resendApiKey = process.env.RESEND_API_KEY || functions.config().resend?.api_key;
+
+                if (!resendApiKey) {
+                    return res.status(500).json({ error: 'Resend API Key não configurada no servidor.' });
+                }
+
+                const resend = new Resend(resendApiKey);
+
+                // Fetch Subscribers
+                const subscribersSnapshot = await admin.firestore().collection('newsletter_subscribers')
+                    .where('status', '==', 'active')
+                    .get();
+
+                if (subscribersSnapshot.empty) {
+                    return res.json({ message: 'Nenhum inscrito ativo encontrado.' });
+                }
+
+                const emails = [];
+                subscribersSnapshot.forEach(doc => emails.push(doc.id));
+
+                // Send Emails using Resend Batch API (if available) or simple loop
+                // Resend allows 'bcc' to send up to 50 recipients at once, or 'to' for individual personalized.
+                // For privacy, we should send individual emails or use bcc with a generic 'to'.
+                // Ideally, we loop and fire requests. Resend rate limits are quite high.
+
+                let successCount = 0;
+                let failureCount = 0;
+
+                // Simple loop for MVP (Resend is fast)
+                for (const email of emails) {
+                    try {
+                        const { data, error } = await resend.emails.send({
+                            from: 'Trilha Comigo <marketing@southsea.com.br>', // PRECISA VERIFICAR O DOMINIO NO RESEND
+                            to: [email],
+                            subject: subject,
+                            html: htmlContent,
+                        });
+
+                        if (error) {
+                            console.error(`Resend Error for ${email}:`, error);
+                            failureCount++;
+                        } else {
+                            successCount++;
+                        }
+                    } catch (err) {
+                        console.error(`Falha ao enviar para ${email}:`, err);
+                        failureCount++;
+                    }
+                }
+
+                res.json({
+                    success: true,
+                    message: `Envio finalizado via Resend. Sucessos: ${successCount}, Falhas: ${failureCount}`,
+                    stats: { successCount, failureCount, total: emails.length }
+                });
+
+            } catch (error) {
+                console.error("Erro no envio da newsletter:", error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+    });

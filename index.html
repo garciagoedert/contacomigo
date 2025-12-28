@@ -268,14 +268,56 @@
                         </div>
                     </div>
 
-                    <!-- Iframe Form -->
+                    <!-- Custom Form (Replacing Iframe) -->
                     <div
                         class="w-full md:w-1/2 bg-gray-100/50 dark:bg-gray-700/30 p-4 md:p-8 flex justify-center items-center">
-                        <div class="w-full max-w-md">
-                            <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script>
-                            <iframe src="https://subscribe-forms.beehiiv.com/8c529f41-9433-45aa-9cca-9af49d66d4ce"
-                                class="beehiiv-embed" data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
-                                style="width: 100%; height: 280px; border-radius: 12px; background-color: transparent;"></iframe>
+                        <div
+                            class="w-full max-w-md gradient-animate p-8 rounded-2xl shadow-xl text-center relative overflow-hidden group">
+                            <!-- Glow Effect -->
+                            <div
+                                class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            </div>
+
+                            <!-- Success Overlay -->
+                            <div id="newsletter-success"
+                                class="hidden absolute inset-0 z-20 flex flex-col justify-center items-center bg-slate-900/95 backdrop-blur-sm p-6 transition-all duration-500">
+                                <div
+                                    class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                                    <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-white font-bold text-2xl mb-2">Quase lá! 🚀</h3>
+                                <p class="text-indigo-100 text-sm mb-6">Enviamos um link de confirmação para o seu
+                                    e-mail.</p>
+                                <button type="button" id="reset-form-btn"
+                                    class="px-6 py-2 bg-white text-indigo-900 font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg">
+                                    Entendido
+                                </button>
+                            </div>
+
+                            <h3 class="text-white font-bold text-2xl mb-2 relative z-10">Assine Agora</h3>
+                            <p class="text-indigo-100 text-sm mb-6 relative z-10">Junte-se a 1.000+ inscritos.</p>
+
+                            <!-- Error Message Container -->
+                            <div id="newsletter-error"
+                                class="hidden mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-100 text-xs text-left relative z-10">
+                            </div>
+
+                            <form id="custom-newsletter-form" class="relative z-10 flex flex-col gap-3">
+                                <input type="email" placeholder="Seu melhor e-mail" required
+                                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-indigo-200 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all backdrop-blur-sm">
+
+                                <button type="submit"
+                                    class="w-full px-4 py-3 bg-white text-pink-600 font-bold rounded-lg hover:bg-gray-50 hover:scale-[1.02] transition-all shadow-lg">
+                                    Começar Gratuitamente
+                                </button>
+                            </form>
+
+                            <p class="text-xs text-indigo-200 mt-4 opacity-80 z-10 relative">✨ Sem spam. Cancele quando
+                                quiser.</p>
                         </div>
                     </div>
                 </div>
@@ -306,6 +348,84 @@
             <script src="newsletter-service.js"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', async () => {
+                    // Newsletter Form Handling
+                    const customForm = document.getElementById('custom-newsletter-form');
+                    const formButton = customForm?.querySelector('button');
+                    const originalButtonText = formButton?.innerHTML;
+                    const successOverlay = document.getElementById('newsletter-success');
+                    const errorContainer = document.getElementById('newsletter-error');
+                    const resetBtn = document.getElementById('reset-form-btn');
+
+                    if (resetBtn) {
+                        resetBtn.addEventListener('click', () => {
+                            successOverlay.classList.add('hidden');
+                            customForm.reset();
+                        });
+                    }
+
+                    if (customForm) {
+                        customForm.addEventListener('submit', async (e) => {
+                            e.preventDefault();
+                            const emailInput = customForm.querySelector('input[type="email"]');
+                            // Reset States
+                            if (errorContainer) {
+                                errorContainer.classList.add('hidden');
+                                errorContainer.textContent = '';
+                            }
+
+                            const email = emailInput.value;
+
+                            // Loading State
+                            formButton.disabled = true;
+                            formButton.innerHTML = '<span class="animate-spin inline-block mr-2">↻</span> Inscrevendo...';
+                            emailInput.disabled = true;
+
+                            try {
+                                // Call Cloud Function
+                                // In development, this points to localhost:5001. In prod, it will be the deployed URL.
+                                // We use a relative path if rewrites are set up, or the full function URL.
+                                // For this environment, we'll try the emulator URL first or assume relative '/api' if configured.
+                                // Since we don't have rewrites confirmed, we'll use the likely emulator URL for local dev, or relative path which functions handles if hosted.
+                                // Let's try relative path assuming hosting rewrites or direct function URL.
+                                // For robustness in this dev environment, I'll use the hardcoded emulator URL if generic relative fails, 
+                                // but for now let's try a direct fetch to the function.
+
+                                // NOTE: Replace with your actual project location if different
+                                // Using relative path via Firebase Rewrites to avoid CORS and Project ID issues
+                                const FUNCTION_URL = '/api/subscribeToNewsletter';
+
+                                const response = await fetch(FUNCTION_URL, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ email })
+                                });
+
+                                const data = await response.json();
+
+                                if (response.ok) {
+                                    if (successOverlay) successOverlay.classList.remove('hidden');
+                                    emailInput.value = '';
+                                } else {
+                                    throw new Error(data.error || 'Erro desconhecido');
+                                }
+
+                            } catch (error) {
+                                console.error('Newsletter Error:', error);
+                                if (errorContainer) {
+                                    errorContainer.textContent = `⚠️ ${error.message}`;
+                                    errorContainer.classList.remove('hidden');
+                                } else {
+                                    alert(`⚠️ Erro ao inscrever: ${error.message}`);
+                                }
+                            } finally {
+                                // Reset State
+                                formButton.disabled = false;
+                                formButton.innerHTML = originalButtonText;
+                                emailInput.disabled = false;
+                            }
+                        });
+                    }
+
                     const grid = document.getElementById('home-articles-grid');
                     const loading = document.getElementById('loading-articles');
 

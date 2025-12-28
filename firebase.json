@@ -16,6 +16,10 @@
                 "function": "getAdminData"
             },
             {
+                "source": "/api/subscribeToNewsletter",
+                "function": "subscribeToNewsletter"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }
