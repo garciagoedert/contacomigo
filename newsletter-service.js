@@ -8,18 +8,18 @@ const RSS_TO_JSON_API = 'https://api.rss2json.com/v1/api.json?rss_url=';
  */
 async function fetchNewsletterPosts() {
     try {
-        const response = await fetch(RSS_TO_JSON_API + encodeURIComponent(RSS_URL));
+        const response = await fetch(RSS_TO_JSON_API + encodeURIComponent(RSS_URL) + '&t=' + new Date().getTime());
         const data = await response.json();
 
         if (data.status === 'ok') {
             return data.items.map(item => ({
                 title: item.title,
                 link: item.link,
-                pubDate: new Date(item.pubDate),
+                pubDate: new Date(item.pubDate.replace(' ', 'T')),
                 // Beehiiv puts the cover image in the <enclosure> tag.
                 // rss2json maps this to item.enclosure.link
                 thumbnail: item.enclosure?.link || item.thumbnail || extractImageFromContent(item.content) || 'imgs/article-placeholder.jpg',
-                description: stripHtml(item.description).substring(0, 150) + '...',
+                description: stripHtml(item.description || '').substring(0, 150) + '...',
                 category: 'Newsletter' // Default category
             }));
         } else {
@@ -56,7 +56,14 @@ function extractImageFromContent(content) {
  */
 function createPostCard(post) {
     // Format date in PT-BR
-    const dateStr = post.pubDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    // Format date in PT-BR
+    let dateStr;
+    try {
+        if (isNaN(post.pubDate.getTime())) throw new Error('Invalid Date');
+        dateStr = post.pubDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) {
+        dateStr = 'Recentemente';
+    }
 
     // Choose a random gradient or color if no image, but for now assuming placeholder
     // We will use the layout from existing cards
