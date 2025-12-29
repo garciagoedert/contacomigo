@@ -308,48 +308,40 @@
                 }
                 document.getElementById('post-date').textContent = dateStr;
 
-                // Sanitize Content
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = data.content;
+                document.getElementById('post-body').innerHTML = data.content;
 
-                // 1. Remove all <style> tags (Prevents global style leaks)
-                const styleTags = tempDiv.querySelectorAll('style');
-                styleTags.forEach(tag => tag.remove());
+                // Post-render cleanup
+                try {
+                    const postBody = document.getElementById('post-body');
 
-                // 2. Remove Beehiiv Footer (Safe Heuristic)
-                const allElements = tempDiv.querySelectorAll('*');
-                allElements.forEach(el => {
-                    const text = el.textContent || '';
-                    if (text.includes('Unsubscribe') ||
-                        text.includes('Update your email preferences') ||
-                        text.includes('Powered by beehiiv')) {
+                    // 1. Remove style tags to prevent global leaks
+                    const styles = postBody.querySelectorAll('style');
+                    styles.forEach(s => s.remove());
 
-                        // Find the closest table or div container
-                        let container = el;
-                        let depth = 0;
-                        let removed = false;
-                        while (container.parentElement && depth < 5) {
-                            // Beehiiv often uses tables with class or just generic tables at the end
-                            if (container.tagName === 'TABLE' && depth > 0) {
-                                container.remove();
-                                removed = true;
-                                break;
+                    // 2. Safely remove Beehiiv footer
+                    // Look for specific markers but don't delete the whole container
+                    const markers = ['Powered by beehiiv', 'Unsubscribe', 'Update your email preferences'];
+
+                    // Helper to check if element is likely a footer container
+                    const isFooter = (el) => {
+                        const text = el.textContent || '';
+                        return markers.some(m => text.includes(m));
+                    };
+
+                    // Find small containers at the bottom
+                    const candidates = postBody.querySelectorAll('div, table, p');
+                    candidates.forEach(el => {
+                        if (isFooter(el)) {
+                            // Only remove if it's not the main container and is relatively small or at the end
+                            if (el !== postBody && el.textContent.length < 500) {
+                                el.style.display = 'none'; // Hide instead of remove to be safe
                             }
-                            if (container.classList.contains('beehiiv-footer')) {
-                                container.remove();
-                                removed = true;
-                                break;
-                            }
-                            container = container.parentElement;
-                            depth++;
                         }
-                        if (!removed && (el.tagName === 'DIV' || el.tagName === 'P')) {
-                            el.remove();
-                        }
-                    }
-                });
+                    });
 
-                document.getElementById('post-body').innerHTML = tempDiv.innerHTML;
+                } catch (e) {
+                    console.warn("Cleanup warning:", e);
+                }
 
                 // Show Content
                 document.getElementById('loader').classList.add('hidden');
