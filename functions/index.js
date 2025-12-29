@@ -604,7 +604,7 @@ exports.sendNewsletter = functions
                     return res.status(403).json({ error: 'Permission Denied' });
                 }
 
-                const { subject, htmlContent, thumbnail, isTest, testEmail, saveOnly } = req.body;
+                const { subject, htmlContent, thumbnail, isTest, testEmail, saveOnly, publishOnly } = req.body;
                 if (!subject || !htmlContent) {
                     return res.status(400).json({ error: 'Assunto e conteúdo HTML são obrigatórios.' });
                 }
@@ -617,12 +617,19 @@ exports.sendNewsletter = functions
                     .replace(/^-+|-+$/g, ''); // Remove - do início/fim
 
                 // Preparar documento do post
+                // Status mapping:
+                // saveOnly -> 'draft'
+                // publishOnly -> 'sent' (but no email)
+                // standard send -> 'sent' (with email)
+                let status = 'sent';
+                if (saveOnly) status = 'draft';
+
                 const postData = {
                     slug,
                     title: subject,
                     thumbnail: thumbnail || null,
                     content: htmlContent, // CUIDADO: Armazenar HTML pode ser pesado, mas ok para MVP
-                    status: saveOnly ? 'draft' : 'sent',
+                    status: status,
                     updatedAt: admin.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -632,7 +639,23 @@ exports.sendNewsletter = functions
                     return res.json({ success: true, message: 'Rascunho salvo com sucesso!', slug });
                 }
 
-                // --- ENVIO REAL ---
+                // Se for Publish Only (Blog Only), não envia emails
+                if (publishOnly) {
+                    // Set sentAt for ordering
+                    postData.sentAt = admin.firestore.FieldValue.serverTimestamp();
+                    postData.sentCount = 0; // No emails sent
+                    postData.createdAt = postData.createdAt || admin.firestore.FieldValue.serverTimestamp();
+
+                    await admin.firestore().collection('newsletter_posts').doc(slug).set(postData, { merge: true });
+
+                    return res.json({
+                        success: true,
+                        message: 'Publicado no blog com sucesso (sem envio de email)!',
+                        slug
+                    });
+                }
+
+                // --- ENVIO REAL (EMAIL) ---
 
                 let recipients = [];
                 let isTestSend = false;
