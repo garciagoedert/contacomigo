@@ -351,6 +351,7 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
     }
 
     const subject = subjectInput.value;
+    const thumbnail = document.getElementById('post-thumbnail').value || null;
     const testEmail = testEmailInput.value;
 
     if (!subject) return showStatus('Por favor, informe um assunto.', 'error');
