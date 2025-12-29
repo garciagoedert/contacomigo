@@ -353,13 +353,33 @@ window.loadDraft = async function (slug) {
             document.getElementById('post-thumbnail').value = data.thumbnail || '';
 
             // Populate Content
+            // Populate Content
             const content = data.content || '';
-            if (isCodeView) {
+
+            // Check for Complex HTML (Full template)
+            const isComplexHtml = content.includes('<html') || content.includes('<body') || content.includes('<style');
+
+            if (isComplexHtml) {
+                console.log("Complex HTML detected, switching to Code View.");
+                if (!isCodeView) toggleCodeView(); // Open Code View
                 htmlEditor.value = content;
-                // If in code view, we might want to render preview
-                if (renderPreview) renderPreview();
+                if (typeof renderPreview === 'function') renderPreview();
             } else {
-                quill.clipboard.dangerouslyPasteHTML(0, content);
+                // Try Normal Quill Load
+                try {
+                    // Reset View if needed
+                    if (isCodeView) toggleCodeView();
+
+                    quill.setContents([]); // Clear first
+                    quill.clipboard.dangerouslyPasteHTML(0, content);
+                } catch (quillErr) {
+                    console.error("Quill failed to parse content, falling back to Code View:", quillErr);
+                    showStatus('Conteúdo complexo detectado. Abrindo em modo Código.', 'warning');
+
+                    if (!isCodeView) toggleCodeView();
+                    htmlEditor.value = content;
+                    if (typeof renderPreview === 'function') renderPreview();
+                }
             }
 
             // Switch to Compose Tab
