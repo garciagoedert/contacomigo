@@ -3,11 +3,7 @@
     "trailingSlash": false,
     "rewrites": [
         {
-            "source": "/artigos",
-            "destination": "/articles.html"
-        },
-        {
-            "source": "/artigos/:path*",
+            "source": "/artigos/:slug((?!index$).*)",
             "destination": "/post_viewer.html"
         },
         {
