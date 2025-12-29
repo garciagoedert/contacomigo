@@ -107,9 +107,11 @@ if (codeViewBtn) {
     codeViewBtn.title = "Editar HTML Fonte";
 }
 
-// --- CODE VIEW LOGIC ---
+// --- CODE VIEW LOGIC (UPDATED) ---
 const editorContainer = document.getElementById('editor-container');
+const codeViewContainer = document.getElementById('code-view-container');
 const htmlEditor = document.getElementById('html-editor');
+const forceRenderBtn = document.getElementById('force-render-btn');
 let isCodeView = false;
 
 function toggleCodeView() {
@@ -118,23 +120,50 @@ function toggleCodeView() {
     if (isCodeView) {
         // Switch to HTML Editor
         const html = quill.root.innerHTML;
-        htmlEditor.value = html_beautify(html); // Optional: Prettify if easy, else just html
+        // Basic clean up
+        htmlEditor.value = html;
+
         editorContainer.classList.add('hidden');
-        htmlEditor.classList.remove('hidden');
-        codeViewBtn.classList.add('text-blue-600', 'bg-blue-50'); // Highlight button
+        if (codeViewContainer) {
+            codeViewContainer.classList.remove('hidden');
+        } else {
+            // Fallback
+            htmlEditor.classList.remove('hidden');
+        }
+
+        if (codeViewBtn) codeViewBtn.classList.add('text-blue-600', 'bg-blue-50');
     } else {
         // Switch back to Visual Editor
-        const html = htmlEditor.value;
-        quill.root.innerHTML = html;
-        htmlEditor.classList.add('hidden');
+        updateVisualEditorFromCode();
+
+        if (codeViewContainer) {
+            codeViewContainer.classList.add('hidden');
+        } else {
+            htmlEditor.classList.add('hidden');
+        }
+
         editorContainer.classList.remove('hidden');
-        codeViewBtn.classList.remove('text-blue-600', 'bg-blue-50');
+        if (codeViewBtn) codeViewBtn.classList.remove('text-blue-600', 'bg-blue-50');
     }
 }
 
-// Simple HTML Formatter for readability
+function updateVisualEditorFromCode() {
+    const html = htmlEditor.value;
+    // Use dangerousPasteHTML to properly parse and insert style/class structure
+    quill.setContents([]);
+    quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
+}
+
+// Force Render Button Action
+if (forceRenderBtn) {
+    forceRenderBtn.addEventListener('click', () => {
+        updateVisualEditorFromCode();
+        showStatus("Visual atualizado com sucesso!", "success");
+    });
+}
+
 function html_beautify(html) {
-    // Very basic indentation logic
+    // Kept for reference but unused in new logic to preserve raw precision
     let formatted = '';
     let indent = '';
     html.split(/>\s*</).forEach(function (node) {
