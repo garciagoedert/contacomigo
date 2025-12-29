@@ -278,7 +278,7 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
     // Ensure content is synced if in Code View
     if (isCodeView) {
         const html = htmlEditor.value;
-        quill.root.innerHTML = html;
+        quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
     }
 
     const subject = subjectInput.value;
@@ -286,7 +286,18 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
     const testEmail = testEmailInput.value;
 
     if (!subject) return showStatus('Por favor, informe um assunto.', 'error');
-    if (quill.getText().trim().length === 0 && !content.includes('<img')) return showStatus('O conteúdo não pode estar vazio.', 'error');
+
+    // Check if content is empty (ignoring HTML tags if only empty tags exist, but allowing images/structural html)
+    // If in code view, we trust the user input more.
+    const textContent = quill.getText().trim();
+    if (textContent.length === 0 && !content.includes('<img') && !content.includes('<table') && !content.includes('<div') && !isCodeView) {
+        return showStatus('O conteúdo não pode estar vazio.', 'error');
+    }
+    // Double check for Code VIEW empty
+    if (isCodeView && htmlEditor.value.trim().length === 0) {
+        return showStatus('O conteúdo HTML não pode estar vazio.', 'error');
+    }
+
     if (isTest && !testEmail && !saveOnly) return showStatus('Para enviar um teste, informe um email de destino.', 'error');
 
     if (!isTest && !saveOnly && !confirm('ATENÇÃO: Você está prestes a enviar este email para TODOS os seus inscritos ativos. Esta ação não pode ser desfeita. Deseja continuar?')) {
