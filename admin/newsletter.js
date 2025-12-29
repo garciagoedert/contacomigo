@@ -51,10 +51,20 @@ const statusMessage = document.getElementById('status-message');
 const statusText = document.getElementById('status-text');
 
 // Initialize Quill Editor
+// REGISTER CUSTOM ATTRIBUTORS TO KEEP CLASSES AND STYLES
+var Parchment = Quill.import('parchment');
+var ClassAttributor = new Parchment.Attributor.Attribute('class', 'class', { scope: Parchment.Scope.ANY });
+var StyleAttributor = new Parchment.Attributor.Attribute('style', 'style', { scope: Parchment.Scope.ANY });
+Quill.register(ClassAttributor, true);
+Quill.register(StyleAttributor, true);
+
 var quill = new Quill('#editor-container', {
     theme: 'snow',
     placeholder: 'Escreva o conteúdo da sua newsletter aqui...',
     modules: {
+        clipboard: {
+            matchVisual: false // Prevents some automatic cleanup issues
+        },
         toolbar: {
             container: [
                 [{ 'header': [1, 2, 3, false] }],
