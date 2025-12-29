@@ -429,7 +429,7 @@
                     const grid = document.getElementById('home-articles-grid');
                     const loading = document.getElementById('loading-articles');
 
-                    const posts = await fetchNewsletterPosts();
+                    const posts = await fetchNewsletterPosts(3);
 
                     if (posts.length > 0) {
                         loading.classList.add('hidden');

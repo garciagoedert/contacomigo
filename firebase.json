@@ -20,6 +20,14 @@
                 "function": "subscribeToNewsletter"
             },
             {
+                "source": "/api/getNewsletterPosts",
+                "function": "getNewsletterPosts"
+            },
+            {
+                "source": "/artigos/**",
+                "destination": "/post_viewer.html"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }

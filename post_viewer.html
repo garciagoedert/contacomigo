@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilha Comigo - Artigo</title>
+    <meta name="description" content="Leia nossos artigos sobre finanças, investimentos e planejamento.">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .gradient-animate {
+            background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+        }
+
+        /* Article Typography Overrides */
+        .prose img {
+            border-radius: 0.75rem;
+            margin: 2rem auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .prose h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            color: #1f2937;
+        }
+
+        .prose h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .prose p {
+            margin-bottom: 1.25rem;
+            line-height: 1.8;
+            color: #4b5563;
+        }
+
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prose li {
+            margin-bottom: 0.5rem;
+        }
+
+        .prose blockquote {
+            border-left: 4px solid #E91E63;
+            /* Main color */
+            padding-left: 1rem;
+            font-style: italic;
+            color: #4b5563;
+            background-color: #fff1f2;
+            /* Light pink/red tint */
+            padding: 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .prose a {
+            color: #E91E63;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+    <!-- Navbar (Matched to artigos.html) -->
+    <nav class="fixed top-0 w-full z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="/">
+                        <img src="/imgs/14.png" alt="Trilha Comigo Logo" class="h-10 md:h-12">
+                    </a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/"
+                        class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)]">Início</a>
+                    <a href="/#features"
+                        class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)]">Recursos</a>
+                    <a href="/artigos.html" class="text-sm font-medium text-[var(--cor-principal)]">Blog</a>
+                </div>
+                <!-- CTA -->
+                <div class="hidden md:block">
+                    <a href="/login/index.html"
+                        class="px-6 py-2.5 bg-[var(--cor-principal)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-lg">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 min-h-screen">
+
+        <div class="mb-8 pt-6">
+            <a href="/artigos.html"
+                class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-[var(--cor-principal)] transition-colors">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Voltar para o Blog
+            </a>
+        </div>
+
+        <article id="post-container"
+            class="bg-white rounded-2xl shadow-xl p-8 md:p-12 min-h-[50vh] border border-gray-100">
+            <!-- Skeleton Loader -->
+            <div id="loader" class="animate-pulse space-y-4">
+                <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/4 mb-8"></div>
+                <div class="space-y-3 mt-8">
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                    <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                    <div class="h-32 bg-gray-100 rounded"></div>
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div id="content" class="hidden">
+                <!-- Header with Blue accent style from Artigos page if needed, or clean white -->
+                <header class="mb-10 border-b border-gray-100 pb-8">
+                    <div class="flex items-center gap-3 text-sm text-gray-500 mb-6">
+                        <span
+                            class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Artigo</span>
+                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                        <span id="post-date" class="font-medium text-gray-400">...</span>
+                    </div>
+                    <h1 id="post-title"
+                        class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6 tracking-tight">...
+                    </h1>
+
+                    <!-- Optional: Author / Metadata could go here -->
+                </header>
+
+                <div id="post-body"
+                    class="prose prose-lg max-w-none text-gray-600 prose-headings:text-gray-900 prose-a:text-[var(--cor-principal)] hover:prose-a:text-pink-700">
+                    <!-- HTML Injected Here -->
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-message" class="hidden text-center py-20">
+                <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Artigo não encontrado</h2>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto">O artigo que você procura pode ter sido removido ou o
+                    link está incorreto.</p>
+                <a href="/artigos.html"
+                    class="px-8 py-3 bg-[var(--cor-principal)] text-white rounded-lg font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    Voltar para o Blog
+                </a>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- Footer (Exact match from index.html) -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Column 1 -->
+                <div>
+                    <img src="/imgs/14.png" alt="Trilha Comigo" class="h-16 mb-4">
+                    <p class="text-sm">Controle financeiro familiar simples, gratuito e poderoso.</p>
+                    <div class="mt-6 flex space-x-4">
+                        <a href="https://discord.gg/ZWBZX5r7" target="_blank"
+                            class="text-gray-400 hover:text-[var(--cor-principal)] transition-colors">
+                            <span class="sr-only">Discord</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                        <a href="https://www.instagram.com/trilhacomigo.cc/#" target="_blank"
+                            class="text-gray-400 hover:text-[var(--cor-principal)] transition-colors">
+                            <span class="sr-only">Instagram</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.468 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+
+                        <a href="https://www.tiktok.com/@trilhacomigo.br" target="_blank"
+                            class="text-gray-400 hover:text-[var(--cor-principal)] transition-colors">
+                            <span class="sr-only">TikTok</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.02v6.1c-.01 3.47-3.02 6.17-6.55 5.82-3.07-.31-5.46-3.04-5.32-6.11.13-2.9 2.45-5.25 5.35-5.37l.03 4.08c-1.3-.06-2.54 1.15-2.3 2.53.21 1.22 1.45 2.05 2.64 1.8 1.19-.24 2.04-1.39 1.94-2.6.02-3.82.01-8.31.02-8.31z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2 -->
+                <div>
+                    <h4 class="font-bold mb-4">Produto</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/#features" class="hover:text-white transition-colors">Recursos</a></li>
+                        <li><a href="/#how-it-works" class="hover:text-white transition-colors">Como Funciona</a></li>
+                        <li><a href="/artigos.html" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/#testimonials" class="hover:text-white transition-colors">Depoimentos</a></li>
+                        <li><a href="/#faq" class="hover:text-white transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div>
+                    <h4 class="font-bold mb-4">Empresa</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Sobre Nós</a></li>
+                        <li><a href="/artigos.html" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4 -->
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/privacidade.html" class="hover:text-white transition-colors">Privacidade</a></li>
+                        <li><a href="/termos.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                        <li><a href="/seguranca.html" class="hover:text-white transition-colors">Segurança</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2025 Trilha Comigo. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        async function loadPost() {
+            // Get Slug from URL
+            const pathSegments = window.location.pathname.split('/').filter(p => p);
+            let slug = pathSegments.length > 1 ? pathSegments[1] : null;
+
+            // Clean slug if needed
+            if (slug && slug.endsWith('.html')) slug = slug.replace('.html', '');
+
+            console.log("Slug extracted for post viewer:", slug);
+
+            if (!slug) {
+                console.warn("No slug found in URL");
+                window.location.href = '/artigos.html';
+                return;
+            }
+
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                let functionUrl = isLocalhost
+                    ? `http://127.0.0.1:5001/financeapp-6da16/us-central1/getNewsletterPosts?slug=${slug}`
+                    : `/api/getNewsletterPosts?slug=${slug}`;
+
+                console.log("Requesting post from:", functionUrl);
+
+                const response = await fetch(functionUrl);
+
+                if (!response.ok) {
+                    console.error("API Response Error:", response.status, response.statusText);
+                    try {
+                        const errorBody = await response.text();
+                        console.error("API Error Body:", errorBody);
+                    } catch (e) { console.error("Could not read error body"); }
+                    throw new Error('Post not found locally or remote');
+                }
+
+                const data = await response.json();
+                console.log("Post data received:", data.title);
+
+                // Render
+                document.title = `${data.title} | Trilha Comigo`;
+                document.getElementById('post-title').textContent = data.title;
+
+                let dateStr = 'Data indisponível';
+                if (data.sentAt && data.sentAt._seconds) {
+                    dateStr = new Date(data.sentAt._seconds * 1000).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+                document.getElementById('post-date').textContent = dateStr;
+
+                document.getElementById('post-body').innerHTML = data.content;
+
+                // Show Content
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Critical error loading post:", error);
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('error-message').classList.remove('hidden');
+            }
+        }
+
+        loadPost();
+    </script>
+</body>
+
+</html>

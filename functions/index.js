@@ -504,13 +504,22 @@ exports.deleteUserAccount = functions
     });
 
 // --- NEWSLETTER SYSTEM ---
-// --- NEWSLETTER SYSTEM ---
-// Removido
 
+const nodemailer = require('nodemailer');
 
-// 1. Subscribe to Newsletter (Beehiiv Integration)
-const axios = require('axios');
+// Configuração do Transportador de Email (Nodemailer)
+// Usando as credenciais fornecidas: marketing@southsea.com.br
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com', // Assumindo Gmail/Google Workspace dado o uso de App Password
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+        user: 'marketing@southsea.com.br',
+        pass: 'dzjjhqnpvxlrobyk' // CUIDADO: Em produção, usar Variáveis de Ambiente!
+    }
+});
 
+// 1. Inscrição na Newsletter (Salvar no Firestore)
 exports.subscribeToNewsletter = functions
     .runWith({ invoker: 'public' })
     .https.onRequest((req, res) => {
@@ -520,68 +529,72 @@ exports.subscribeToNewsletter = functions
             const { email } = req.body;
             if (!email) return res.status(400).json({ error: 'Email is required' });
 
-            // Beehiiv Configuration
-            // User provided V1: 7d32b4e7-9f81-43c2-8320-4466f07542c4 (Using as API Key/Token)
-            // User provided V2: pub_7d32b4e7-9f81-43c2-8320-4466f07542c4 (Publication ID)
-            const BEEHIIV_PUB_ID = 'pub_7d32b4e7-9f81-43c2-8320-4466f07542c4';
-            const BEEHIIV_API_KEY = 'iNf9ojb0ODcl2yMRtw8jf31QELPxd4IsRuUytGJTv9zmTGLS05z7oRPOCQBnMMCh';
-            const BEEHIIV_URL = `https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`;
-
             try {
-                console.log(`Tentando inscrever ${email} no Beehiiv...`);
+                // Verificar se já existe
+                const subscriberDoc = await admin.firestore().collection('newsletter_subscribers').doc(email).get();
 
-                const response = await axios.post(BEEHIIV_URL, {
-                    email: email,
-                    reactivate_existing: true,
-                    send_welcome_email: true,
-                    utm_source: 'financeapp_website',
-                    utm_medium: 'organic',
-                    utm_campaign: 'homepage_hero'
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${BEEHIIV_API_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                if (subscriberDoc.exists) {
+                    // Se já existe e estava inativo, reativar
+                    if (subscriberDoc.data().status !== 'active') {
+                        await subscriberDoc.ref.update({ status: 'active', updatedAt: admin.firestore.FieldValue.serverTimestamp() });
+                        return res.json({ success: true, message: 'Inscrição reativada com sucesso!' });
                     }
+                    return res.json({ success: true, message: 'Você já está inscrito!' });
+                }
+
+                // Salvar novo inscrito
+                await admin.firestore().collection('newsletter_subscribers').doc(email).set({
+                    email,
+                    status: 'active',
+                    source: 'internal_form',
+                    createdAt: admin.firestore.FieldValue.serverTimestamp()
                 });
 
-                console.log('✅ Sucesso Beehiiv:', response.data);
+                // Enviar Email de Boas-vindas (Opcional, mas recomendado)
+                const welcomeHtml = `
+                    <div style="font-family: sans-serif; color: #333;">
+                        <h1>Bem-vindo(a) à Newsletter Trilha Comigo!</h1>
+                        <p>É um prazer ter você conosco.</p>
+                        <p>Aguarde nossas dicas semanais sobre investimentos e economia.</p>
+                        <br>
+                        <p>Att, Equipe Trilha Comigo.</p>
+                    </div>
+                `;
 
-                // Save to Firestore for redundancy (Non-blocking)
                 try {
-                    await admin.firestore().collection('newsletter_subscribers').doc(email).set({
-                        email,
-                        status: 'active',
-                        source: 'beehiiv_api',
-                        createdAt: new Date(), // using Date() instead of serverTimestamp to avoid SDK issues
-                        beehiivId: response.data.data?.id || null
+                    await transporter.sendMail({
+                        from: '"Trilha Comigo" <marketing@southsea.com.br>',
+                        to: email,
+                        subject: 'Bem-vindo ao Trilha Comigo!',
+                        html: welcomeHtml
                     });
-                } catch (dbError) {
-                    console.warn('⚠️ Falha ao salvar backup no Firestore (ignorando, pois Beehiiv foi sucesso):', dbError.message);
+                } catch (emailError) {
+                    console.error("Erro ao enviar email de boas-vindas:", emailError);
+                    // Não falhar a inscrição se o email de boas vindas der erro
                 }
 
                 res.json({ success: true, message: 'Inscrição realizada com sucesso!' });
 
             } catch (error) {
-                console.error('❌ Erro Beehiiv:', error.response?.data || error.message);
-
-                // Return a clean error to frontend
+                console.error('Erro na inscrição:', error);
                 res.status(500).json({
-                    error: 'Falha na inscrição',
-                    details: error.response?.data?.errors || error.message
+                    error: 'Falha na inscrição.',
+                    details: error.message
                 });
             }
         });
     });
-// 2. Send Newsletter (Admin Only) - USANDO RESEND
+
+
+// 2. Enviar Newsletter (Admin Only) - USANDO NODEMAILER INTERNO
 exports.sendNewsletter = functions
-    .runWith({ invoker: 'public', timeoutSeconds: 540 }) // Long timeout for bulk sending
+    .runWith({ invoker: 'public', timeoutSeconds: 540 }) // Timeout alto para envio em massa
     .https.onRequest((req, res) => {
         cors(req, res, async () => {
             if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
             try {
-                // Verify Admin Token
+                // Verificar Token de Admin
                 const idToken = req.headers.authorization?.split('Bearer ')[1] || req.body.token;
                 if (!idToken) return res.status(401).json({ error: 'Unauthorized' });
 
@@ -591,72 +604,173 @@ exports.sendNewsletter = functions
                     return res.status(403).json({ error: 'Permission Denied' });
                 }
 
-                const { subject, htmlContent } = req.body;
+                const { subject, htmlContent, isTest, testEmail, saveOnly } = req.body;
                 if (!subject || !htmlContent) {
                     return res.status(400).json({ error: 'Assunto e conteúdo HTML são obrigatórios.' });
                 }
 
-                // Resend Config (via Firebase Config)
-                // firebase functions:config:set resend.api_key="re_123456"
-                const resendApiKey = process.env.RESEND_API_KEY || functions.config().resend?.api_key;
+                // Gerar Slug (ID amigável)
+                const slug = subject
+                    .toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, "") // Remove acentos
+                    .replace(/[^a-z0-9]+/g, '-') // Substitui não alfanuméricos por -
+                    .replace(/^-+|-+$/g, ''); // Remove - do início/fim
 
-                if (!resendApiKey) {
-                    return res.status(500).json({ error: 'Resend API Key não configurada no servidor.' });
+                // Preparar documento do post
+                const postData = {
+                    slug,
+                    title: subject,
+                    content: htmlContent, // CUIDADO: Armazenar HTML pode ser pesado, mas ok para MVP
+                    status: saveOnly ? 'draft' : 'sent',
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                };
+
+                if (saveOnly) {
+                    // Apenas Salvar Rascunho
+                    await admin.firestore().collection('newsletter_posts').doc(slug).set(postData, { merge: true });
+                    return res.json({ success: true, message: 'Rascunho salvo com sucesso!', slug });
                 }
 
-                const resend = new Resend(resendApiKey);
+                // --- ENVIO REAL ---
 
-                // Fetch Subscribers
-                const subscribersSnapshot = await admin.firestore().collection('newsletter_subscribers')
-                    .where('status', '==', 'active')
-                    .get();
+                let recipients = [];
+                let isTestSend = false;
 
-                if (subscribersSnapshot.empty) {
-                    return res.json({ message: 'Nenhum inscrito ativo encontrado.' });
+                if (isTest && testEmail) {
+                    isTestSend = true;
+                    recipients.push(testEmail);
+                } else {
+                    // Buscar inscritos ativos
+                    const subscribersSnapshot = await admin.firestore().collection('newsletter_subscribers')
+                        .where('status', '==', 'active')
+                        .get();
+
+                    if (subscribersSnapshot.empty) {
+                        return res.json({ message: 'Nenhum inscrito ativo encontrado.' });
+                    }
+
+                    subscribersSnapshot.forEach(doc => recipients.push(doc.id));
                 }
 
-                const emails = [];
-                subscribersSnapshot.forEach(doc => emails.push(doc.id));
-
-                // Send Emails using Resend Batch API (if available) or simple loop
-                // Resend allows 'bcc' to send up to 50 recipients at once, or 'to' for individual personalized.
-                // For privacy, we should send individual emails or use bcc with a generic 'to'.
-                // Ideally, we loop and fire requests. Resend rate limits are quite high.
+                console.log(`Iniciando envio (${isTestSend ? 'TESTE' : 'REAL'}) para ${recipients.length} destinatários...`);
 
                 let successCount = 0;
                 let failureCount = 0;
 
-                // Simple loop for MVP (Resend is fast)
-                for (const email of emails) {
+                // Loop de envio
+                for (const email of recipients) {
                     try {
-                        const { data, error } = await resend.emails.send({
-                            from: 'Trilha Comigo <marketing@southsea.com.br>', // PRECISA VERIFICAR O DOMINIO NO RESEND
-                            to: [email],
+                        const mailOptions = {
+                            from: '"Trilha Comigo" <marketing@southsea.com.br>',
+                            to: email,
                             subject: subject,
                             html: htmlContent,
-                        });
+                            // Opcional: Adicionar Link de Unsubscribe no rodapé
+                        };
 
-                        if (error) {
-                            console.error(`Resend Error for ${email}:`, error);
-                            failureCount++;
-                        } else {
-                            successCount++;
-                        }
+                        await transporter.sendMail(mailOptions);
+                        successCount++;
                     } catch (err) {
                         console.error(`Falha ao enviar para ${email}:`, err);
                         failureCount++;
                     }
                 }
 
+                // Se for envio real (para todos), atualizar estatísticas no post
+                if (!isTestSend) {
+                    postData.sentAt = admin.firestore.FieldValue.serverTimestamp();
+                    postData.sentCount = successCount;
+                    postData.createdAt = postData.createdAt || admin.firestore.FieldValue.serverTimestamp(); // Mantém criação original se já existir
+
+                    await admin.firestore().collection('newsletter_posts').doc(slug).set(postData, { merge: true });
+                }
+
                 res.json({
                     success: true,
-                    message: `Envio finalizado via Resend. Sucessos: ${successCount}, Falhas: ${failureCount}`,
-                    stats: { successCount, failureCount, total: emails.length }
+                    message: `Envio finalizado. Sucessos: ${successCount}, Falhas: ${failureCount}`,
+                    stats: { successCount, failureCount, total: recipients.length },
+                    slug
                 });
 
             } catch (error) {
-                console.error("Erro no envio da newsletter:", error);
-                res.status(500).json({ error: error.message });
+                console.error("Erro ao buscar posts:", error);
+                res.status(500).json({ error: error.message, stack: error.stack });
+            }
+        });
+    });
+
+// 3. Buscar Posts (Público)
+exports.getNewsletterPosts = functions
+    .runWith({ invoker: 'public' })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'GET') return res.status(405).send('Method Not Allowed');
+
+            try {
+                const { slug, limit } = req.query;
+
+                if (slug) {
+                    // Buscar post único
+                    const doc = await admin.firestore().collection('newsletter_posts').doc(slug).get();
+                    if (!doc.exists) return res.status(404).json({ error: 'Post não encontrado' });
+
+                    const data = doc.data();
+
+                    // Sanitize Date for JSON response to avoid 500 on serialization of complex objects
+                    let sanitizedData = { ...data };
+
+                    ['sentAt', 'createdAt', 'updatedAt'].forEach(field => {
+                        if (sanitizedData[field] && typeof sanitizedData[field].toDate === 'function') {
+                            sanitizedData[field] = sanitizedData[field].toDate().toISOString();
+                        } else if (sanitizedData[field] instanceof Date) {
+                            sanitizedData[field] = sanitizedData[field].toISOString();
+                        }
+                    });
+
+                    if (data.status !== 'sent') {
+                        return res.status(404).json({ error: 'Post não disponível (Status mismatch)' });
+                    }
+
+                    return res.json(sanitizedData);
+                } else {
+                    // Buscar lista
+                    let q = admin.firestore().collection('newsletter_posts')
+                        .where('status', '==', 'sent');
+                    // .orderBy('sentAt', 'desc'); // Commented out to debug missing index error
+
+                    if (limit) {
+                        q = q.limit(parseInt(limit));
+                    }
+
+                    const snapshot = await q.get();
+                    console.log(`Found ${snapshot.size} posts.`);
+
+                    const posts = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        try {
+                            const sentAtStr = data.sentAt && typeof data.sentAt.toDate === 'function' ? data.sentAt.toDate().toISOString() :
+                                (data.sentAt instanceof Date ? data.sentAt.toISOString() : new Date().toISOString());
+
+                            posts.push({
+                                slug: doc.id,
+                                title: data.title,
+                                thumbnail: data.thumbnail || null,
+                                sentAt: sentAtStr,
+                                date: sentAtStr
+                            });
+                        } catch (err) {
+                            console.error(`Error processing doc ${doc.id}:`, err);
+                        }
+                    });
+
+                    console.log("Returning posts:", posts.length);
+                    return res.json(posts);
+                }
+
+            } catch (error) {
+                console.error("Erro ao buscar posts:", error);
+                res.status(500).json({ error: error.message, stack: error.stack });
             }
         });
     });
