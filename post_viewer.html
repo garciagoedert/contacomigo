@@ -154,7 +154,7 @@
                 </header>
 
                 <div id="post-body"
-                    class="prose prose-lg max-w-none text-gray-600 prose-headings:text-gray-900 prose-a:text-[var(--cor-principal)] hover:prose-a:text-pink-700">
+                    class="prose prose-lg max-w-none text-gray-600 prose-headings:text-gray-900 prose-a:text-[var(--cor-principal)] hover:prose-a:text-pink-700 [&>table:last-child]:hidden [&>div:last-child:has(>a[href*='beehiiv'])]:hidden">
                     <!-- HTML Injected Here -->
                 </div>
             </div>
@@ -308,43 +308,7 @@
                 }
                 document.getElementById('post-date').textContent = dateStr;
 
-                // Sanitize Content (Remove Beehiiv Footer)
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = data.content;
-
-                // Remove common footer elements by text content or structure
-                // Heuristic: Remove the last table if it contains "Unsubscribe" or "Powered by beehiiv"
-                // Or remove elements with specific text
-                const allElements = tempDiv.querySelectorAll('*');
-                allElements.forEach(el => {
-                    if (el.textContent && (
-                        el.textContent.includes('Unsubscribe') ||
-                        el.textContent.includes('Update your email preferences') ||
-                        el.textContent.includes('Powered by beehiiv')
-                    )) {
-                        // Traverse up to find the container/row and remove it
-                        // Beehiiv usually wraps these in tables or divs
-                        let container = el;
-                        let depth = 0;
-                        while (container.parentElement && depth < 4) {
-                            if (container.tagName === 'TABLE' || container.classList.contains('beehiiv-footer')) {
-                                container.remove();
-                                return;
-                            }
-                            container = container.parentElement;
-                            depth++;
-                        }
-                        // If no container found, remove the element itself if it's block-level
-                        if (el.tagName === 'DIV' || el.tagName === 'P' || el.tagName === 'TABLE') {
-                            el.remove();
-                        }
-                    }
-                });
-
-                // Final cleanup of empty tables/divs that might remain at bottom
-                // (Optional: simple heuristic)
-
-                document.getElementById('post-body').innerHTML = tempDiv.innerHTML;
+                document.getElementById('post-body').innerHTML = data.content;
 
                 // Show Content
                 document.getElementById('loader').classList.add('hidden');
