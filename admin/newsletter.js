@@ -55,17 +55,45 @@ var quill = new Quill('#editor-container', {
     theme: 'snow',
     placeholder: 'Escreva o conteúdo da sua newsletter aqui...',
     modules: {
-        toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            ['blockquote', 'code-block'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'color': [] }, { 'background': [] }],
-            ['link', 'image'],
-            ['clean']
-        ]
+        toolbar: {
+            container: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['link', 'image'],
+                ['clean'],
+                ['markdown-btn'] // Custom button
+            ],
+            handlers: {
+                'markdown-btn': function () {
+                    const text = quill.getText();
+                    if (!text.trim()) return;
+
+                    // Simple check to avoid double conversion or converting HTML accidentally
+                    // We assume user pastes RAW markdown.
+
+                    try {
+                        const html = marked.parse(text);
+                        // Confirmation if length is large? No, just do it.
+                        quill.clipboard.dangerouslyPasteHTML(html);
+                    } catch (e) {
+                        console.error("Markdown conversion error", e);
+                        showStatus("Erro ao converter Markdown.", 'error');
+                    }
+                }
+            }
+        }
     }
 });
+
+// Custom Icon for Markdown Button
+const markdownBtn = document.querySelector('.ql-markdown-btn');
+if (markdownBtn) {
+    markdownBtn.innerHTML = '<span style="font-weight:bold; font-size:12px;">MD</span>';
+    markdownBtn.title = "Converter Markdown para Rich Text";
+}
 
 // Auth State
 onAuthStateChanged(auth, (user) => {
