@@ -68,20 +68,7 @@ var quill = new Quill('#editor-container', {
             ],
             handlers: {
                 'markdown-btn': function () {
-                    const text = quill.getText();
-                    if (!text.trim()) return;
-
-                    // Simple check to avoid double conversion or converting HTML accidentally
-                    // We assume user pastes RAW markdown.
-
-                    try {
-                        const html = marked.parse(text);
-                        // Confirmation if length is large? No, just do it.
-                        quill.clipboard.dangerouslyPasteHTML(html);
-                    } catch (e) {
-                        console.error("Markdown conversion error", e);
-                        showStatus("Erro ao converter Markdown.", 'error');
-                    }
+                    openMarkdownModal();
                 }
             }
         }
@@ -91,9 +78,69 @@ var quill = new Quill('#editor-container', {
 // Custom Icon for Markdown Button
 const markdownBtn = document.querySelector('.ql-markdown-btn');
 if (markdownBtn) {
-    markdownBtn.innerHTML = '<span style="font-weight:bold; font-size:12px;">MD</span>';
-    markdownBtn.title = "Converter Markdown para Rich Text";
+    markdownBtn.innerHTML = '<span class="flex items-center gap-1 font-bold text-xs"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> AI Import</span>';
+    markdownBtn.style.width = 'auto';
+    markdownBtn.style.padding = '0 5px';
+    markdownBtn.title = "Importar do Gemini/ChatGPT (Markdown)";
 }
+
+// --- MARKDOWN MODAL LOGIC ---
+const mdModal = document.getElementById('md-import-modal');
+const mdInput = document.getElementById('md-input');
+const mdPreview = document.getElementById('md-preview');
+const closeMdBtn = document.getElementById('close-md-modal');
+const cancelMdBtn = document.getElementById('cancel-md-import');
+const confirmMdBtn = document.getElementById('confirm-md-import');
+
+function openMarkdownModal() {
+    mdModal.classList.remove('hidden');
+    mdInput.focus();
+}
+
+function closeMarkdownModal() {
+    mdModal.classList.add('hidden');
+    mdInput.value = '';
+    mdPreview.innerHTML = '<p class="text-gray-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>';
+}
+
+// Live Preview
+mdInput.addEventListener('input', () => {
+    const text = mdInput.value;
+    if (!text.trim()) {
+        mdPreview.innerHTML = '<p class="text-gray-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>';
+        return;
+    }
+    try {
+        const html = marked.parse(text);
+        mdPreview.innerHTML = html;
+    } catch (e) {
+        console.error(e);
+    }
+});
+
+[closeMdBtn, cancelMdBtn].forEach(btn => btn.addEventListener('click', closeMarkdownModal));
+
+confirmMdBtn.addEventListener('click', () => {
+    const text = mdInput.value;
+    if (!text.trim()) return;
+
+    try {
+        const html = marked.parse(text);
+
+        // Insert at cursor or append
+        const range = quill.getSelection(true);
+        if (range) {
+            quill.clipboard.dangerouslyPasteHTML(range.index, html);
+        } else {
+            quill.clipboard.dangerouslyPasteHTML(quill.getLength(), html);
+        }
+
+        closeMarkdownModal();
+        showStatus("Conteúdo importado com sucesso!", 'success');
+    } catch (e) {
+        showStatus("Erro ao importar.", 'error');
+    }
+});
 
 // Auth State
 onAuthStateChanged(auth, (user) => {
