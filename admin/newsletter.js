@@ -91,10 +91,13 @@ const mdPreview = document.getElementById('md-preview');
 const closeMdBtn = document.getElementById('close-md-modal');
 const cancelMdBtn = document.getElementById('cancel-md-import');
 const confirmMdBtn = document.getElementById('confirm-md-import');
+const importFormatSelect = document.getElementById('import-format');
 
 function openMarkdownModal() {
     mdModal.classList.remove('hidden');
-    mdInput.focus();
+    // Set focus after transition
+    setTimeout(() => mdInput.focus(), 50);
+    renderPreview();
 }
 
 function closeMarkdownModal() {
@@ -103,29 +106,52 @@ function closeMarkdownModal() {
     mdPreview.innerHTML = '<p class="text-gray-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>';
 }
 
-// Live Preview
-mdInput.addEventListener('input', () => {
+function renderPreview() {
     const text = mdInput.value;
+    const format = importFormatSelect ? importFormatSelect.value : 'markdown';
+
     if (!text.trim()) {
         mdPreview.innerHTML = '<p class="text-gray-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>';
         return;
     }
+
     try {
-        const html = marked.parse(text);
+        let html = '';
+        if (format === 'markdown') {
+            html = marked.parse(text);
+        } else {
+            // Raw HTML - Render it directly
+            html = text;
+        }
         mdPreview.innerHTML = html;
     } catch (e) {
         console.error(e);
+        mdPreview.innerHTML = '<p class="text-red-500 text-center mt-10">Erro na pré-visualização</p>';
     }
-});
+}
+
+// Event Listeners
+mdInput.addEventListener('input', renderPreview);
+if (importFormatSelect) {
+    importFormatSelect.addEventListener('change', renderPreview);
+}
 
 [closeMdBtn, cancelMdBtn].forEach(btn => btn.addEventListener('click', closeMarkdownModal));
 
 confirmMdBtn.addEventListener('click', () => {
     const text = mdInput.value;
+    const format = importFormatSelect ? importFormatSelect.value : 'markdown';
+
     if (!text.trim()) return;
 
     try {
-        const html = marked.parse(text);
+        let html = '';
+        if (format === 'markdown') {
+            html = marked.parse(text);
+        } else {
+            // Raw HTML
+            html = text;
+        }
 
         // Insert at cursor or append
         const range = quill.getSelection(true);
