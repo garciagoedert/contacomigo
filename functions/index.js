@@ -762,8 +762,8 @@ exports.getNewsletterPosts = functions
                 } else {
                     // Buscar lista
                     let q = admin.firestore().collection('newsletter_posts')
-                        .where('status', '==', 'sent');
-                    // .orderBy('sentAt', 'desc'); // Commented out to debug missing index error
+                        .where('status', '==', 'sent')
+                        .orderBy('sentAt', 'desc');
 
                     if (limit) {
                         q = q.limit(parseInt(limit));
