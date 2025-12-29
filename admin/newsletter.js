@@ -64,11 +64,15 @@ var quill = new Quill('#editor-container', {
                 [{ 'color': [] }, { 'background': [] }],
                 ['link', 'image'],
                 ['clean'],
-                ['markdown-btn'] // Custom button
+                ['markdown-btn'], // Custom button
+                ['code-view-btn'] // New Code View button
             ],
             handlers: {
                 'markdown-btn': function () {
                     openMarkdownModal();
+                },
+                'code-view-btn': function () {
+                    toggleCodeView();
                 }
             }
         }
@@ -82,6 +86,53 @@ if (markdownBtn) {
     markdownBtn.style.width = 'auto';
     markdownBtn.style.padding = '0 5px';
     markdownBtn.title = "Importar do Gemini/ChatGPT (Markdown)";
+}
+
+// Custom Icon for Code View Button
+const codeViewBtn = document.querySelector('.ql-code-view-btn');
+if (codeViewBtn) {
+    codeViewBtn.innerHTML = '<span class="flex items-center gap-1 font-bold text-xs"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> HTML</span>';
+    codeViewBtn.style.width = 'auto';
+    codeViewBtn.style.padding = '0 5px';
+    codeViewBtn.title = "Editar HTML Fonte";
+}
+
+// --- CODE VIEW LOGIC ---
+const editorContainer = document.getElementById('editor-container');
+const htmlEditor = document.getElementById('html-editor');
+let isCodeView = false;
+
+function toggleCodeView() {
+    isCodeView = !isCodeView;
+
+    if (isCodeView) {
+        // Switch to HTML Editor
+        const html = quill.root.innerHTML;
+        htmlEditor.value = html_beautify(html); // Optional: Prettify if easy, else just html
+        editorContainer.classList.add('hidden');
+        htmlEditor.classList.remove('hidden');
+        codeViewBtn.classList.add('text-blue-600', 'bg-blue-50'); // Highlight button
+    } else {
+        // Switch back to Visual Editor
+        const html = htmlEditor.value;
+        quill.root.innerHTML = html;
+        htmlEditor.classList.add('hidden');
+        editorContainer.classList.remove('hidden');
+        codeViewBtn.classList.remove('text-blue-600', 'bg-blue-50');
+    }
+}
+
+// Simple HTML Formatter for readability
+function html_beautify(html) {
+    // Very basic indentation logic
+    let formatted = '';
+    let indent = '';
+    html.split(/>\s*</).forEach(function (node) {
+        if (node.match(/^\/\w/)) indent = indent.substring(2);
+        formatted += indent + '<' + node + '>\r\n';
+        if (node.match(/^<?\w[^>]*[^\/]$/) && !node.startsWith("input") && !node.startsWith("img") && !node.startsWith("br")) indent += '  ';
+    });
+    return formatted.substring(1, formatted.length - 3);
 }
 
 // --- MARKDOWN MODAL LOGIC ---
@@ -224,6 +275,12 @@ tabSubscribersBtn.addEventListener('click', () => switchTab('subscribers'));
 // --- COMPOSE & SEND ACTIONS ---
 
 async function sendEmailAction(isTest = true, saveOnly = false) {
+    // Ensure content is synced if in Code View
+    if (isCodeView) {
+        const html = htmlEditor.value;
+        quill.root.innerHTML = html;
+    }
+
     const subject = subjectInput.value;
     const content = quill.root.innerHTML;
     const testEmail = testEmailInput.value;
