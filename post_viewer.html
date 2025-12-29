@@ -278,7 +278,7 @@
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 let functionUrl = isLocalhost
                     ? `http://127.0.0.1:5001/financeapp-6da16/us-central1/getNewsletterPosts?slug=${slug}`
-                    : `/api/getNewsletterPosts?slug=${slug}`;
+                    : `https://us-central1-financeapp-6da16.cloudfunctions.net/getNewsletterPosts?slug=${slug}`;
 
                 console.log("Requesting post from:", functionUrl);
 

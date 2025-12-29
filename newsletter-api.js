@@ -1,5 +1,6 @@
 
-const API_URL = '/api/getNewsletterPosts';
+// Use absolute URL for production to avoid custom domain rewrite issues
+const API_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/getNewsletterPosts';
 
 /**
  * Fetches newsletter posts from Internal API.
