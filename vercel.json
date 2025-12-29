@@ -1,4 +1,14 @@
 {
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "rewrites": [
+        {
+            "source": "/artigos/:slug",
+            "destination": "/post_viewer.html"
+        },
+        {
+            "source": "/api/getNewsletterPosts",
+            "destination": "https://us-central1-financeapp-6da16.cloudfunctions.net/getNewsletterPosts"
+        }
+    ]
 }
