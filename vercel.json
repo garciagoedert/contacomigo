@@ -1,10 +1,10 @@
 {
-    "cleanUrls": false,
+    "cleanUrls": true,
     "trailingSlash": false,
     "rewrites": [
         {
             "source": "/artigos",
-            "destination": "/artigos.html"
+            "destination": "/content_list.html"
         },
         {
             "source": "/artigos/:slug",
