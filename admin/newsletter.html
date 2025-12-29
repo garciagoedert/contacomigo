@@ -134,9 +134,28 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Conteúdo</label>
                         <div id="editor-container" class="h-96 bg-white text-black text-base"></div>
-                        <textarea id="html-editor"
-                            class="hidden w-full h-96 p-4 font-mono text-sm border border-gray-300 rounded-b-lg focus:ring-blue-500 focus:border-blue-500 bg-gray-50 dark:bg-gray-900 dark:text-gray-300"
-                            placeholder="Cole ou edite seu HTML aqui..."></textarea>
+
+                        <!-- Code View Container with Toolbar -->
+                        <div id="code-view-container"
+                            class="hidden flex flex-col h-96 border border-gray-300 rounded-b-lg bg-gray-50 dark:bg-gray-900">
+                            <div
+                                class="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700">
+                                <span class="text-xs font-mono text-gray-500 uppercase">Editor de Código Fonte
+                                    (HTML)</span>
+                                <button id="force-render-btn"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded shadow-sm flex items-center gap-1 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Renderizar Visual
+                                </button>
+                            </div>
+                            <textarea id="html-editor"
+                                class="flex-1 w-full p-4 font-mono text-sm resize-none focus:outline-none bg-gray-50 dark:bg-gray-900 dark:text-gray-300"
+                                placeholder="Cole ou edite seu HTML aqui..."></textarea>
+                        </div>
                     </div>
 
                     <!-- Actions -->
