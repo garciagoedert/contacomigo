@@ -153,9 +153,9 @@
                     <!-- Optional: Author / Metadata could go here -->
                 </header>
 
-                <div id="post-body"
-                    class="prose prose-lg max-w-none text-gray-600 prose-headings:text-gray-900 prose-a:text-[var(--cor-principal)] hover:prose-a:text-pink-700 [&>table:last-child]:hidden [&>div:last-child:has(>a[href*='beehiiv'])]:hidden">
-                    <!-- HTML Injected Here -->
+                <div class="w-full overflow-hidden">
+                    <iframe id="post-frame" class="w-full border-none" style="min-height: 500px;"
+                        title="Conteúdo do Artigo" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
                 </div>
             </div>
 
@@ -298,7 +298,7 @@
                 const data = await response.json();
                 console.log("Post data received:", data.title);
 
-                // Render
+                // Render Title and Date
                 document.title = `${data.title} | Trilha Comigo`;
                 document.getElementById('post-title').textContent = data.title;
 
@@ -308,49 +308,43 @@
                 }
                 document.getElementById('post-date').textContent = dateStr;
 
-                document.getElementById('post-body').innerHTML = data.content;
+                // IFrame Rendering Logic
+                const iframe = document.getElementById('post-frame');
 
-                // Post-render cleanup
-                try {
-                    const postBody = document.getElementById('post-body');
-
-                    // 1. Remove style tags to prevent global leaks
-                    const styles = postBody.querySelectorAll('style');
-                    styles.forEach(s => s.remove());
-
-                    // 2. Safely remove Beehiiv footer
-                    // Look for specific markers but don't delete the whole container
-                    const markers = ['Powered by beehiiv', 'Unsubscribe', 'Update your email preferences'];
-
-                    // Helper to check if element is likely a footer container
-                    const isFooter = (el) => {
-                        const text = el.textContent || '';
-                        return markers.some(m => text.includes(m));
-                    };
-
-                    // Find small containers at the bottom
-                    const candidates = postBody.querySelectorAll('div, table, p');
-                    candidates.forEach(el => {
-                        if (isFooter(el)) {
-                            // Only remove if it's not the main container and is relatively small or at the end
-                            if (el !== postBody && el.textContent.length < 500) {
-                                el.style.display = 'none'; // Hide instead of remove to be safe
-                            }
-                        }
-                    });
-
-                } catch (e) {
-                    console.warn("Cleanup warning:", e);
-                }
-
-                // Show Content
+                // Show Content Container
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('content').classList.remove('hidden');
+
+                // Write content to IFrame
+                const doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write(data.content);
+                doc.close();
+
+                // Auto-resize logic
+                // we use a slight delay to ensure content is rendered or use resize observer inside if possible
+                iframe.onload = function () {
+                    resizeIframe(iframe);
+                };
+
+                // Also resize after a short timeout to catch any late rendering (images etc)
+                setTimeout(() => resizeIframe(iframe), 500);
+                setTimeout(() => resizeIframe(iframe), 1500);
 
             } catch (error) {
                 console.error("Critical error loading post:", error);
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('error-message').classList.remove('hidden');
+            }
+        }
+
+        function resizeIframe(iframe) {
+            try {
+                // Adjust height to fit content
+                const height = iframe.contentWindow.document.documentElement.scrollHeight || iframe.contentWindow.document.body.scrollHeight;
+                iframe.style.height = (height + 50) + 'px'; // +50px buffer
+            } catch (e) {
+                console.warn("Could not resize iframe", e);
             }
         }
 
