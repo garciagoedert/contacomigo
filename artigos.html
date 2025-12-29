@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRNK2W5VPX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-KRNK2W5VPX');
+    </script>
+    <title>Blog - Trilha Comigo</title>
+    <meta name="description"
+        content="Artigos sobre educação financeira, economia e investimentos para transformar suas finanças.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="imgs/favicon.png" type="image/png">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="/">
+                        <img src="/imgs/14.png" alt="Trilha Comigo Logo" class="h-10 md:h-12">
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/"
+                        class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)]">Início</a>
+                    <a href="/#features"
+                        class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)]">Recursos</a>
+                    <a href="/artigos" class="text-sm font-medium text-[var(--cor-principal)]">Blog</a>
+                </div>
+                <div class="hidden md:block">
+                    <a href="login/index.html"
+                        class="px-6 py-2.5 bg-[var(--cor-principal)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-lg">Entrar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-animate text-white pt-32 pb-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6">Blog Trilha Comigo</h1>
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto">Educação financeira para transformar sua vida</p>
+        </div>
+    </section>
+
+    <!-- Articles Grid -->
+    <section class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cor-principal)] mx-auto mb-4">
+                </div>
+                <p class="text-gray-500">Carregando artigos...</p>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
+                <!-- Content will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Import Newsletter Service -->
+    <script src="/newsletter-api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('articles-grid');
+            const loading = document.getElementById('loading');
+
+            const posts = await fetchNewsletterPosts();
+
+            if (posts.length > 0) {
+                loading.classList.add('hidden');
+                grid.classList.remove('hidden');
+
+                posts.forEach(post => {
+                    grid.innerHTML += createPostCard(post);
+                });
+            } else {
+                loading.innerHTML = '<p class="text-gray-500">Nenhum artigo encontrado no momento.</p>';
+            }
+        });
+    </script>
+
+    <!-- CTA Section -->
+    <section class="gradient-animate text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Pronto para colocar em prática?</h2>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
+                Use o Trilha Comigo para aplicar tudo que você aprendeu
+            </p>
+            <a href="login/index.html"
+                class="inline-block px-10 py-4 bg-white text-[var(--cor-principal)] rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors shadow-xl">
+                Começar Gratuitamente
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <img src="imgs/14.png" alt="Trilha Comigo" class="h-16 mb-4">
+                    <p class="text-sm">Controle financeiro familiar simples, gratuito e poderoso.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Produto</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html#features" class="hover:text-white transition-colors">Recursos</a></li>
+                        <li><a href="index.html#how-it-works" class="hover:text-white transition-colors">Como
+                                Funciona</a></li>
+                        <li><a href="artigos.html" class="hover:text-white transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Empresa</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Sobre Nós</a></li>
+                        <li><a href="/artigos" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacidade</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Segurança</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2025 Trilha Comigo. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

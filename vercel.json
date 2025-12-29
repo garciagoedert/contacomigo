@@ -4,7 +4,7 @@
     "rewrites": [
         {
             "source": "/artigos",
-            "destination": "/blog.html"
+            "destination": "/artigos.html"
         },
         {
             "source": "/artigos/:slug",
