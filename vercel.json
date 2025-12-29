@@ -4,11 +4,11 @@
     "rewrites": [
         {
             "source": "/artigos",
-            "destination": "/content_list.html"
+            "destination": "/content_list"
         },
         {
             "source": "/artigos/:slug",
-            "destination": "/post_viewer.html"
+            "destination": "/post_viewer"
         },
         {
             "source": "/api/getNewsletterPosts",
