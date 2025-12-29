@@ -7,7 +7,7 @@
             "destination": "/articles.html"
         },
         {
-            "source": "/artigos/:slug",
+            "source": "/artigos/:path*",
             "destination": "/post_viewer.html"
         },
         {
