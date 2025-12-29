@@ -389,6 +389,7 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
         const payload = {
             token,
             subject,
+            thumbnail, // Pass thumbnail to the API
             htmlContent: content, // Send the correct content source
             isTest,
             testEmail: isTest ? testEmail : null,

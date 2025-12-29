@@ -604,7 +604,7 @@ exports.sendNewsletter = functions
                     return res.status(403).json({ error: 'Permission Denied' });
                 }
 
-                const { subject, htmlContent, isTest, testEmail, saveOnly } = req.body;
+                const { subject, htmlContent, thumbnail, isTest, testEmail, saveOnly } = req.body;
                 if (!subject || !htmlContent) {
                     return res.status(400).json({ error: 'Assunto e conteúdo HTML são obrigatórios.' });
                 }
@@ -620,6 +620,7 @@ exports.sendNewsletter = functions
                 const postData = {
                     slug,
                     title: subject,
+                    thumbnail: thumbnail || null,
                     content: htmlContent, // CUIDADO: Armazenar HTML pode ser pesado, mas ok para MVP
                     status: saveOnly ? 'draft' : 'sent',
                     updatedAt: admin.firestore.FieldValue.serverTimestamp()
@@ -727,9 +728,12 @@ exports.getNewsletterPosts = functions
                         }
                     });
 
-                    if (data.status !== 'sent') {
-                        return res.status(404).json({ error: 'Post não disponível (Status mismatch)' });
-                    }
+                    // ALLOW DRAFTS: For single post view by slug, we allow viewing drafts/sent posts.
+                    // If strict public access control is needed later, add a 'preview_token' or similar.
+                    // For now, if you have the slug, you can view it (Draft or Sent).
+                    // if (data.status !== 'sent') {
+                    //    return res.status(404).json({ error: 'Post não disponível (Status mismatch)' });
+                    // }
 
                     return res.json(sanitizedData);
                 } else {

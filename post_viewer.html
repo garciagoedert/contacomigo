@@ -319,6 +319,16 @@
                 const doc = iframe.contentWindow.document;
                 doc.open();
                 doc.write(data.content);
+
+                // Inject style to fix background
+                doc.write(`
+                    <style>
+                        body { background-color: transparent !important; margin: 0; padding: 0; }
+                        /* Ensure container is centered if it's a table based email */
+                        table { margin: 0 auto; }
+                    </style>
+                `);
+
                 doc.close();
 
                 // Auto-resize logic
