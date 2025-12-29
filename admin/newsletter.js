@@ -107,34 +107,54 @@ if (codeViewBtn) {
     codeViewBtn.title = "Editar HTML Fonte";
 }
 
-// --- CODE VIEW LOGIC (UPDATED) ---
+// --- CODE VIEW LOGIC (UPDATED WITH IFRAME PREVIEW) ---
 const editorContainer = document.getElementById('editor-container');
 const codeViewContainer = document.getElementById('code-view-container');
 const htmlEditor = document.getElementById('html-editor');
-const forceRenderBtn = document.getElementById('force-render-btn');
+const previewFrame = document.getElementById('html-preview-frame');
+const forceRenderBtn = document.getElementById('force-render-btn'); // Now "Preview" button
 let isCodeView = false;
 
 function toggleCodeView() {
     isCodeView = !isCodeView;
 
     if (isCodeView) {
-        // Switch to HTML Editor
-        const html = quill.root.innerHTML;
-        // Basic clean up
-        htmlEditor.value = html;
+        // Switch to HTML Editor Mode
+        const html = quill.root.innerHTML; // Get current state from Quill
+
+        // Only set value if editor is empty, to valid overwriting changes made in code view 
+        // if user toggled back and forth without modifying visual.
+        // Actually, safer to always sync from Visual -> Code when entering Code view
+        // BUT we must allow user to persist their raw HTML if they didn't touch visual.
+        if (!htmlEditor.value || htmlEditor.value.trim() === "") {
+            htmlEditor.value = html;
+        }
 
         editorContainer.classList.add('hidden');
         if (codeViewContainer) {
             codeViewContainer.classList.remove('hidden');
         } else {
-            // Fallback
             htmlEditor.classList.remove('hidden');
         }
 
         if (codeViewBtn) codeViewBtn.classList.add('text-blue-600', 'bg-blue-50');
+
+        // Reset preview frame visibility
+        if (previewFrame) previewFrame.classList.add('hidden');
+
     } else {
         // Switch back to Visual Editor
-        updateVisualEditorFromCode();
+        // WARNING: Switching back to Quill might strip styles. 
+        // We warn user if they pasted full HTML
+        const html = htmlEditor.value;
+        if (html.includes('<html') || html.includes('<style')) {
+            if (!confirm("Atenção: Voltar para o modo visual pode quebrar seu template HTML customizado (tags <head>, <style>, etc). Deseja continuar?")) {
+                isCodeView = true; // Cancel switch
+                return;
+            }
+        }
+
+        quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
 
         if (codeViewContainer) {
             codeViewContainer.classList.add('hidden');
@@ -147,31 +167,36 @@ function toggleCodeView() {
     }
 }
 
-function updateVisualEditorFromCode() {
+// Render Preview Function (IFrame)
+function renderPreview() {
     const html = htmlEditor.value;
-    // Use dangerousPasteHTML to properly parse and insert style/class structure
-    quill.setContents([]);
-    quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
+
+    if (!previewFrame) {
+        console.error("Preview frame not found");
+        return;
+    }
+
+    // Show iframe, resize textarea
+    previewFrame.classList.remove('hidden');
+
+    // Write content to iframe
+    const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+
+    showStatus("Pré-visualização atualizada!", "success");
 }
 
-// Force Render Button Action
+// Force Render Button Action (Now "Preview")
 if (forceRenderBtn) {
     forceRenderBtn.addEventListener('click', () => {
-        updateVisualEditorFromCode();
-        showStatus("Visual atualizado com sucesso!", "success");
+        renderPreview();
     });
 }
 
 function html_beautify(html) {
-    // Kept for reference but unused in new logic to preserve raw precision
-    let formatted = '';
-    let indent = '';
-    html.split(/>\s*</).forEach(function (node) {
-        if (node.match(/^\/\w/)) indent = indent.substring(2);
-        formatted += indent + '<' + node + '>\r\n';
-        if (node.match(/^<?\w[^>]*[^\/]$/) && !node.startsWith("input") && !node.startsWith("img") && !node.startsWith("br")) indent += '  ';
-    });
-    return formatted.substring(1, formatted.length - 3);
+    return html;
 }
 
 // --- MARKDOWN MODAL LOGIC ---
@@ -187,7 +212,7 @@ function openMarkdownModal() {
     mdModal.classList.remove('hidden');
     // Set focus after transition
     setTimeout(() => mdInput.focus(), 50);
-    renderPreview();
+    renderMdPreview();
 }
 
 function closeMarkdownModal() {
@@ -196,7 +221,7 @@ function closeMarkdownModal() {
     mdPreview.innerHTML = '<p class="text-gray-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>';
 }
 
-function renderPreview() {
+function renderMdPreview() {
     const text = mdInput.value;
     const format = importFormatSelect ? importFormatSelect.value : 'markdown';
 
@@ -221,9 +246,9 @@ function renderPreview() {
 }
 
 // Event Listeners
-mdInput.addEventListener('input', renderPreview);
+mdInput.addEventListener('input', renderMdPreview);
 if (importFormatSelect) {
-    importFormatSelect.addEventListener('change', renderPreview);
+    importFormatSelect.addEventListener('change', renderMdPreview);
 }
 
 [closeMdBtn, cancelMdBtn].forEach(btn => btn.addEventListener('click', closeMarkdownModal));
@@ -314,31 +339,39 @@ tabSubscribersBtn.addEventListener('click', () => switchTab('subscribers'));
 // --- COMPOSE & SEND ACTIONS ---
 
 async function sendEmailAction(isTest = true, saveOnly = false) {
-    // Ensure content is synced if in Code View
+    let content = '';
+
+    // CRITICAL FIX: If isCodeView, prioritize the raw HTML from textarea
+    // This allows sending full HTML templates (with head/style) exactly as is.
     if (isCodeView) {
-        const html = htmlEditor.value;
-        quill.clipboard.dangerouslyPasteHTML(0, html, 'user');
+        content = htmlEditor.value;
+        console.log("Sending RAW HTML from Code Editor:", content.substring(0, 100) + "...");
+    } else {
+        content = quill.root.innerHTML;
     }
 
     const subject = subjectInput.value;
-    const content = quill.root.innerHTML;
     const testEmail = testEmailInput.value;
 
     if (!subject) return showStatus('Por favor, informe um assunto.', 'error');
 
-    // Check if content is empty (ignoring HTML tags if only empty tags exist, but allowing images/structural html)
-    // If in code view, we trust the user input more.
-    const textContent = quill.getText().trim();
-    if (textContent.length === 0 && !content.includes('<img') && !content.includes('<table') && !content.includes('<div') && !isCodeView) {
-        return showStatus('O conteúdo não pode estar vazio.', 'error');
-    }
-    // Double check for Code VIEW empty
-    if (isCodeView && htmlEditor.value.trim().length === 0) {
-        return showStatus('O conteúdo HTML não pode estar vazio.', 'error');
+    // Check content validity
+    // If raw HTML (Code View), we trust it more, just check if empty
+    if (isCodeView) {
+        if (!content || content.trim().length === 0) {
+            return showStatus('O conteúdo HTML não pode estar vazio.', 'error');
+        }
+    } else {
+        // Quill validation
+        const textContent = quill.getText().trim();
+        if (textContent.length === 0 && !content.includes('<img') && !content.includes('<table') && !content.includes('<div')) {
+            return showStatus('O conteúdo não pode estar vazio.', 'error');
+        }
     }
 
     if (isTest && !testEmail && !saveOnly) return showStatus('Para enviar um teste, informe um email de destino.', 'error');
 
+    // CONFIRMATION DIALOG (Skip for tests or drafts)
     if (!isTest && !saveOnly && !confirm('ATENÇÃO: Você está prestes a enviar este email para TODOS os seus inscritos ativos. Esta ação não pode ser desfeita. Deseja continuar?')) {
         return;
     }
@@ -356,7 +389,7 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
         const payload = {
             token,
             subject,
-            htmlContent: content,
+            htmlContent: content, // Send the correct content source
             isTest,
             testEmail: isTest ? testEmail : null,
             saveOnly
@@ -375,9 +408,10 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
             if (saveOnly) {
                 // Could highlight draft saved
             } else if (!isTest) {
-                // Clear form if real send
+                // Clear form if real send and success
                 // subjectInput.value = '';
                 // quill.setContents([]);
+                // if(isCodeView) htmlEditor.value = '';
                 switchTab('history');
             }
         } else {
