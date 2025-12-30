@@ -567,54 +567,64 @@ async function loadHistory() {
         querySnapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
 
         docs.sort((a, b) => {
-            const dateA = a.updatedAt || a.createdAt || a.sentAt || { seconds: 0 };
-            const dateB = b.updatedAt || b.createdAt || b.sentAt || { seconds: 0 };
-            return dateB.seconds - dateA.seconds;
+            const dateA = safeDateSort(a.updatedAt || a.createdAt || a.sentAt);
+            const dateB = safeDateSort(b.updatedAt || b.createdAt || b.sentAt);
+            return dateB - dateA;
         });
 
         docs.forEach((data) => {
-            const docSnap = { id: data.id };
-            // data is already the object
+            try {
+                const docSnap = { id: data.id };
+                // data is already the object
 
-            const dateStr = data.sentAt ? new Date(data.sentAt.seconds * 1000).toLocaleString() : (data.updatedAt ? new Date(data.updatedAt.seconds * 1000).toLocaleDateString() + ' (Rascunho)' : '-');
-            const statusClass = data.status === 'sent' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
-            const sentCount = data.sentCount !== undefined ? data.sentCount : '-';
+                const sentDate = safeDate(data.sentAt);
+                const updateDate = safeDate(data.updatedAt);
 
-            const tr = document.createElement('tr');
+                let dateStr = '-';
+                if (sentDate) dateStr = sentDate.toLocaleString();
+                else if (updateDate) dateStr = updateDate.toLocaleDateString() + ' (Rascunho)';
 
-            // Define Actions based on status
-            let actionButtons = `
-                <a href="/artigos/${docSnap.id}" target="_blank" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
-                <button onclick="window.deletePost('${docSnap.id}')" class="text-red-500 hover:text-red-700 font-bold" title="Excluir">✕</button>
-            `;
+                const statusClass = data.status === 'sent' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
+                const sentCount = data.sentCount !== undefined ? data.sentCount : '-';
 
-            if (data.status === 'draft') {
-                actionButtons = `
-                    <button onclick="window.loadDraft('${docSnap.id}')" class="text-yellow-600 hover:text-yellow-900 mr-3 font-semibold">Editar</button>
-                    ${actionButtons}
+                const tr = document.createElement('tr');
+
+                // Define Actions based on status
+                let actionButtons = `
+                    <a href="/artigos/${docSnap.id}" target="_blank" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
+                    <button onclick="window.deletePost('${docSnap.id}')" class="text-red-500 hover:text-red-700 font-bold" title="Excluir">✕</button>
                 `;
-            } else {
-                // Also allow editing SENT posts
-                actionButtons = `
-                    <button onclick="window.loadDraft('${docSnap.id}')" class="text-green-600 hover:text-green-900 mr-3 font-semibold">Editar</button>
-                    ${actionButtons}
+
+                if (data.status === 'draft') {
+                    actionButtons = `
+                        <button onclick="window.loadDraft('${docSnap.id}')" class="text-yellow-600 hover:text-yellow-900 mr-3 font-semibold">Editar</button>
+                        ${actionButtons}
+                    `;
+                } else {
+                    // Also allow editing SENT posts
+                    actionButtons = `
+                        <button onclick="window.loadDraft('${docSnap.id}')" class="text-green-600 hover:text-green-900 mr-3 font-semibold">Editar</button>
+                        ${actionButtons}
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${data.title || 'Sem Título (' + docSnap.id + ')'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${dateStr}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${sentCount}</td>
+                     <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${data.status === 'sent' ? 'Enviado' : 'Rascunho'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                         ${actionButtons}
+                    </td>
                 `;
+                historyTableBody.appendChild(tr);
+            } catch (rowErr) {
+                console.error("Erro ao renderizar linha:", rowErr, data);
             }
-
-            tr.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${data.title}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${dateStr}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${sentCount}</td>
-                 <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
-                        ${data.status === 'sent' ? 'Enviado' : 'Rascunho'}
-                    </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                     ${actionButtons}
-                </td>
-            `;
-            historyTableBody.appendChild(tr);
         });
 
     } catch (error) {
@@ -623,8 +633,22 @@ async function loadHistory() {
     }
 }
 
+// Helper for Robust Date Parsing
+function safeDate(val) {
+    if (!val) return null;
+    if (val.seconds) return new Date(val.seconds * 1000); // Firestore Timestamp
+    if (val instanceof Date) return val; // JS Date
+    if (typeof val === 'string') return new Date(val); // ISO String
+    if (typeof val === 'number') return new Date(val); // Epoch
+    return null;
+}
 
-refreshHistoryBtn.addEventListener('click', loadHistory);
+function safeDateSort(val) {
+    const d = safeDate(val);
+    return d ? d.getTime() : 0;
+}
+
+// ... (refreshHistoryBtn listener remains)
 
 // --- DELETE LOGIC ---
 window.deletePost = async function (slug) {
