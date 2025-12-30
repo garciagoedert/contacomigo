@@ -534,7 +534,8 @@ async function loadHistory() {
     historyTableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">Carregando...</td></tr>';
 
     try {
-        const q = query(collection(db, "newsletter_posts"), orderBy("updatedAt", "desc"));
+        // FETCH ALL (Client-side sort handles missing fields)
+        const q = query(collection(db, "newsletter_posts"));
         const querySnapshot = await getDocs(q);
 
         historyTableBody.innerHTML = '';
@@ -544,8 +545,20 @@ async function loadHistory() {
             return;
         }
 
-        querySnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
+        // Convert to array and sort manually (Newest first)
+        const docs = [];
+        querySnapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+
+        docs.sort((a, b) => {
+            const dateA = a.updatedAt || a.createdAt || a.sentAt || { seconds: 0 };
+            const dateB = b.updatedAt || b.createdAt || b.sentAt || { seconds: 0 };
+            return dateB.seconds - dateA.seconds;
+        });
+
+        docs.forEach((data) => {
+            const docSnap = { id: data.id };
+            // data is already the object
+
             const dateStr = data.sentAt ? new Date(data.sentAt.seconds * 1000).toLocaleString() : (data.updatedAt ? new Date(data.updatedAt.seconds * 1000).toLocaleDateString() + ' (Rascunho)' : '-');
             const statusClass = data.status === 'sent' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
             const sentCount = data.sentCount !== undefined ? data.sentCount : '-';

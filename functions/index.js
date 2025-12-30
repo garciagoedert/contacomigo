@@ -4,6 +4,8 @@ const cors = require('cors')({ origin: true });
 
 admin.initializeApp();
 
+const { GoogleGenerativeAI, SchemaType } = require("@google/generative-ai");
+
 // Configuração do Asaas
 // A chave de API é armazenada de forma segura usando Firebase Functions Config
 // Para configurar: firebase functions:config:set asaas.api_key="SUA_CHAVE_AQUI"
@@ -229,7 +231,9 @@ exports.syncPluggyTransactions = functions
 
 
 // --- AI FINANCIAL COACH (GEMINI) ---
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+// const { GoogleGenerativeAI } = require("@google/generative-ai"); // REMOVED DUPLICATE
+const Parser = require('rss-parser');
+const parser = new Parser();
 
 exports.generateWeeklyInsights = functions
     .runWith({ invoker: 'public', timeoutSeconds: 60 })
@@ -519,6 +523,54 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Helper Function: Send Emails to All Active Subscribers
+const sendEmailsToSubscribers = async (subject, htmlContent, slug) => {
+    try {
+        console.log(`📧 Iniciando envio em massa para: ${subject}`);
+        const subscribersSnapshot = await admin.firestore().collection('newsletter_subscribers')
+            .where('status', '==', 'active')
+            .get();
+
+        if (subscribersSnapshot.empty) {
+            console.log('⚠️ Nenhum inscrito ativo encontrado.');
+            return { successCount: 0, failureCount: 0 };
+        }
+
+        const recipients = [];
+        subscribersSnapshot.forEach(doc => recipients.push(doc.id));
+
+        console.log(`👥 Encontrados ${recipients.length} destinatários.`);
+
+        let successCount = 0;
+        let failureCount = 0;
+
+        for (const email of recipients) {
+            try {
+                const mailOptions = {
+                    from: '"Trilha News" <marketing@southsea.com.br>',
+                    to: email,
+                    subject: subject,
+                    html: htmlContent,
+                    // TODO: Adicionar Link de Unsubscribe real
+                };
+
+                await transporter.sendMail(mailOptions);
+                successCount++;
+            } catch (err) {
+                console.error(`❌ Falha ao enviar para ${email}:`, err);
+                failureCount++;
+            }
+        }
+
+        console.log(`✅ Envio finalizado. Sucessos: ${successCount}, Falhas: ${failureCount}`);
+        return { successCount, failureCount };
+
+    } catch (error) {
+        console.error("❌ Erro crítico no envio de emails:", error);
+        throw error;
+    }
+};
+
 // 1. Inscrição na Newsletter (Salvar no Firestore)
 exports.subscribeToNewsletter = functions
     .runWith({ invoker: 'public' })
@@ -798,6 +850,309 @@ exports.getNewsletterPosts = functions
             } catch (error) {
                 console.error("Erro ao buscar posts:", error);
                 res.status(500).json({ error: error.message, stack: error.stack });
+            }
+        });
+    });
+
+// 4. Generate Daily Post (AI Agent)
+// Runs automatically every day at 08:00 AM (Sao Paulo time)
+exports.generateDailyPost = functions
+    .runWith({ timeoutSeconds: 540 }) // Aumentado para 9 min (geração + email)
+    .pubsub.schedule('0 8 * * *') // 08:00 AM Daily
+    .timeZone('America/Sao_Paulo')
+    .onRun(async (context) => {
+        try {
+            console.log("🤖 Iniciando Agente de Conteúdo Automático (v2 - High Quality)...");
+            const API_KEY = process.env.GOOGLE_GENAI_API_KEY || functions.config().google?.genai_api_key;
+            if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
+
+            const genAI = new GoogleGenerativeAI(API_KEY);
+
+            // SCHEMA DEFINITION
+            const schema = {
+                description: "Blog post content",
+                type: SchemaType.OBJECT,
+                properties: {
+                    title: { type: SchemaType.STRING, description: "Catchy title", nullable: false },
+                    subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
+                    content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
+                    thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
+                },
+                required: ["title", "subject", "content", "thumbnail"]
+            };
+
+            const model = genAI.getGenerativeModel({
+                model: "gemini-2.5-flash-lite",
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: schema,
+                    maxOutputTokens: 8192 // Ensure enough space for long content
+                }
+            });
+
+            // 1. FETCH REAL NEWS (RSS)
+            let newsContext = "";
+            try {
+                console.log("📰 Buscando notícias em tempo real...");
+                const feedG1 = await parser.parseURL('https://g1.globo.com/dynamo/economia/rss2.xml');
+                const feedInvesting = await parser.parseURL('https://br.investing.com/rss/news_11.rss'); // Stock Markets
+
+                const articles = [
+                    ...feedG1.items.slice(0, 3),
+                    ...feedInvesting.items.slice(0, 3)
+                ].map(item => `- ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
+
+                newsContext = `ÚLTIMAS NOTÍCIAS (FONTE REAL): \n${articles}`;
+                console.log("✅ Contexto de notícias obtido.");
+            } catch (rssError) {
+                console.error("⚠️ Erro ao buscar RSS (usando fallback):", rssError);
+                newsContext = "Sem notícias recentes. Escolha um tema evergreen.";
+            }
+
+            const prompt = `
+            CONTEXTO DE MUNDO REAL (USE ISSO):
+            ${newsContext}
+
+            Você é o Editor-Chefe e Redator Sênior do "Trilha News".
+            Sua missão é criar o artigo do dia baseado nas notícias REAIS acima (se houver) ou um tema evergreen se não houver notícias relevantes.
+
+            Você é o Editor-Chefe e Redator Sênior do "Trilha News", um portal de finanças moderno e direto.
+            Sua missão é criar o artigo do dia, que será lido por milhares de brasileiros buscando melhorar sua vida financeira.
+
+            ESTILO E TOM:
+            - **Visual**: Limpo, arejado, uso estratégico de negrito para escaneabilidade.
+            - **Tom**: Otimista, motivador, "direto ao ponto", mas com profundidade. Evite "economês" desnecessário.
+            - **Estrutura**:
+                1.  **Título Impactante**: Curto e que desperte curiosidade imediata.
+                2.  **Subtítulo (Lead)**: Uma frase que resume o valor do artigo.
+                3.  **Introdução**: Conecte-se com a dor ou desejo do leitor.
+                4.  **Key Takeaways**: Lista rápida com 3 bullets (emojis).
+                5.  **Desenvolvimento**: 3 a 4 seções com subtítulos claros (<h2>). Use parágrafos curtos.
+                6.  **Deep Dive (O Pulo do Gato)**: Uma dica avançada (Box de destaque).
+                7.  **Conclusão e Call to Action**: Motive o leitor a agir hoje.
+
+            CONTEÚDO:
+            - Escolha um tema "quente" ou "evergreen" (ex: Selic, Cartão de Crédito, Reserva de Emergência, Renda Extra, mindset financeiro).
+            - Escolha um tema "quente" ou "evergreen" (ex: Selic, Cartão de Crédito, Reserva de Emergência, Renda Extra, mindset financeiro).
+            - O artigo deve ter **entre 800 e 1200 palavras** (conteúdo rico).
+
+            CRÍTICO: NÃO USE ESTILOS INLINE (style="..."). USE APENAS HTML SEMÂNTICO PURO.
+            O CSS do site cuidará de todas as fontes e cores. Se você usar styles, quebrará o design.
+
+            FORMATO DE SAÍDA (JSON ESTRITO):
+            Retorne APENAS o JSON. Não inclua "Ok", "Aqui está" ou blocos de código markdown.
+            
+            {
+                "title": "Seu Título Aqui",
+                "subject": "slug-do-artigo",
+                "content": "<p>Seu HTML aqui... (Use h2, p, ul, li, blockquote)</p>",
+                "thumbnail": "URL válida de imagem (Unsplash source ou similar, ex: https://source.unsplash.com/800x600/?money,finance)"
+            }
+            `;
+
+            const result = await model.generateContent(prompt);
+            // Com responseMimeType: 'application/json', o texto já vem limpo, mas mantemos o clean por segurança
+            const responseText = result.response.text();
+            let cleanedText = responseText.trim();
+            if (cleanedText.startsWith('```json')) cleanedText = cleanedText.replace(/^```json/, '').replace(/```$/, '');
+
+            const articleData = JSON.parse(cleanedText);
+
+            // THUMBNAIL GENERATION (Pollinations AI)
+            const encodedTitle = encodeURIComponent(articleData.title + " financial minimalist flat vector art");
+            const aiThumbnail = `https://image.pollinations.ai/prompt/${encodedTitle}?width=800&height=600&nologo=true`;
+
+            const slug = articleData.subject
+                .toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                + '-' + Date.now();
+
+            const postData = {
+                slug: slug,
+                title: articleData.title,
+                content: articleData.content,
+                thumbnail: aiThumbnail, // Dynamic AI Image
+                status: 'sent',
+                sentAt: admin.firestore.FieldValue.serverTimestamp(),
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(), // MANDATORY for Admin Panel
+                generatedBy: "AI Agent (Scheduled v3)",
+                tags: ["AI", "Daily", "Auto-Generated", "Scheduled", "HighQuality"]
+            };
+
+            // 1. Salvar no Firestore
+            await admin.firestore().collection('newsletter_posts').doc(slug).set(postData);
+            console.log(`✅ Artigo salvo no banco: ${slug}`);
+
+            // 2. Enviar por Email (Feature Nova)
+            const emailSubject = `Trilha News 🚀: ${articleData.title}`;
+            const emailHtml = `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                    <img src="https://trilhacomigo.cc/imgs/14.png" alt="Trilha News" style="height: 50px; margin-bottom: 20px;">
+                    ${articleData.content}
+                    <hr style="margin-top: 40px; border: 0; border-top: 1px solid #eee;">
+                    <p style="font-size: 12px; color: #999; text-align: center;">
+                        <a href="https://trilhacomigo.cc/artigos.html?slug=${slug}">Ler no navegador</a> | 
+                        <a href="#">Descadastrar</a>
+                    </p>
+                </div>
+            `;
+
+            const emailStats = await sendEmailsToSubscribers(emailSubject, emailHtml, slug);
+
+            // 3. Atualizar estatísticas de envio no post
+            await admin.firestore().collection('newsletter_posts').doc(slug).update({
+                sentCount: emailStats.successCount,
+                emailStats: emailStats
+            });
+
+            console.log("✅ Ciclo diário concluído com sucesso.");
+            return null;
+
+        } catch (error) {
+            console.error("❌ Erro no Agente Automático:", error);
+            return null;
+        }
+    });
+
+// 5. MANUAL DEBUG (Runs the same logic but triggers via URL)
+// NOTE: Does NOT send emails to everyone, only generates the post.
+exports.debugGenerateDailyPost = functions
+    .runWith({ timeoutSeconds: 300 })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            try {
+                console.log("🤖 Iniciando Agente MANUAL (DEBUG v2)...");
+                const API_KEY = process.env.GOOGLE_GENAI_API_KEY || functions.config().google?.genai_api_key;
+                if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
+
+                const genAI = new GoogleGenerativeAI(API_KEY);
+
+                // SCHEMA DEFINITION
+                const schema = {
+                    description: "Blog post content",
+                    type: SchemaType.OBJECT,
+                    properties: {
+                        title: { type: SchemaType.STRING, description: "Catchy title", nullable: false },
+                        subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
+                        content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
+                        thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
+                    },
+                    required: ["title", "subject", "content", "thumbnail"]
+                };
+
+                const model = genAI.getGenerativeModel({
+                    model: "gemini-2.5-flash-lite",
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: schema,
+                        maxOutputTokens: 8192
+                    }
+                });
+
+                // 1. FETCH REAL NEWS (RSS)
+                let newsContext = "";
+                try {
+                    console.log("📰 Buscando notícias em tempo real...");
+                    // Re-instanciar parser se necessário ou usar o global
+                    const feedG1 = await parser.parseURL('https://g1.globo.com/dynamo/economia/rss2.xml');
+                    const feedInvesting = await parser.parseURL('https://br.investing.com/rss/news_11.rss');
+
+                    const articles = [
+                        ...feedG1.items.slice(0, 3),
+                        ...feedInvesting.items.slice(0, 3)
+                    ].map(item => `- ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
+
+                    newsContext = `ÚLTIMAS NOTÍCIAS (FONTE REAL): \n${articles}`;
+                    console.log("✅ Contexto de notícias obtido.");
+                } catch (rssError) {
+                    console.error("⚠️ Erro ao buscar RSS (usando fallback):", rssError);
+                    newsContext = "Sem notícias recentes. Escolha um tema evergreen.";
+                }
+
+                // USANDO O MESMO PROMPT DO PRODUCTION PARA GARANTIR PARIDADE
+                const prompt = `
+                CONTEXTO DE MUNDO REAL (USE ISSO):
+                ${newsContext}
+
+                Você é o Editor-Chefe e Redator Sênior do "Trilha News".
+                Você é o Editor-Chefe e Redator Sênior do "Trilha News", um portal de finanças moderno e direto.
+                Sua missão é criar o artigo do dia, que será lido por milhares de brasileiros buscando melhorar sua vida financeira.
+
+                ESTILO E TOM:
+                - **Visual**: Limpo, arejado, uso estratégico de negrito para escaneabilidade.
+                - **Tom**: Otimista, motivador, "direto ao ponto", mas com profundidade. Evite "economês" desnecessário.
+                - **Estrutura**:
+                    1.  **Título Impactante**: Curto e que desperte curiosidade imediata.
+                    2.  **Subtítulo (Lead)**: Uma frase que resume o valor do artigo.
+                    3.  **Introdução**: Conecte-se com a dor ou desejo do leitor.
+                    4.  **Key Takeaways**: Lista rápida com 3 bullets (emojis).
+                    5.  **Desenvolvimento**: 3 a 4 seções com subtítulos claros (<h2>). Use parágrafos curtos.
+                    6.  **Deep Dive (O Pulo do Gato)**: Uma dica avançada (Box de destaque).
+                    7.  **Conclusão e Call to Action**: Motive o leitor a agir hoje.
+
+                CONTEÚDO:
+                - Escolha um tema "quente" ou "evergreen" (ex: Selic, Cartão de Crédito, Reserva de Emergência, Renda Extra, mindset financeiro).
+                - O artigo deve ter **entre 800 e 1200 palavras** (conteúdo rico).
+
+                FORMATO DE SAÍDA (JSON ESTRITO):
+                Retorne APENAS o JSON. Não inclua "Ok", "Aqui está" ou blocos de código markdown.
+                
+                {
+                    "title": "Seu Título Aqui",
+                    "subject": "slug-do-artigo",
+                    "content": "<p>Seu HTML aqui... (Use h2, p, ul, li, blockquote)</p>",
+                    "thumbnail": "URL válida de imagem (Unsplash source ou similar, ex: https://source.unsplash.com/800x600/?money,finance)"
+                }
+                `;
+
+                const result = await model.generateContent(prompt);
+                const responseText = result.response.text();
+                let cleanedText = responseText.trim();
+                // Remove Markdown code blocks if they persist
+                if (cleanedText.startsWith('```')) {
+                    cleanedText = cleanedText.replace(/^```(json)?/, '').replace(/```$/, '');
+                }
+
+                const articleData = JSON.parse(cleanedText);
+
+                // THUMBNAIL GENERATION (Pollinations AI)
+                const encodedTitle = encodeURIComponent(articleData.title + " financial minimalist flat vector art");
+                const aiThumbnail = `https://image.pollinations.ai/prompt/${encodedTitle}?width=800&height=600&nologo=true`;
+
+                const slug = articleData.subject
+                    .toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '')
+                    + '-' + Date.now();
+
+                const postData = {
+                    slug: slug,
+                    title: articleData.title,
+                    content: articleData.content,
+                    thumbnail: aiThumbnail, // Dynamic AI Image
+                    status: 'sent',
+                    sentAt: admin.firestore.FieldValue.serverTimestamp(),
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(), // MANDATORY for Admin Panel
+                    generatedBy: "AI Agent (Debug v3)",
+                    tags: ["AI", "Daily", "Auto-Generated", "Debug", "HighQuality"]
+                };
+
+                await admin.firestore().collection('newsletter_posts').doc(slug).set(postData);
+
+                res.json({
+                    success: true,
+                    message: "Artigo (Debug v2) gerado e publicado! Emails NÃO foram enviados (modo debug).",
+                    data: { slug, title: articleData.title, link: `https://trilhacomigo.cc/artigos.html?slug=${slug}` }
+                });
+
+            } catch (error) {
+                console.error("❌ Erro no Agente (Debug):", error);
+                res.status(500).json({ error: error.message, details: error.toString() });
             }
         });
     });
