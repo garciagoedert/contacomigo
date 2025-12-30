@@ -35,6 +35,7 @@ const sendAllBtn = document.getElementById('send-all-btn');
 const saveDraftBtn = document.getElementById('save-draft-btn');
 const testEmailInput = document.getElementById('test-email-input');
 const subjectInput = document.getElementById('email-subject');
+let currentEditingSlug = null; // Track which post is being edited
 
 // History
 const historyTableBody = document.getElementById('history-table-body');
@@ -320,6 +321,10 @@ function switchTab(tabId) {
         tabComposeBtn.classList.add('border-blue-500', 'text-blue-600');
         tabComposeBtn.classList.remove('border-transparent', 'text-gray-500');
     } else if (tabId === 'history') {
+        // Reset Editing State when leaving compose (optional, but safer to keep unless explicitly cleared)
+        // Actually, if we switch to history, maybe we SHOULD clear? 
+        // No, user might want to check history and go back.
+        // But if they click "Compose" tab manually, we should probably clear. -> Handled in btn listener below if needed.
         tabHistory.classList.remove('hidden');
         tabHistoryBtn.classList.add('border-blue-500', 'text-blue-600');
         tabHistoryBtn.classList.remove('border-transparent', 'text-gray-500');
@@ -332,7 +337,15 @@ function switchTab(tabId) {
     }
 }
 
-tabComposeBtn.addEventListener('click', () => switchTab('compose'));
+tabComposeBtn.addEventListener('click', () => {
+    // If clicking explicitly on Compose, clear editing state? 
+    // Usually yes, "New Post" behavior.
+    currentEditingSlug = null;
+    subjectInput.value = '';
+    quill.setContents([]);
+    document.getElementById('post-thumbnail').value = '';
+    switchTab('compose');
+});
 tabHistoryBtn.addEventListener('click', () => switchTab('history'));
 tabSubscribersBtn.addEventListener('click', () => switchTab('subscribers'));
 
@@ -341,7 +354,7 @@ tabSubscribersBtn.addEventListener('click', () => switchTab('subscribers'));
 // --- EDIT DRAFT LOGIC ---
 window.loadDraft = async function (slug) {
     try {
-        showStatus('Carregando rascunho...', 'info');
+        showStatus('Carregando post...', 'info');
         const docRef = doc(db, "newsletter_posts", slug);
         const docSnap = await getDoc(docRef);
 
@@ -383,8 +396,9 @@ window.loadDraft = async function (slug) {
             }
 
             // Switch to Compose Tab
+            currentEditingSlug = slug; // SET EDITING SLUG
             switchTab('compose');
-            showStatus('Rascunho carregado. Pode editar agora.', 'success');
+            showStatus('Post carregado. Pode editar agora.', 'success');
         } else {
             showStatus('Rascunho não encontrado.', 'error');
         }
@@ -461,7 +475,9 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
             isTest,
             testEmail: isTest ? testEmail : null,
             saveOnly,
-            publishOnly // New Flag
+            saveOnly,
+            publishOnly, // New Flag
+            slug: currentEditingSlug // Send SLUG if editing
         };
 
         const response = await fetch(functionUrl, {
@@ -480,6 +496,7 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
                 // Clear form if real send/publish and success
                 // Reset checkbox
                 if (publishOnlyCheck) publishOnlyCheck.checked = false;
+                currentEditingSlug = null; // Clear editing state after success
                 switchTab('history');
             }
         } else {
@@ -574,6 +591,12 @@ async function loadHistory() {
             if (data.status === 'draft') {
                 actionButtons = `
                     <button onclick="window.loadDraft('${docSnap.id}')" class="text-yellow-600 hover:text-yellow-900 mr-3 font-semibold">Editar</button>
+                    ${actionButtons}
+                `;
+            } else {
+                // Also allow editing SENT posts
+                actionButtons = `
+                    <button onclick="window.loadDraft('${docSnap.id}')" class="text-green-600 hover:text-green-900 mr-3 font-semibold">Editar</button>
                     ${actionButtons}
                 `;
             }

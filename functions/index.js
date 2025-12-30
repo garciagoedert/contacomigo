@@ -656,13 +656,13 @@ exports.sendNewsletter = functions
                     return res.status(403).json({ error: 'Permission Denied' });
                 }
 
-                const { subject, htmlContent, thumbnail, isTest, testEmail, saveOnly, publishOnly } = req.body;
+                const { subject, htmlContent, thumbnail, isTest, testEmail, saveOnly, publishOnly, slug: providedSlug } = req.body;
                 if (!subject || !htmlContent) {
                     return res.status(400).json({ error: 'Assunto e conteúdo HTML são obrigatórios.' });
                 }
 
-                // Gerar Slug (ID amigável)
-                const slug = subject
+                // Use provided slug (Edit Mode) OR Generate new one
+                const slug = providedSlug || subject
                     .toLowerCase()
                     .normalize('NFD').replace(/[\u0300-\u036f]/g, "") // Remove acentos
                     .replace(/[^a-z0-9]+/g, '-') // Substitui não alfanuméricos por -
@@ -680,7 +680,7 @@ exports.sendNewsletter = functions
                     slug,
                     title: subject,
                     thumbnail: thumbnail || null,
-                    content: htmlContent, // CUIDADO: Armazenar HTML pode ser pesado, mas ok para MVP
+                    content: htmlContent,
                     status: status,
                     updatedAt: admin.firestore.FieldValue.serverTimestamp()
                 };
