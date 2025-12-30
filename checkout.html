@@ -302,7 +302,10 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Erro ao criar assinatura');
+                    console.error('❌ Erro detalhado do servidor:', data);
+                    const errorMessage = data.error || 'Erro ao criar assinatura';
+                    const errorDetails = data.details ? `\nDetalhes: ${JSON.stringify(data.details, null, 2)}` : '';
+                    throw new Error(errorMessage + errorDetails);
                 }
 
                 // Redirecionar para o Checkout do AbacatePay

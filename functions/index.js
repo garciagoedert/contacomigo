@@ -95,7 +95,8 @@ exports.createAbacatePayBilling = functions
                 const billingData = await billingResponse.json();
 
                 if (!billingResponse.ok) {
-                    console.error('❌ Erro na API do AbacatePay:', JSON.stringify(billingData, null, 2));
+                    const errorDetails = JSON.stringify(billingData, null, 2);
+                    console.error('❌ Erro na API do AbacatePay:', errorDetails);
                     return res.status(500).json({
                         error: 'Falha ao criar cobrança no provedor de pagamentos',
                         details: billingData,
@@ -105,11 +106,17 @@ exports.createAbacatePayBilling = functions
 
                 console.log("✅ Billing criado com sucesso:", billingData.data.id);
 
-
+                res.json({
+                    checkoutUrl: billingData.data.url,
+                    billingId: billingData.data.id
+                });
 
             } catch (error) {
                 console.error('Erro ao processar pagamento:', error);
-                res.status(500).json({ error: error.message });
+                res.status(500).json({
+                    error: error.message,
+                    details: error.stack
+                });
             }
         });
     });

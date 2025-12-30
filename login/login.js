@@ -136,20 +136,28 @@ registerForm.addEventListener('submit', async (e) => {
                 setTimeout(() => window.location.href = '../dashboard.html', 3000);
             }
         } else {
-            // Se for FREE, o onAuthStateChanged vai cuidar do redirecionamento, 
-            // mas como já estamos autenticados aqui, podemos forçar se o listener não tiver disparado ainda
-            // ou apenas deixar o listener disparar (que agora checa !isRegisteringPremium, que é true para free... wait. !false = true. OK.)
+            // Se for FREE...
         }
 
     } catch (error) {
         isRegisteringPremium = false; // Reset em caso de erro
-        console.error("Erro de cadastro:", error.code);
+
+        // Reset button state
+        const registerBtn = registerForm.querySelector('button[type="submit"]');
+        if (registerBtn) {
+            registerBtn.innerText = 'Cadastrar';
+            registerBtn.disabled = false;
+        }
+
+        console.error("Erro de cadastro/checkout:", error); // Log mais detalhado
+
         if (error.code === 'auth/email-already-in-use') {
             registerError.textContent = "Este email já está em uso.";
         } else if (error.code === 'auth/invalid-email') {
             registerError.textContent = "O email fornecido é inválido.";
         } else {
-            registerError.textContent = "Ocorreu um erro ao criar a conta.";
+            // Mostra mensagem de erro vinda do checkout se houver
+            registerError.textContent = error.message || "Ocorreu um erro ao criar a conta.";
         }
         registerError.classList.remove('hidden');
     }
@@ -157,9 +165,10 @@ registerForm.addEventListener('submit', async (e) => {
 
 // Função de Checkout (Adaptada de checkout.html)
 async function startCheckout(user, planType, cellphone, taxId) {
-    const CLOUD_FUNCTION_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1/createAbacatePayBilling'
-        : 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAbacatePayBilling';
+    // URL de Produção forçada
+    const CLOUD_FUNCTION_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAbacatePayBilling';
+
+    console.log(`🚀 Iniciando Checkout... Connecting to: ${CLOUD_FUNCTION_URL}`);
 
     const response = await fetch(CLOUD_FUNCTION_URL, {
         method: 'POST',
@@ -180,7 +189,10 @@ async function startCheckout(user, planType, cellphone, taxId) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.error || 'Erro ao criar assinatura');
+        console.error('❌ Erro detalhado do servidor:', data);
+        const errorMessage = data.error || 'Erro ao criar assinatura';
+        const errorDetails = data.details ? `\nDetalhes: ${JSON.stringify(data.details, null, 2)}` : '';
+        throw new Error(errorMessage + errorDetails);
     }
 
     if (data.checkoutUrl) {
