@@ -510,7 +510,8 @@ exports.deleteUserAccount = functions
             return { success: true, message: 'Usuário excluído permanentemente.' };
         } catch (error) {
             console.error('Erro ao excluir usuário:', error);
-            throw new functions.https.HttpsError('internal', 'Erro ao excluir conta.');
+            // Include specific error message
+            throw new functions.https.HttpsError('internal', `Erro ao excluir conta: ${error.message}`);
         }
     });
 
