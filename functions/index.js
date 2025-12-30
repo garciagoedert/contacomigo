@@ -877,8 +877,9 @@ exports.generateDailyPost = functions
                     subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
                     content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
                     thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
+                    imagePrompt: { type: SchemaType.STRING, description: "A descriptive English prompt for the image generator, describing a scene that represents the article.", nullable: false }
                 },
-                required: ["title", "subject", "content", "thumbnail"]
+                required: ["title", "subject", "content", "thumbnail", "imagePrompt"]
             };
 
             const model = genAI.getGenerativeModel({
@@ -892,15 +893,32 @@ exports.generateDailyPost = functions
 
             // 1. FETCH REAL NEWS (RSS)
             let newsContext = "";
+            let realImageUrl = null; // Store real image from RSS
             try {
                 console.log("📰 Buscando notícias em tempo real...");
                 const feedG1 = await parser.parseURL('https://g1.globo.com/dynamo/economia/rss2.xml');
                 const feedInvesting = await parser.parseURL('https://br.investing.com/rss/news_11.rss'); // Stock Markets
 
-                const articles = [
+                const allItems = [
                     ...feedG1.items.slice(0, 3),
                     ...feedInvesting.items.slice(0, 3)
-                ].map(item => `- ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
+                ];
+
+                const articles = allItems.map(item => `- ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
+
+                // Try to extract a real image from the first item with an image
+                for (const item of allItems) {
+                    if (item.enclosure && item.enclosure.url) {
+                        realImageUrl = item.enclosure.url;
+                        console.log(`✅ Imagem real encontrada (enclosure): ${realImageUrl}`);
+                        break;
+                    }
+                    if (item['media:content'] && item['media:content'].$ && item['media:content'].$.url) {
+                        realImageUrl = item['media:content'].$.url;
+                        console.log(`✅ Imagem real encontrada (media:content): ${realImageUrl}`);
+                        break;
+                    }
+                }
 
                 newsContext = `ÚLTIMAS NOTÍCIAS (FONTE REAL): \n${articles}`;
                 console.log("✅ Contexto de notícias obtido.");
@@ -946,7 +964,8 @@ exports.generateDailyPost = functions
                 "title": "Seu Título Aqui",
                 "subject": "slug-do-artigo",
                 "content": "<p>Seu HTML aqui... (Use h2, p, ul, li, blockquote)</p>",
-                "thumbnail": "URL válida de imagem (Unsplash source ou similar, ex: https://source.unsplash.com/800x600/?money,finance)"
+                "imagePrompt": "A futuristic digital wallet glowing with gold coins, cinematic lighting, vector art, minimalist",
+                "thumbnail": "IGNORED_BY_LOGIC_BUT_REQUIRED_BY_SCHEMA"
             }
             `;
 
@@ -958,9 +977,18 @@ exports.generateDailyPost = functions
 
             const articleData = JSON.parse(cleanedText);
 
-            // THUMBNAIL GENERATION (Pollinations AI)
-            const encodedTitle = encodeURIComponent(articleData.title + " financial minimalist flat vector art");
-            const aiThumbnail = `https://image.pollinations.ai/prompt/${encodedTitle}?width=800&height=600&nologo=true`;
+            // THUMBNAIL STRATEGY: Real Image First, AI Fallback
+            let finalThumbnail;
+            if (realImageUrl) {
+                finalThumbnail = realImageUrl;
+                console.log("✅ Usando imagem real da notícia.");
+            } else {
+                // Fallback to AI-generated image
+                const rawPrompt = articleData.imagePrompt || articleData.title;
+                const encodedTitle = encodeURIComponent(rawPrompt + " financial minimalist flat vector art high quality");
+                finalThumbnail = `https://image.pollinations.ai/prompt/${encodedTitle}?width=800&height=600&nologo=true`;
+                console.log("⚠️ Nenhuma imagem real encontrada. Usando AI.");
+            }
 
             const slug = articleData.subject
                 .toLowerCase()
@@ -973,7 +1001,7 @@ exports.generateDailyPost = functions
                 slug: slug,
                 title: articleData.title,
                 content: articleData.content,
-                thumbnail: aiThumbnail, // Dynamic AI Image
+                thumbnail: finalThumbnail, // Real or AI Image
                 status: 'sent',
                 sentAt: admin.firestore.FieldValue.serverTimestamp(),
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -1039,8 +1067,9 @@ exports.debugGenerateDailyPost = functions
                         subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
                         content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
                         thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
+                        imagePrompt: { type: SchemaType.STRING, description: "A descriptive English prompt for the image generator, describing a scene that represents the article.", nullable: false }
                     },
-                    required: ["title", "subject", "content", "thumbnail"]
+                    required: ["title", "subject", "content", "thumbnail", "imagePrompt"]
                 };
 
                 const model = genAI.getGenerativeModel({
@@ -1054,16 +1083,33 @@ exports.debugGenerateDailyPost = functions
 
                 // 1. FETCH REAL NEWS (RSS)
                 let newsContext = "";
+                let realImageUrl = null; // Store real image from RSS
                 try {
                     console.log("📰 Buscando notícias em tempo real...");
                     // Re-instanciar parser se necessário ou usar o global
                     const feedG1 = await parser.parseURL('https://g1.globo.com/dynamo/economia/rss2.xml');
                     const feedInvesting = await parser.parseURL('https://br.investing.com/rss/news_11.rss');
 
-                    const articles = [
+                    const allItems = [
                         ...feedG1.items.slice(0, 3),
                         ...feedInvesting.items.slice(0, 3)
-                    ].map(item => `- ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
+                    ];
+
+                    const articles = allItems.map(item => `- ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
+
+                    // Try to extract a real image from the first item with an image
+                    for (const item of allItems) {
+                        if (item.enclosure && item.enclosure.url) {
+                            realImageUrl = item.enclosure.url;
+                            console.log(`✅ Imagem real encontrada (enclosure): ${realImageUrl}`);
+                            break;
+                        }
+                        if (item['media:content'] && item['media:content'].$ && item['media:content'].$.url) {
+                            realImageUrl = item['media:content'].$.url;
+                            console.log(`✅ Imagem real encontrada (media:content): ${realImageUrl}`);
+                            break;
+                        }
+                    }
 
                     newsContext = `ÚLTIMAS NOTÍCIAS (FONTE REAL): \n${articles}`;
                     console.log("✅ Contexto de notícias obtido.");
@@ -1102,11 +1148,12 @@ exports.debugGenerateDailyPost = functions
                 
                 {
                     "title": "Seu Título Aqui",
-                    "subject": "slug-do-artigo",
-                    "content": "<p>Seu HTML aqui... (Use h2, p, ul, li, blockquote)</p>",
-                    "thumbnail": "URL válida de imagem (Unsplash source ou similar, ex: https://source.unsplash.com/800x600/?money,finance)"
-                }
-                `;
+                "subject": "slug-do-artigo",
+                "content": "<p>Seu HTML aqui... (Use h2, p, ul, li, blockquote)</p>",
+                "imagePrompt": "A futuristic digital wallet glowing with gold coins, cinematic lighting, vector art, minimalist",
+                "thumbnail": "IGNORED_BY_LOGIC_BUT_REQUIRED_BY_SCHEMA"
+            }
+            `;
 
                 const result = await model.generateContent(prompt);
                 const responseText = result.response.text();
@@ -1118,9 +1165,18 @@ exports.debugGenerateDailyPost = functions
 
                 const articleData = JSON.parse(cleanedText);
 
-                // THUMBNAIL GENERATION (Pollinations AI)
-                const encodedTitle = encodeURIComponent(articleData.title + " financial minimalist flat vector art");
-                const aiThumbnail = `https://image.pollinations.ai/prompt/${encodedTitle}?width=800&height=600&nologo=true`;
+                // THUMBNAIL STRATEGY: Real Image First, AI Fallback
+                let finalThumbnail;
+                if (realImageUrl) {
+                    finalThumbnail = realImageUrl;
+                    console.log("✅ Usando imagem real da notícia.");
+                } else {
+                    // Fallback to AI-generated image
+                    const rawPrompt = articleData.imagePrompt || articleData.title;
+                    const encodedTitle = encodeURIComponent(rawPrompt + " financial minimalist flat vector art high quality");
+                    finalThumbnail = `https://image.pollinations.ai/prompt/${encodedTitle}?width=800&height=600&nologo=true`;
+                    console.log("⚠️ Nenhuma imagem real encontrada. Usando AI.");
+                }
 
                 const slug = articleData.subject
                     .toLowerCase()
@@ -1133,7 +1189,7 @@ exports.debugGenerateDailyPost = functions
                     slug: slug,
                     title: articleData.title,
                     content: articleData.content,
-                    thumbnail: aiThumbnail, // Dynamic AI Image
+                    thumbnail: finalThumbnail, // Real or AI Image
                     status: 'sent',
                     sentAt: admin.firestore.FieldValue.serverTimestamp(),
                     createdAt: admin.firestore.FieldValue.serverTimestamp(),
