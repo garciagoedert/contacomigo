@@ -669,37 +669,103 @@ window.deletePost = async function (slug) {
 
 // --- SUBSCRIBER IMPORT LOGIC ---
 
+// --- SUBSCRIBER MANAGEMENT LOGIC ---
+
+// Elements
+const subscriberSearchInput = document.getElementById('subscriber-search');
+
+let allSubscribers = []; // Store fetched subscribers for validation/filtering
+
 async function loadSubscribers() {
-    // For MVP, just count. Listing all might be heavy if many.
-    // Let's just list last 50 for now or summary.
     try {
-        const q = query(collection(db, "newsletter_subscribers"), orderBy("createdAt", "desc")); // limit handled basically
-        const querySnapshot = await getDocs(q); // TODO: Add limit(50) if gets slow
+        setLoading(true);
+        // Fetch ALL subscribers ordered by date
+        const q = query(collection(db, "newsletter_subscribers"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
 
-        totalSubscribersCount.textContent = querySnapshot.size;
-
-        subscribersList.innerHTML = '';
-        let count = 0;
+        allSubscribers = [];
         querySnapshot.forEach((doc) => {
-            if (count >= 50) return; // Client side limit for now
-            const data = doc.data();
-            const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString() : '-';
-
-            const li = document.createElement('li');
-            li.className = "px-4 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700";
-            li.innerHTML = `
-                <div class="text-sm font-medium text-gray-900 dark:text-white">${data.email}</div>
-                <div class="text-xs text-gray-500 gap-2 flex items-center">
-                    <span>${date}</span>
-                    <span class="px-2 py-0.5 rounded-full text-xs ${data.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${data.status}</span>
-                </div>
-             `;
-            subscribersList.appendChild(li);
-            count++;
+            allSubscribers.push({ id: doc.id, ...doc.data() });
         });
 
+        totalSubscribersCount.textContent = allSubscribers.length;
+        renderSubscribersList(allSubscribers);
+
     } catch (e) {
-        console.error(e);
+        console.error("Erro ao carregar inscritos:", e);
+        showStatus("Erro ao carregar lista de inscritos.", 'error');
+    } finally {
+        setLoading(false);
+    }
+}
+
+function renderSubscribersList(subscribers) {
+    subscribersList.innerHTML = '';
+
+    if (subscribers.length === 0) {
+        subscribersList.innerHTML = '<li class="px-4 py-8 text-center text-gray-500">Nenhum inscrito encontrado.</li>';
+        return;
+    }
+
+    subscribers.forEach((data) => {
+        const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString() : '-';
+        const source = data.source === 'csv_import' ? 'Importação' : 'Site';
+
+        const li = document.createElement('li');
+        li.className = "px-4 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700";
+        li.innerHTML = `
+            <div>
+                <div class="text-sm font-medium text-gray-900 dark:text-white">${data.email}</div>
+                <div class="text-xs text-gray-500 flex items-center gap-2 mt-1">
+                    <span>${date}</span>
+                    <span class="text-gray-400">•</span>
+                    <span>${source}</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                 <span class="px-2 py-0.5 rounded-full text-xs ${data.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    ${data.status === 'active' ? 'Ativo' : 'Cancelado'}
+                </span>
+                <button onclick="window.deleteSubscriber('${data.email}')" class="text-gray-400 hover:text-red-600 transition-colors" title="Remover Inscrito">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+         `;
+        subscribersList.appendChild(li);
+    });
+}
+
+// Search Logic
+if (subscriberSearchInput) {
+    subscriberSearchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allSubscribers.filter(sub => sub.email.toLowerCase().includes(term));
+        renderSubscribersList(filtered);
+    });
+}
+
+// Global Delete Function
+window.deleteSubscriber = async function (email) {
+    if (!confirm(`Tem certeza que deseja remover ${email} da lista?`)) return;
+
+    try {
+        await deleteDoc(doc(db, "newsletter_subscribers", email));
+        showStatus(`Inscrito ${email} removido.`, 'success');
+
+        // Remove from local list and re-render to avoid full reload
+        allSubscribers = allSubscribers.filter(s => s.email !== email);
+        totalSubscribersCount.textContent = allSubscribers.length;
+
+        // Re-apply search filter if exists
+        const term = subscriberSearchInput ? subscriberSearchInput.value.toLowerCase() : '';
+        const filtered = allSubscribers.filter(sub => sub.email.toLowerCase().includes(term));
+        renderSubscribersList(filtered);
+
+    } catch (e) {
+        console.error("Erro ao deletar:", e);
+        showStatus("Erro ao remover inscrito.", 'error');
     }
 }
 

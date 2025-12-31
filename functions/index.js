@@ -604,7 +604,7 @@ const getNewsletterTemplate = (title, content, unsubscribeUrl) => {
         
         <!-- Header -->
         <div class="header" style="background-color: #1A1A1A; padding: 30px; text-align: center;">
-            <img src="https://trilhacomigo.br/imgs/14.png" alt="Trilha Comigo" style="max-height: 40px; display: block; margin: 0 auto; filter: invert(1);">
+            <img src="https://www.trilhacomigo.com/imgs/bannertrilha.png" alt="Trilha Comigo" style="max-height: 40px; display: block; margin: 0 auto; filter: invert(0);">
         </div>
 
         <!-- Hero Section -->

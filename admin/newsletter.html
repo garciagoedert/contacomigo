@@ -408,8 +408,10 @@
                         <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Importar Inscritos (CSV)
                         </h3>
                         <div class="mt-2 max-w-xl text-sm text-gray-500">
-                            <p>Faça upload de um arquivo CSV contendo os emails dos seus inscritos. O sistema tentará
-                                detectar automaticamente a coluna de email.</p>
+                            <p>Faça upload de um arquivo CSV contendo os emails dos seus inscritos. <br>
+                                <span class="text-xs text-gray-400">Emails já existentes serão atualizados (sem
+                                    duplicatas).</span>
+                            </p>
                         </div>
                         <div class="mt-5 sm:flex sm:items-center">
                             <div class="w-full sm:max-w-xs">
@@ -432,12 +434,21 @@
 
             <!-- List -->
             <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
-                <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Últimos Inscritos</h3>
+                <div
+                    class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Lista de Inscritos</h3>
+                    <div class="relative rounded-md shadow-sm">
+                        <input type="text" id="subscriber-search"
+                            class="focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
+                            placeholder="Buscar email...">
+                    </div>
                 </div>
-                <ul id="subscribers-list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                    <!-- Loaded via JS -->
-                </ul>
+                <!-- Scrollable Container -->
+                <div class="max-h-[600px] overflow-y-auto">
+                    <ul id="subscribers-list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Loaded via JS -->
+                    </ul>
+                </div>
             </div>
         </div>
 
