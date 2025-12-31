@@ -579,6 +579,66 @@ const sendEmailsToSubscribers = async (subject, htmlContent, slug) => {
     }
 };
 
+// Helper: Gerar Template de Email Responsivo
+const getNewsletterTemplate = (title, content, unsubscribeUrl) => {
+    return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        body, p, h1, h2, h3, a { margin: 0; padding: 0; font-family: 'Inter', Helvetica, Arial, sans-serif; }
+        body { background-color: #F5F5F5; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        @media only screen and (max-width: 600px) {
+            .container { width: 100% !important; }
+            .content { padding: 20px !important; }
+            .header { padding: 20px !important; }
+        }
+    </style>
+</head>
+<body style="background-color: #F5F5F5; margin: 0; padding: 20px;">
+    <div class="container" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        
+        <!-- Header -->
+        <div class="header" style="background-color: #1A1A1A; padding: 30px; text-align: center;">
+            <img src="https://trilhacomigo.br/imgs/14.png" alt="Trilha Comigo" style="max-height: 40px; display: block; margin: 0 auto; filter: invert(1);">
+        </div>
+
+        <!-- Hero Section -->
+        <div style="background-color: #F4B000; padding: 40px 30px; text-align: center;">
+            <h1 style="color: #1A1A1A; font-size: 24px; font-weight: 800; line-height: 1.2; margin: 0;">
+                ${title}
+            </h1>
+        </div>
+
+        <!-- Body Content -->
+        <div class="content" style="padding: 40px 40px; color: #4A4A4A; font-size: 16px; line-height: 1.6;">
+            ${content}
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #F9FAFB; padding: 30px; text-align: center; border-top: 1px solid #E5E7EB;">
+            <p style="color: #9CA3AF; font-size: 12px; margin-bottom: 15px;">
+                © 2025 Trilha Comigo. Todos os direitos reservados.<br>
+            </p>
+            <div style="margin-bottom: 15px;">
+                <a href="https://instagram.com/trilhacomigo.br" style="color: #9CA3AF; text-decoration: none; margin: 0 10px; font-size: 12px;">Instagram</a>
+                <a href="https://trilhacomigo.br" style="color: #9CA3AF; text-decoration: none; margin: 0 10px; font-size: 12px;">Website</a>
+            </div>
+            <p style="color: #D1D5DB; font-size: 11px;">
+                Você recebeu este email porque se inscreveu em nossa newsletter.<br>
+                <a href="${unsubscribeUrl}" style="color: #9CA3AF; text-decoration: underline;">Cancelar inscrição</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    `;
+};
+
 // 1. Inscrição na Newsletter (Salvar no Firestore)
 exports.subscribeToNewsletter = functions
     .runWith({ invoker: 'public' })
@@ -786,21 +846,15 @@ exports.sendNewsletter = functions
                 for (const email of recipients) {
                     try {
                         const unsubscribeUrl = `https://us-central1-financeapp-6da16.cloudfunctions.net/unsubscribeUser?email=${encodeURIComponent(email)}`;
-                        const footerHtml = `
-                            <br><br>
-                            <hr style="border: 0; border-top: 1px solid #eee;">
-                            <p style="font-size: 12px; color: #999; text-align: center;">
-                                Você está recebendo este email porque se inscreveu na newsletter do Trilha Comigo.
-                                <br>
-                                <a href="${unsubscribeUrl}" style="color: #999; text-decoration: underline;">Cancelar inscrição</a>
-                            </p>
-                        `;
+
+                        // Gerar HTML final usando o template
+                        const finalHtml = getNewsletterTemplate(subject, htmlContent, unsubscribeUrl);
 
                         const mailOptions = {
                             from: '"Trilha Comigo" <marketing@southsea.com.br>',
                             to: email,
                             subject: subject,
-                            html: htmlContent + footerHtml,
+                            html: finalHtml,
                         };
 
                         await transporter.sendMail(mailOptions);
