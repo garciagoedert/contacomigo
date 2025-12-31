@@ -14,5 +14,16 @@
             "source": "/api/getNewsletterPosts",
             "destination": "https://us-central1-financeapp-6da16.cloudfunctions.net/getNewsletterPosts"
         }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=0, must-revalidate"
+                }
+            ]
+        }
     ]
 }
