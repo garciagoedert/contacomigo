@@ -646,6 +646,47 @@ exports.subscribeToNewsletter = functions
     });
 
 
+
+// 1.5 Cancelar Inscrição (Unsubscribe)
+exports.unsubscribeUser = functions
+    .runWith({ invoker: 'public' })
+    .https.onRequest((req, res) => {
+        cors(req, res, async () => {
+            if (req.method !== 'GET') return res.status(405).send('Method Not Allowed');
+
+            const { email } = req.query;
+            if (!email) return res.status(400).send('Email is required');
+
+            try {
+                const subscriberRef = admin.firestore().collection('newsletter_subscribers').doc(email);
+                const doc = await subscriberRef.get();
+
+                if (!doc.exists) {
+                    return res.send('<h1>Email não encontrado na nossa lista.</h1>');
+                }
+
+                await subscriberRef.update({
+                    status: 'unsubscribed',
+                    unsubscribedAt: admin.firestore.FieldValue.serverTimestamp()
+                });
+
+                res.send(`
+                    <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                        <h1>Inscrição Cancelada</h1>
+                        <p>O email <strong>${email}</strong> foi removido da nossa newsletter.</p>
+                        <p>Você não receberá mais nossos emails.</p>
+                        <br>
+                        <a href="https://financeapp-6da16.web.app/" style="color: blue; text-decoration: underline;">Voltar ao site</a>
+                    </div>
+                `);
+
+            } catch (error) {
+                console.error("Erro no unsubscribe:", error);
+                res.status(500).send('Erro ao cancelar inscrição.');
+            }
+        });
+    });
+
 // 2. Enviar Newsletter (Admin Only) - USANDO NODEMAILER INTERNO
 exports.sendNewsletter = functions
     .runWith({ invoker: 'public', timeoutSeconds: 540 }) // Timeout alto para envio em massa
@@ -744,12 +785,22 @@ exports.sendNewsletter = functions
                 // Loop de envio
                 for (const email of recipients) {
                     try {
+                        const unsubscribeUrl = `https://us-central1-financeapp-6da16.cloudfunctions.net/unsubscribeUser?email=${encodeURIComponent(email)}`;
+                        const footerHtml = `
+                            <br><br>
+                            <hr style="border: 0; border-top: 1px solid #eee;">
+                            <p style="font-size: 12px; color: #999; text-align: center;">
+                                Você está recebendo este email porque se inscreveu na newsletter do Trilha Comigo.
+                                <br>
+                                <a href="${unsubscribeUrl}" style="color: #999; text-decoration: underline;">Cancelar inscrição</a>
+                            </p>
+                        `;
+
                         const mailOptions = {
                             from: '"Trilha Comigo" <marketing@southsea.com.br>',
                             to: email,
                             subject: subject,
-                            html: htmlContent,
-                            // Opcional: Adicionar Link de Unsubscribe no rodapé
+                            html: htmlContent + footerHtml,
                         };
 
                         await transporter.sendMail(mailOptions);
