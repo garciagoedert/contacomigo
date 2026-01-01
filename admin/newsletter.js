@@ -603,6 +603,7 @@ async function loadHistory() {
                 } else {
                     // Also allow editing SENT posts
                     actionButtons = `
+                        <button onclick="window.resendPost('${docSnap.id}', '${escapeHtml(data.title)}')" class="text-purple-600 hover:text-purple-900 mr-3 font-semibold" title="Reenviar Emails">Reenviar</button>
                         <button onclick="window.loadDraft('${docSnap.id}')" class="text-green-600 hover:text-green-900 mr-3 font-semibold">Editar</button>
                         ${actionButtons}
                     `;
@@ -664,6 +665,78 @@ window.deletePost = async function (slug) {
         console.error("Erro ao excluir:", error);
         showStatus('Erro ao excluir post.', 'error');
     }
+}
+
+
+// --- RESEND LOGIC ---
+window.resendPost = async function (slug, title) {
+    if (!confirm(`ATENÇÃO: Deseja reenviar o email do post "${title}" para TODOS os inscritos ativos?`)) {
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        // 1. Fetch current post content to ensure we send the latest version
+        const docRef = doc(db, "newsletter_posts", slug);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            throw new Error("Post original não encontrado.");
+        }
+
+        const data = docSnap.data();
+
+        // 2. Prepare Payload using existing endpoint
+        const token = await auth.currentUser.getIdToken();
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        let functionUrl = isLocalhost
+            ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1/sendNewsletter'
+            : 'https://us-central1-financeapp-6da16.cloudfunctions.net/sendNewsletter';
+
+        const payload = {
+            token,
+            subject: data.title,
+            thumbnail: data.thumbnail,
+            htmlContent: data.content,
+            isTest: false, // REAL SEND
+            saveOnly: false,
+            publishOnly: false, // Force Email Send
+            slug: slug
+        };
+
+        const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showStatus('Emails reenviados com sucesso!', 'success');
+            loadHistory(); // Refresh stats
+        } else {
+            throw new Error(result.error || 'Falha ao reenviar.');
+        }
+
+    } catch (error) {
+        console.error("Erro ao reenviar:", error);
+        showStatus('Erro ao reenviar: ' + error.message, 'error');
+    } finally {
+        setLoading(false);
+    }
+}
+
+// Helper to escape title for onclick attribute
+function escapeHtml(text) {
+    if (!text) return "";
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
