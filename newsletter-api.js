@@ -35,7 +35,7 @@ async function fetchNewsletterPosts(limit = null) {
             pubDate: item.date ? new Date(item.date) : (item.sentAt ? new Date(item.sentAt) : new Date()),
             thumbnail: item.thumbnail || 'imgs/article-placeholder.jpg',
             description: 'Clique para acessar esta edição da newsletter exclusiva.',
-            category: 'Newsletter'
+            category: 'Trilha News'
         }));
 
     } catch (error) {

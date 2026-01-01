@@ -603,7 +603,7 @@ async function loadHistory() {
                 } else {
                     // Also allow editing SENT posts
                     actionButtons = `
-                        <button onclick="window.resendPost('${docSnap.id}', '${escapeHtml(data.title)}')" class="text-purple-600 hover:text-purple-900 mr-3 font-semibold" title="Reenviar Emails">Reenviar</button>
+                        <button onclick="window.resendPost('${docSnap.id}')" class="text-purple-600 hover:text-purple-900 mr-3 font-semibold" title="Reenviar Emails">Reenviar</button>
                         <button onclick="window.loadDraft('${docSnap.id}')" class="text-green-600 hover:text-green-900 mr-3 font-semibold">Editar</button>
                         ${actionButtons}
                     `;
@@ -669,11 +669,7 @@ window.deletePost = async function (slug) {
 
 
 // --- RESEND LOGIC ---
-window.resendPost = async function (slug, title) {
-    if (!confirm(`ATENÇÃO: Deseja reenviar o email do post "${title}" para TODOS os inscritos ativos?`)) {
-        return;
-    }
-
+window.resendPost = async function (slug) {
     setLoading(true);
 
     try {
@@ -686,6 +682,13 @@ window.resendPost = async function (slug, title) {
         }
 
         const data = docSnap.data();
+
+        // Safe Confirm (after fetch)
+        setLoading(false);
+        if (!confirm(`ATENÇÃO: Deseja reenviar o email do post "${data.title}" para TODOS os inscritos ativos?`)) {
+            return;
+        }
+        setLoading(true);
 
         // 2. Prepare Payload using existing endpoint
         const token = await auth.currentUser.getIdToken();
@@ -717,7 +720,13 @@ window.resendPost = async function (slug, title) {
             // Visualize real backend feedback
             let msgType = 'success';
             if (result.message && result.message.includes('Nenhum inscrito')) msgType = 'warning';
-            if (result.stats && result.stats.successCount === 0 && result.stats.failureCount > 0) msgType = 'error';
+            if (result.stats && result.stats.successCount === 0 && result.stats.failureCount > 0) {
+                msgType = 'error';
+                if (result.stats.errors && result.stats.errors.length > 0) {
+                    // Show the first error as a sample
+                    alert(`Falha no envio: ${result.stats.errors[0]}`);
+                }
+            }
 
             showStatus(result.message || 'Emails reenviados com sucesso!', msgType);
             loadHistory(); // Refresh stats

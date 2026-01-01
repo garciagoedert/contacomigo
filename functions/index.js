@@ -517,19 +517,21 @@ exports.deleteUserAccount = functions
 
 // --- NEWSLETTER SYSTEM ---
 
-const nodemailer = require('nodemailer');
+// --- NEWSLETTER SYSTEM ---
 
-// Configuração do Transportador de Email (Nodemailer)
-// Usando as credenciais fornecidas: marketing@southsea.com.br
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Assumindo Gmail/Google Workspace dado o uso de App Password
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    auth: {
-        user: 'marketing@southsea.com.br',
-        pass: 'dzjjhqnpvxlrobyk' // CUIDADO: Em produção, usar Variáveis de Ambiente!
-    }
-});
+const { Resend } = require('resend');
+
+// Configuração do Resend
+// API Key fixada para resolver o problema imediato (ideal: mover para .env depois)
+const RESEND_API_KEY = process.env.RESEND_API_KEY || 're_X6gRBcc2_Gc1EjFJBq2hbpV9FQt4gGJsH';
+const resend = new Resend(RESEND_API_KEY);
+
+// FROM: Agora usando o domínio verificado
+const SENDER_EMAIL = 'Trilha News <marketing@southsea.com.br>';
+
+
+// Helper sleep
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Helper Function: Send Emails to All Active Subscribers
 const sendEmailsToSubscribers = async (subject, htmlContent, slug) => {
@@ -551,27 +553,52 @@ const sendEmailsToSubscribers = async (subject, htmlContent, slug) => {
 
         let successCount = 0;
         let failureCount = 0;
+        let failureErrors = []; // Track specific errors
 
+        // Loop de envio (Resend tem rate limit de 2 reqs/seg e 100/dia no plano free)
         for (const email of recipients) {
             try {
-                const mailOptions = {
-                    from: '"Trilha News" <marketing@southsea.com.br>',
+                // Rate Limit Protection: Wait 1 second between emails (conservative)
+                await sleep(1000);
+
+                // Link de Unsubscribe
+                const unsubscribeUrl = `https://us-central1-financeapp-6da16.cloudfunctions.net/unsubscribeUser?email=${encodeURIComponent(email)}`;
+
+                // Nao precisa gerar template aqui se ja vier pronto, mas vamos garantir o unsubscribe
+                // O HTML Content ja deve vir "pronto" do gerador, mas podemos envelopar.
+                // Mas atenção: o `sendNewsletter` já envelopa. Aqui é só envio interno?
+                // Não, `sendNewsletter` chama `sendEmailsToSubscribers`? 
+                // Ah, `sendNewsletter` faz o loop ele mesmo!!
+                // ESTA FUNCAO AQUI parece ser usada pelo Agente Automatico (`generateDailyPost`).
+                // O `sendNewsletter` (Admin) usa nodemailer direto no loop dele (linhas 852-872).
+                // PRECISAMOS ATUALIZAR AMBOS.
+
+                const { data, error } = await resend.emails.send({
+                    from: SENDER_EMAIL,
                     to: email,
                     subject: subject,
                     html: htmlContent,
-                    // TODO: Adicionar Link de Unsubscribe real
-                };
+                    headers: {
+                        'List-Unsubscribe': `<${unsubscribeUrl}>`
+                    }
+                });
 
-                await transporter.sendMail(mailOptions);
-                successCount++;
+                if (error) {
+                    console.error(`❌ Falha ao enviar para ${email}:`, error);
+                    failureErrors.push(`${email}: ${error.message || JSON.stringify(error)}`);
+                    failureCount++;
+                } else {
+                    successCount++;
+                }
             } catch (err) {
-                console.error(`❌ Falha ao enviar para ${email}:`, err);
+                console.error(`❌ Erro inesperado ao enviar para ${email}:`, err);
+                failureErrors.push(`${email}: ${err.message}`);
                 failureCount++;
             }
         }
 
         console.log(`✅ Envio finalizado. Sucessos: ${successCount}, Falhas: ${failureCount}`);
-        return { successCount, failureCount };
+        return { successCount, failureCount, errors: failureErrors }; // Return detailed errors
 
     } catch (error) {
         console.error("❌ Erro crítico no envio de emails:", error);
@@ -625,8 +652,8 @@ const getNewsletterTemplate = (title, content, unsubscribeUrl) => {
                 © 2025 Trilha Comigo. Todos os direitos reservados.<br>
             </p>
             <div style="margin-bottom: 15px;">
-                <a href="https://instagram.com/trilhacomigo.br" style="color: #9CA3AF; text-decoration: none; margin: 0 10px; font-size: 12px;">Instagram</a>
-                <a href="https://trilhacomigo.br" style="color: #9CA3AF; text-decoration: none; margin: 0 10px; font-size: 12px;">Website</a>
+                <a href="https://www.instagram.com/trilhacomigo.cc/#" style="color: #9CA3AF; text-decoration: none; margin: 0 10px; font-size: 12px;">Instagram</a>
+                <a href="https://www.trilhacomigo.com/" style="color: #9CA3AF; text-decoration: none; margin: 0 10px; font-size: 12px;">Website</a>
             </div>
             <p style="color: #D1D5DB; font-size: 11px;">
                 Você recebeu este email porque se inscreveu em nossa newsletter.<br>
@@ -682,8 +709,8 @@ exports.subscribeToNewsletter = functions
                 `;
 
                 try {
-                    await transporter.sendMail({
-                        from: '"Trilha Comigo" <marketing@southsea.com.br>',
+                    await resend.emails.send({
+                        from: SENDER_EMAIL,
                         to: email,
                         subject: 'Bem-vindo ao Trilha Comigo!',
                         html: welcomeHtml
@@ -802,12 +829,18 @@ exports.sendNewsletter = functions
 
                 // Se for Publish Only (Blog Only), não envia emails
                 if (publishOnly) {
-                    // Set sentAt for ordering
-                    postData.sentAt = admin.firestore.FieldValue.serverTimestamp();
-                    postData.sentCount = 0; // No emails sent
-                    postData.createdAt = postData.createdAt || admin.firestore.FieldValue.serverTimestamp();
+                    const docRef = admin.firestore().collection('newsletter_posts').doc(slug);
+                    const docSnap = await docRef.get();
 
-                    await admin.firestore().collection('newsletter_posts').doc(slug).set(postData, { merge: true });
+                    if (!docSnap.exists) {
+                        // New Post: Initialize counters and timestamps
+                        postData.sentAt = admin.firestore.FieldValue.serverTimestamp();
+                        postData.sentCount = 0; // No emails sent
+                        postData.createdAt = admin.firestore.FieldValue.serverTimestamp();
+                    }
+                    // If exists, preserve existing sentAt, sentCount, and createdAt (don't add them to postData)
+
+                    await docRef.set(postData, { merge: true });
 
                     return res.json({
                         success: true,
@@ -845,20 +878,31 @@ exports.sendNewsletter = functions
                 // Loop de envio
                 for (const email of recipients) {
                     try {
+                        // Rate Limit: 1 sec delay
+                        await sleep(1000);
+
                         const unsubscribeUrl = `https://us-central1-financeapp-6da16.cloudfunctions.net/unsubscribeUser?email=${encodeURIComponent(email)}`;
 
                         // Gerar HTML final usando o template
                         const finalHtml = getNewsletterTemplate(subject, htmlContent, unsubscribeUrl);
 
-                        const mailOptions = {
-                            from: '"Trilha Comigo" <marketing@southsea.com.br>',
+                        const { error } = await resend.emails.send({
+                            from: SENDER_EMAIL,
                             to: email,
                             subject: subject,
                             html: finalHtml,
-                        };
+                            headers: {
+                                'List-Unsubscribe': `<${unsubscribeUrl}>`
+                            }
+                        });
 
-                        await transporter.sendMail(mailOptions);
-                        successCount++;
+
+                        if (error) {
+                            console.error(`Falha ao enviar para ${email}:`, error);
+                            failureCount++;
+                        } else {
+                            successCount++;
+                        }
                     } catch (err) {
                         console.error(`Falha ao enviar para ${email}:`, err);
                         failureCount++;
@@ -1127,6 +1171,7 @@ exports.generateDailyPost = functions
             await admin.firestore().collection('newsletter_posts').doc(slug).set(postData);
             console.log(`✅ Artigo salvo no banco: ${slug}`);
 
+<<<<<<< HEAD
             // 2. Enviar por Email (Feature Nova)
             const ENABLE_EMAILS_V2 = false; // DISABLED BY ADMIN REQUEST (User cancelled newsletter)
 
@@ -1156,6 +1201,34 @@ exports.generateDailyPost = functions
                 sentCount: emailStats.successCount,
                 emailStats: emailStats,
                 emailDisabled: !ENABLE_EMAILS_V2
+=======
+            // 2. Enviar por Email (Feature Nova) - DESATIVADO (Trilha News Pivot)
+            /*
+            const emailSubject = `Trilha News 🚀: ${articleData.title}`;
+            const emailHtml = `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                    <img src="https://trilhacomigo.cc/imgs/14.png" alt="Trilha News" style="height: 50px; margin-bottom: 20px;">
+                    ${articleData.content}
+                    <hr style="margin-top: 40px; border: 0; border-top: 1px solid #eee;">
+                    <p style="font-size: 12px; color: #999; text-align: center;">
+                        <a href="https://trilhacomigo.cc/artigos.html?slug=${slug}">Ler no navegador</a> | 
+                        <a href="#">Descadastrar</a>
+                    </p>
+                </div>
+            `;
+
+            const emailStats = await sendEmailsToSubscribers(emailSubject, emailHtml, slug);
+            */
+
+            // Stats zerados pois não enviamos mais email
+            const emailStats = { successCount: 0, failureCount: 0 };
+
+            // 3. Atualizar estatísticas de envio no post
+            await admin.firestore().collection('newsletter_posts').doc(slug).update({
+                sentCount: 0,
+                emailStats: emailStats,
+                status: 'published_on_site' // Novo status para diferenciar
+>>>>>>> e2a6e42 (feat: Refocus on Trilha News, disable newsletter emails and hide subscription forms)
             });
 
             console.log("✅ Ciclo diário concluído com sucesso.");
@@ -1334,3 +1407,93 @@ exports.debugGenerateDailyPost = functions
             }
         });
     });
+
+// --- MIGRATION UTILS ---
+
+exports.migrateContacts = functions.runWith({
+    timeoutSeconds: 540,
+    memory: '1GB'
+}).https.onRequest(async (req, res) => {
+    // SELF-CONTAINED SETUP
+    const { Resend } = require('resend');
+    const RESEND_KEY = 're_X6gRBcc2_Gc1EjFJBq2hbpV9FQt4gGJsH';
+    const resendClient = new Resend(RESEND_KEY);
+
+    try {
+        console.log("🚀 Iniciando migração de contatos (v3 Debug)...");
+
+        let audienceId;
+        try {
+            const listResp = await resendClient.audiences.list();
+            // console.log("List response:", JSON.stringify(listResp));
+
+            if (listResp.data && listResp.data.length > 0) {
+                audienceId = listResp.data[0].id;
+            } else {
+                const createResp = await resendClient.audiences.create({ name: 'Newsletter Subscribers' });
+                // console.log("Create response:", JSON.stringify(createResp));
+
+                if (createResp.error) {
+                    // Check if it's already exists error
+                    const errStr = JSON.stringify(createResp.error);
+                    // If exists, list again or assume we can't find it?
+                    throw new Error(`Create Error: ${createResp.error.message || errStr}`);
+                }
+
+                if (createResp.data) {
+                    audienceId = createResp.data.id;
+                } else if (createResp.id) {
+                    audienceId = createResp.id;
+                } else {
+                    throw new Error(`Create returned no data: ${JSON.stringify(createResp)}`);
+                }
+            }
+        } catch (audErr) {
+            console.error("Audience Error:", audErr);
+            return res.status(500).json({ step: "audience", error: audErr.message, stack: audErr.stack });
+        }
+
+        const snapshot = await admin.firestore().collection('newsletter_subscribers')
+            .where('status', '==', 'active')
+            .orderBy('createdAt', 'desc')
+            .limit(1000)
+            .get();
+
+        if (snapshot.empty) return res.send("Nenhum inscrito para migrar.");
+
+        let successCount = 0;
+        let errors = [];
+        const subscribers = [];
+        snapshot.forEach(doc => subscribers.push(doc.id));
+
+        for (const email of subscribers) {
+            try {
+                await new Promise(r => setTimeout(r, 200));
+                const result = await resendClient.contacts.create({
+                    email: email,
+                    audience_id: audienceId,
+                    unsubscribed: false
+                });
+
+                if (result.error) {
+                    const errStr = JSON.stringify(result.error);
+                    if (!errStr.includes('already')) {
+                        errors.push(`${email}: ${errStr}`);
+                    }
+                } else {
+                    successCount++;
+                }
+            } catch (err) {
+                errors.push(`${email}: ${err.message}`);
+            }
+        }
+        res.json({ success: true, migrated: successCount, errors });
+    } catch (error) {
+        console.error("Critical:", error);
+        res.status(500).send(error.message);
+    }
+});
+
+
+
+
