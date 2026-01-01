@@ -714,7 +714,12 @@ window.resendPost = async function (slug, title) {
         const result = await response.json();
 
         if (response.ok) {
-            showStatus('Emails reenviados com sucesso!', 'success');
+            // Visualize real backend feedback
+            let msgType = 'success';
+            if (result.message && result.message.includes('Nenhum inscrito')) msgType = 'warning';
+            if (result.stats && result.stats.successCount === 0 && result.stats.failureCount > 0) msgType = 'error';
+
+            showStatus(result.message || 'Emails reenviados com sucesso!', msgType);
             loadHistory(); // Refresh stats
         } else {
             throw new Error(result.error || 'Falha ao reenviar.');
