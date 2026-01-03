@@ -250,14 +250,32 @@ onAuthStateChanged(auth, async user => {
         try {
             // Usuário está logado, busca informações da família e carrega os dados
             currentUserId = user.uid;
-            await setupUserFamily(user);
 
-            // Tenta carregar o plano, mas não bloqueia se falhar (função global window.loadUserPlan)
+            // --- STRICT PAID-ONLY GATEKEEPING ---
+            // Tenta carregar o plano
+            let plan = 'free';
             if (typeof window.loadUserPlan === 'function') {
-                await window.loadUserPlan(user.uid);
+                plan = await window.loadUserPlan(user.uid);
             } else {
-                console.warn("loadUserPlan não encontrado globalmente. Verifique imports.");
+                console.warn("loadUserPlan não encontrado globalmente.");
             }
+
+            // Se o plano for 'free' (não pago ou expirado), bloqueia o acesso
+            // Exceção: não redirecionar se já estiver no checkout
+            if (plan === 'free') {
+                // Whitelist para testes
+                if (user.email === 'paulo@southsea.com.br') {
+                    console.log("🔓 Acesso liberado para usuário de teste:", user.email);
+                    currentUserPlan = 'premium_monthly'; // Simula plano premium
+                } else if (!window.location.pathname.includes('checkout.html')) {
+                    console.log("🔒 Usuário sem plano ativo. Redirecionando para checkout.");
+                    window.location.href = 'checkout.html?reason=payment_required';
+                    return; // Interrompe a execução do restante do app
+                }
+            }
+            // -------------------------------------
+
+            await setupUserFamily(user);
 
             appView.classList.remove('hidden'); // Mostra a aplicação
             setupRealtimeListeners(currentFamilyId);

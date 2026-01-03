@@ -1128,25 +1128,34 @@ exports.generateDailyPost = functions
             console.log(`✅ Artigo salvo no banco: ${slug}`);
 
             // 2. Enviar por Email (Feature Nova)
-            const emailSubject = `Trilha News 🚀: ${articleData.title}`;
-            const emailHtml = `
-                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-                    <img src="https://trilhacomigo.cc/imgs/14.png" alt="Trilha News" style="height: 50px; margin-bottom: 20px;">
-                    ${articleData.content}
-                    <hr style="margin-top: 40px; border: 0; border-top: 1px solid #eee;">
-                    <p style="font-size: 12px; color: #999; text-align: center;">
-                        <a href="https://trilhacomigo.cc/artigos.html?slug=${slug}">Ler no navegador</a> | 
-                        <a href="#">Descadastrar</a>
-                    </p>
-                </div>
-            `;
+            const ENABLE_EMAILS_V2 = false; // DISABLED BY ADMIN REQUEST (User cancelled newsletter)
 
-            const emailStats = await sendEmailsToSubscribers(emailSubject, emailHtml, slug);
+            let emailStats = { successCount: 0, failureCount: 0 };
+
+            if (ENABLE_EMAILS_V2) {
+                const emailSubject = `Trilha News 🚀: ${articleData.title}`;
+                const emailHtml = `
+                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                        <img src="https://trilhacomigo.cc/imgs/14.png" alt="Trilha News" style="height: 50px; margin-bottom: 20px;">
+                        ${articleData.content}
+                        <hr style="margin-top: 40px; border: 0; border-top: 1px solid #eee;">
+                        <p style="font-size: 12px; color: #999; text-align: center;">
+                            <a href="https://trilhacomigo.cc/artigos.html?slug=${slug}">Ler no navegador</a> | 
+                            <a href="#">Descadastrar</a>
+                        </p>
+                    </div>
+                `;
+
+                emailStats = await sendEmailsToSubscribers(emailSubject, emailHtml, slug);
+            } else {
+                console.log("📴 Envio de emails desativado temporariamente.");
+            }
 
             // 3. Atualizar estatísticas de envio no post
             await admin.firestore().collection('newsletter_posts').doc(slug).update({
                 sentCount: emailStats.successCount,
-                emailStats: emailStats
+                emailStats: emailStats,
+                emailDisabled: !ENABLE_EMAILS_V2
             });
 
             console.log("✅ Ciclo diário concluído com sucesso.");

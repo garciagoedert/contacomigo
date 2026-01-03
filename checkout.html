@@ -230,100 +230,111 @@
             </div>
         </div>
 
-        <!-- Voltar -->
+        <!-- Ações de Conta -->
         <div class="text-center">
-            <a href="dashboard.html" class="text-white hover:underline">← Voltar para o App</a>
+            <button onclick="logout()" class="text-white/80 hover:text-white hover:underline transition-colors">
+                ← Sair / Trocar Conta
+            </button>
         </div>
     </div>
 
     <!-- Firebase -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, updateDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+    import { getFirestore, doc, updateDoc, Timestamp } from
+    'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVLS7bARnU_mH3KlueEeFjDSywN3FCESY",
-            authDomain: "financeapp-6da16.firebaseapp.com",
-            projectId: "financeapp-6da16",
-            storageBucket: "financeapp-6da16.firebasestorage.app",
-            messagingSenderId: "342917624338",
-            appId: "1:342917624338:web:b9977ec338b63f4d50decb",
-            measurementId: "G-KRNK2W5VPX"
-        };
+    // Firebase config
+    const firebaseConfig = {
+    apiKey: "AIzaSyBVLS7bARnU_mH3KlueEeFjDSywN3FCESY",
+    authDomain: "financeapp-6da16.firebaseapp.com",
+    projectId: "financeapp-6da16",
+    storageBucket: "financeapp-6da16.firebasestorage.app",
+    messagingSenderId: "342917624338",
+    appId: "1:342917624338:web:b9977ec338b63f4d50decb",
+    measurementId: "G-KRNK2W5VPX"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        let currentUserId = null;
+    let currentUserId = null;
 
-        // Verificar autenticação
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUserId = user.uid;
-            } else {
-                window.location.href = 'login/index.html';
-            }
-        });
+    // Verificar autenticação
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+    currentUserId = user.uid;
+    } else {
+    window.location.href = 'login/index.html';
+    }
+    });
 
-        // Asaas Configuration
-        const CLOUD_FUNCTION_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAbacatePayBilling';
-        // Para desenvolvimento local, use: 'http://localhost:5001/financeapp-6da16/us-central1/createAsaasSubscription'
+    // Logout Function
+    window.logout = function() {
+    signOut(auth).then(() => {
+    window.location.href = 'login/index.html';
+    }).catch((error) => {
+    console.error("Erro ao sair", error);
+    });
+    };
 
-        window.checkout = async function (planType) {
-            if (!currentUserId) {
-                alert('Por favor, faça login primeiro');
-                return;
-            }
+    // Asaas Configuration
+    const CLOUD_FUNCTION_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/createAbacatePayBilling';
+    // Para desenvolvimento local, use: 'http://localhost:5001/financeapp-6da16/us-central1/createAsaasSubscription'
 
-            const button = event.target;
-            const originalText = button.innerText;
-            button.innerText = 'Processando...';
-            button.disabled = true;
+    window.checkout = async function (planType) {
+    if (!currentUserId) {
+    alert('Por favor, faça login primeiro');
+    return;
+    }
 
-            try {
-                // Chamar Cloud Function para criar assinatura no AbacatePay
-                const response = await fetch(CLOUD_FUNCTION_URL.replace('createAsaasSubscription', 'createAbacatePayBilling'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        planType: planType,
-                        userId: currentUserId,
-                        userEmail: auth.currentUser.email,
-                        userName: auth.currentUser.displayName || 'Cliente Trilha Comigo',
-                        returnUrl: `${window.location.origin}/dashboard.html`
-                    })
-                });
+    const button = event.target;
+    const originalText = button.innerText;
+    button.innerText = 'Processando...';
+    button.disabled = true;
 
-                const data = await response.json();
+    try {
+    // Chamar Cloud Function para criar assinatura no AbacatePay
+    const response = await fetch(CLOUD_FUNCTION_URL.replace('createAsaasSubscription', 'createAbacatePayBilling'), {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+    planType: planType,
+    userId: currentUserId,
+    userEmail: auth.currentUser.email,
+    userName: auth.currentUser.displayName || 'Cliente Trilha Comigo',
+    returnUrl: `${window.location.origin}/dashboard.html`
+    })
+    });
 
-                if (!response.ok) {
-                    console.error('❌ Erro detalhado do servidor:', data);
-                    const errorMessage = data.error || 'Erro ao criar assinatura';
-                    const errorDetails = data.details ? `\nDetalhes: ${JSON.stringify(data.details, null, 2)}` : '';
-                    throw new Error(errorMessage + errorDetails);
-                }
+    const data = await response.json();
 
-                // Redirecionar para o Checkout do AbacatePay
-                if (data.checkoutUrl) {
-                    localStorage.setItem('pending_payment_id', data.billingId);
-                    localStorage.setItem('pending_plan', planType);
-                    window.location.href = data.checkoutUrl;
-                } else {
-                    throw new Error('URL de checkout não recebida');
-                }
+    if (!response.ok) {
+    console.error('❌ Erro detalhado do servidor:', data);
+    const errorMessage = data.error || 'Erro ao criar assinatura';
+    const errorDetails = data.details ? `\nDetalhes: ${JSON.stringify(data.details, null, 2)}` : '';
+    throw new Error(errorMessage + errorDetails);
+    }
 
-            } catch (error) {
-                console.error('Erro no checkout:', error);
-                alert('Erro ao iniciar pagamento: ' + error.message);
-                button.innerText = originalText;
-                button.disabled = false;
-            }
-        };
+    // Redirecionar para o Checkout do AbacatePay
+    if (data.checkoutUrl) {
+    localStorage.setItem('pending_payment_id', data.billingId);
+    localStorage.setItem('pending_plan', planType);
+    window.location.href = data.checkoutUrl;
+    } else {
+    throw new Error('URL de checkout não recebida');
+    }
+
+    } catch (error) {
+    console.error('Erro no checkout:', error);
+    alert('Erro ao iniciar pagamento: ' + error.message);
+    button.innerText = originalText;
+    button.disabled = false;
+    }
+    };
     </script>
 </body>
 

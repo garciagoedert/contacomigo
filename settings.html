@@ -13,713 +13,270 @@
 
         gtag('config', 'G-KRNK2W5VPX');
     </script>
-    <title>Trilha Comigo - Gestor Financeiro</title>
+    <title>Configurações - Trilha Comigo</title>
 
-    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
     <script src="analytics.js"></script>
-    <style>
-        /* Premium visual enhancements */
-        .gradient-sidebar {
-            background: linear-gradient(180deg, #1a202c 0%, #2d3748 100%);
-        }
-
-        .card-hover {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .header-gradient {
-            background: linear-gradient(135deg, rgba(233, 30, 99, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
-        }
-    </style>
     <script src="https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js"></script>
 </head>
 
-<body class="bg-[var(--cor-fundo)] dark:bg-gray-900 text-[var(--cor-texto)] dark:text-gray-200">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-inter">
 
-    <!-- Tela Principal do Aplicativo (inicialmente oculta) -->
-    <div id="app-view">
-        <div class="relative min-h-screen md:flex">
-            <!-- Sidebar -->
-            <aside id="sidebar"
-                class="gradient-sidebar text-white w-64 p-6 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-30 flex flex-col shadow-2xl">
-                <div class="flex items-center justify-center mb-10">
-                    <!-- Logo para Desktop -->
-                    <a href="dashboard.html">
-                        <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-12 hidden md:block">
-                    </a>
-                    <!-- Logo para Mobile -->
-                    <a href="dashboard.html">
-                        <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-12 md:hidden">
-                    </a>
-                </div>
-                <nav class="flex flex-col space-y-2">
-                    <a href="transactions.html" id="show-transactions-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                        <span>Transações</span>
-                    </a>
-                    <a href="coach.html" id="show-coach-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <span class="text-2xl mr-3">🤖</span>
-                        <span>Coach AI</span>
-                    </a>
-                    <a href="investments.html" id="show-investments-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <span>Investimentos</span>
-                    </a>
-                    <a href="budgets.html" id="show-budgets-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Orçamentos</span>
-                    </a>
-                    <a href="goals.html" id="show-goals-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <span>Metas</span>
-                    </a>
-                    <a href="debts.html" id="show-debts-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Dívidas</span>
-                    </a>
-                    <a href="tasks.html" id="show-tasks-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Tarefas</span>
-                    </a>
-                    <a href="calculator.html" id="show-calculator-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                        <span>Calculadora</span>
-                    </a>
-                    <a href="settings.html" id="show-settings-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 sidebar-active">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                            </path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <span>Configurações</span>
-                    </a>
-                    <button id="logout-button"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 w-full text-left">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                            </path>
-                        </svg>
-                        <span>Sair</span>
-                    </button>
-                </nav>
-            </aside>
+    <!-- App View Container (Layout Injected by layout.js) -->
+    <div id="app-view" class="hidden">
 
-            <!-- Overlay para fechar a sidebar -->
-            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
+        <!-- Main Content Area -->
+        <main class="p-6 md:p-10 max-w-5xl mx-auto space-y-8">
 
-            <!-- Conteúdo Principal -->
-            <div class="flex-1 flex flex-col">
-                <header class="bg-white dark:bg-gray-800 header-gradient shadow-lg sticky top-0 z-10 backdrop-blur-sm">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
-                        <!-- Container para Mobile: Botão de Menu e Logo Centralizada -->
-                        <div class="flex-1 flex justify-center items-center md:hidden">
-                            <!-- Botão de Menu (absoluto para não afetar a centralização) -->
-                            <button id="menu-btn"
-                                class="absolute left-4 text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16m-7 6h7"></path>
-                                </svg>
-                            </button>
-                            <!-- Logo Mobile -->
-                            <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-12">
-                        </div>
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Configurações</h1>
+                <p class="text-gray-500 dark:text-gray-400">Gerencie suas preferências, categorias e conexões.</p>
+            </div>
 
-                        <!-- Container para Desktop: Botão à Direita -->
-                        <div class="hidden md:flex flex-1 justify-end space-x-2">
-                            <button id="export-btn-desktop" onclick="exportReport()"
-                                class="flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                Exportar
-                            </button>
-                            <button id="add-transaction-btn-desktop"
-                                class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
-                                Nova Transação
-                            </button>
-                        </div>
-                    </div>
-                </header>
-                <main class="p-4 sm:p-6 lg:p-8">
-                    <!-- Visualização de Configurações -->
-                    <section id="settings-view">
-                        <h1 class="text-3xl font-bold mb-8">Configurações</h1>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <!-- Menu Lateral de Navegação -->
-                            <aside class="md:col-span-1">
-                                <nav class="space-y-2">
-                                    <a href="#aparencia"
-                                        class="block font-semibold text-[var(--cor-principal)] bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md">Aparência</a>
-                                    <a href="#conexoes"
-                                        class="block font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-md">Conexões
-                                        Bancárias</a>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Sidebar Menu for Settings -->
+                <aside class="md:col-span-1 space-y-1">
+                    <nav class="flex flex-col space-y-1">
+                        <a href="#aparencia"
+                            class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 font-semibold rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01">
+                                </path>
+                            </svg>
+                            Aparência
+                        </a>
+                        <a href="#conexoes"
+                            class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white font-medium rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Conexões Bancárias
+                        </a>
+                        <a href="#categorias"
+                            class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white font-medium rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                </path>
+                            </svg>
+                            Categorias
+                        </a>
+                        <a href="#familia"
+                            class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white font-medium rounded-xl transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            Família
+                        </a>
+                    </nav>
+                </aside>
 
-                                    <a href="#categorias"
-                                        class="block font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-md">Categorias</a>
-                                    <a href="#familia"
-                                        class="block font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-md">Família</a>
-                                </nav>
-                            </aside>
+                <!-- Settings Content -->
+                <div class="md:col-span-3 space-y-10">
 
-                            <!-- Conteúdo das Configurações -->
-                            <div class="md:col-span-2 space-y-12">
+                    <!-- Appearance Section -->
+                    <section id="aparencia"
+                        class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+                            <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01">
+                                </path>
+                            </svg>
+                            Aparência
+                        </h2>
 
-                                <!-- Seção de Aparência -->
-                                <section id="aparencia">
-                                    <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Aparência</h2>
-                                    <div class="space-y-6">
-                                        <div>
-                                            <label for="theme-toggle"
-                                                class="block text-lg font-medium mb-2">Tema</label>
-                                            <div
-                                                class="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                                <span>Alternar entre modo claro e escuro</span>
-                                                <button id="theme-toggle-btn"
-                                                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md">Mudar
-                                                    Tema</button>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="color-picker" class="block text-lg font-medium mb-2">Cor
-                                                Principal</label>
-                                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                                <p class="mb-3">Escolha a cor de destaque do aplicativo.</p>
-                                                <div id="color-options" class="flex space-x-4">
-                                                    <!-- Opções de cores serão inseridas aqui -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <!-- Seção de Conexões (Open Banking) -->
-                                <section id="conexoes">
-                                    <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Conexões Bancárias</h2>
-                                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-                                        <div class="flex items-center justify-between mb-4">
-                                            <div>
-                                                <h3 class="font-semibold text-lg">Sincronização Automática</h3>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Conecte seus bancos
-                                                    para importar transações automaticamente via Open Banking.</p>
-                                            </div>
-                                            <span
-                                                class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">Premium</span>
-                                        </div>
-
-                                        <button id="connect-bank-btn"
-                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center shadow-md transform hover:scale-[1.02]">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                                            </svg>
-                                            Conectar Nova Conta
-                                        </button>
-                                        <p class="text-xs text-center text-gray-400 mt-2">Segurança garantida por
-                                            Pluggy.ai. Seus dados são criptografados.</p>
-                                    </div>
-                                </section>
-
-                                <!-- Seção de Categorias -->
-                                <section id="categorias">
-                                    <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Gerenciar Categorias</h2>
-                                    <div
-                                        class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                        <div>
-                                            <h3 class="font-semibold mb-3 text-lg">Receitas</h3>
-                                            <div id="income-categories-list-settings" class="space-y-2 mb-3"></div>
-                                            <form id="add-income-category-form-settings" class="flex">
-                                                <input type="text" id="new-income-category-settings"
-                                                    placeholder="Nova categoria"
-                                                    class="flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-principal)]">
-                                                <button type="submit"
-                                                    class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-r-md font-semibold hover:opacity-90">+</button>
-                                            </form>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-semibold mb-3 text-lg">Despesas</h3>
-                                            <div id="expense-categories-list-settings" class="space-y-2 mb-3"></div>
-                                            <form id="add-expense-category-form-settings" class="flex">
-                                                <input type="text" id="new-expense-category-settings"
-                                                    placeholder="Nova categoria"
-                                                    class="flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-principal)]">
-                                                <button type="submit"
-                                                    class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-r-md font-semibold hover:opacity-90">+</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <!-- Seção de Família -->
-                                <section id="familia">
-                                    <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Gerenciar Família</h2>
-                                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                                        <h3 class="font-semibold mb-3 text-lg">Membros da Família</h3>
-                                        <div id="family-members-list-settings" class="space-y-3 mb-4"></div>
-                                        <h3 class="font-semibold mb-3 text-lg">Convidar Novo Membro</h3>
-                                        <form id="invite-member-form-settings" class="flex">
-                                            <input type="email" id="invite-email-settings"
-                                                placeholder="Email do novo membro" required
-                                                class="flex-grow px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--cor-principal)]">
-                                            <button type="submit"
-                                                class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-r-md font-semibold hover:opacity-90">Convidar</button>
-                                        </form>
-                                    </div>
-                                </section>
-
+                        <div class="space-y-8">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-medium text-gray-900 dark:text-white">Tema Escuro</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Alternar entre modo claro e
+                                        escuro</p>
+                                </div>
+                                <button id="theme-toggle-btn"
+                                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 dark:bg-gray-700 bg-gray-200"
+                                    role="switch" aria-checked="false">
+                                    <span class="sr-only">Use setting</span>
+                                    <span aria-hidden="true"
+                                        class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0 dark:translate-x-5"></span>
+                                </button>
                             </div>
                         </div>
                     </section>
-                </main>
+
+                    <!-- Connections Section -->
+                    <section id="conexoes"
+                        class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-5">
+                            <svg class="w-32 h-32 text-indigo-900" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                    <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    Conexões Bancárias
+                                </h2>
+                                <span
+                                    class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-sm">Premium</span>
+                            </div>
+
+                            <p class="text-gray-600 dark:text-gray-300 mb-6">Conete seus bancos para importar transações
+                                automaticamente via Open Banking. Seguro e criptografado.</p>
+
+                            <button id="connect-bank-btn"
+                                class="flex items-center justify-center gap-2 w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Conectar Nova Conta
+                            </button>
+                            <div class="mt-4 flex items-center gap-2 text-xs text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                    </path>
+                                </svg>
+                                Segurança garantida por Pluggy.ai
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Categories Section -->
+                    <section id="categorias"
+                        class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                </path>
+                            </svg>
+                            Gerenciar Categorias
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Income -->
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div> Receitas
+                                </h3>
+                                <div id="income-categories-list-settings" class="space-y-2 mb-3"></div>
+                                <form id="add-income-category-form-settings" class="flex gap-2">
+                                    <input type="text" id="new-income-category-settings" placeholder="Nova categoria..."
+                                        class="flex-grow px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none text-sm">
+                                    <button type="submit"
+                                        class="p-2 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Expense -->
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-red-500"></div> Despesas
+                                </h3>
+                                <div id="expense-categories-list-settings" class="space-y-2 mb-3"></div>
+                                <form id="add-expense-category-form-settings" class="flex gap-2">
+                                    <input type="text" id="new-expense-category-settings"
+                                        placeholder="Nova categoria..."
+                                        class="flex-grow px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-sm">
+                                    <button type="submit"
+                                        class="p-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Family Section -->
+                    <section id="familia"
+                        class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            Gerenciar Família
+                        </h2>
+
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white mb-3">Membros da Família</h3>
+                                <div id="family-members-list-settings" class="space-y-3">
+                                    <!-- Family list dynamically populated -->
+                                </div>
+                            </div>
+
+                            <div class="pt-6 border-t border-gray-100 dark:border-gray-700">
+                                <h3 class="font-medium text-gray-900 dark:text-white mb-3">Convidar Novo Membro</h3>
+                                <form id="invite-member-form-settings" class="flex gap-2">
+                                    <input type="email" id="invite-email-settings" placeholder="Email do novo membro"
+                                        required
+                                        class="flex-grow px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                    <button type="submit"
+                                        class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20">
+                                        Convidar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
             </div>
-        </div>
-        <!-- Botão Flutuante para Adicionar Transação (Apenas Mobile/Tablet) -->
-        <button id="add-transaction-btn-mobile" title="Adicionar Nova Transação"
-            class="md:hidden fixed bottom-6 right-6 bg-[var(--cor-principal)] hover:opacity-90 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)] dark:ring-offset-gray-900 hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-        </button>
+
+        </main>
     </div>
 
-    <!-- Modal para Adicionar/Editar Transação -->
+    <!-- Transaction Modal (Compatibility for global button) -->
     <div id="transaction-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div id="modal-content"
-            class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4 modal-enter">
-            <h3 id="modal-title" class="text-xl font-semibold mb-4">Nova Transação</h3>
-            <form id="transaction-form">
-                <input type="hidden" id="transaction-id">
-                <div class="mb-4">
-                    <label for="description"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
-                    <input type="text" id="description" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor
-                            (R$)</label>
-                        <input type="number" id="amount" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="0,00">
-                    </div>
-                    <div>
-                        <label for="date"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data</label>
-                        <input type="date" id="date" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</span>
-                        <div class="mt-2 flex space-x-4">
-                            <label class="flex items-center"><input type="radio" name="type" value="income"
-                                    class="form-radio text-[var(--cor-sucesso)]" checked><span
-                                    class="ml-2 text-[var(--cor-sucesso)] dark:text-green-400">Receita</span></label>
-                            <label class="flex items-center"><input type="radio" name="type" value="expense"
-                                    class="form-radio text-red-500"><span
-                                    class="ml-2 text-red-600 dark:text-red-400">Despesa</span></label>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="category"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria</label>
-                        <select id="category" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="alimentacao">Alimentação</option>
-                            <option value="moradia">Moradia</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="lazer">Lazer</option>
-                            <option value="saude">Saúde</option>
-                            <option value="salario">Salário</option>
-                            <option value="outros">Outros</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="investment-option" class="mb-4 hidden">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="is-investment"
-                            class="form-checkbox h-5 w-5 text-[var(--cor-principal)] rounded">
-                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Enviar para investimentos?</span>
-                    </label>
-                </div>
-
-                <div class="mb-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="is-recurring"
-                            class="form-checkbox h-5 w-5 text-[var(--cor-principal)] rounded">
-                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Transação Recorrente?</span>
-                    </label>
-                </div>
-
-                <div id="recurrence-details" class="mb-4 hidden">
-                    <label for="recurrence-frequency"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frequência</label>
-                    <select id="recurrence-frequency"
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="monthly">Mensal</option>
-                        <option value="weekly">Semanal</option>
-                        <option value="yearly">Anual</option>
-                    </select>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar</button>
-                </div>
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] hidden transition-all">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md m-4">
+            <h3 class="text-xl font-bold mb-4">Nova Transação</h3>
+            <form id="transaction-form" onsubmit="event.preventDefault(); return false;">
+                <p class="text-gray-500 mb-4">Use a página de Transações para gerenciar registros completos.</p>
+                <button type="button" onclick="document.getElementById('transaction-modal').classList.add('hidden')"
+                    class="px-4 py-2 bg-gray-200 rounded-lg">Fechar</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal para Adicionar/Editar Meta -->
-    <div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="goal-modal-title" class="text-xl font-semibold mb-4">Nova Meta</h3>
-            <form id="goal-form">
-                <input type="hidden" id="goal-id">
-                <div class="mb-4">
-                    <label for="goal-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome da
-                        Meta</label>
-                    <input type="text" id="goal-name" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="goal-target"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Alvo (R$)</label>
-                        <input type="number" id="goal-target" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="goal-current"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Atual (R$)</label>
-                        <input type="number" id="goal-current" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-goal-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar
-                        Meta</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Ativo de Investimento -->
-    <div id="investment-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="investment-modal-title" class="text-xl font-semibold mb-4">Novo Ativo</h3>
-            <form id="investment-form">
-                <input type="hidden" id="investment-id">
-                <div class="mb-4">
-                    <label for="asset-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome do
-                        Ativo (e.g., Ação, Cripto)</label>
-                    <input type="text" id="asset-name" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="asset-quantity"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                        <input type="number" id="asset-quantity" step="any" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div>
-                        <label for="asset-price"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço Médio de Compra
-                            (R$)</label>
-                        <input type="number" id="asset-price" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="current-asset-price"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço Atual do Ativo
-                        (R$)</label>
-                    <input type="number" id="current-asset-price" step="0.01" min="0" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-investment-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar
-                        Ativo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de Configurações -->
-    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
-            <h3 class="text-xl font-semibold mb-4">Configurações</h3>
-
-            <!-- Gerenciamento de Categorias -->
-            <div>
-                <h4 class="text-lg font-semibold mb-2">Gerenciar Categorias</h4>
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <h5 class="font-semibold mb-2">Receitas</h5>
-                        <div id="income-categories-list" class="space-y-2"></div>
-                        <form id="add-income-category-form" class="mt-2 flex">
-                            <input type="text" id="new-income-category" placeholder="Nova categoria"
-                                class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                            <button type="submit"
-                                class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">+</button>
-                        </form>
-                    </div>
-                    <div>
-                        <h5 class="font-semibold mb-2">Despesas</h5>
-                        <div id="expense-categories-list" class="space-y-2"></div>
-                        <form id="add-expense-category-form" class="mt-2 flex">
-                            <input type="text" id="new-expense-category" placeholder="Nova categoria"
-                                class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                            <button type="submit"
-                                class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">+</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Gerenciamento Familiar -->
-            <div class="mt-6">
-                <h4 class="text-lg font-semibold mb-2">Gerenciar Família</h4>
-                <div>
-                    <h5 class="font-semibold mb-2">Membros</h5>
-                    <div id="family-members-list" class="space-y-2"></div>
-                    <form id="invite-member-form" class="mt-2 flex">
-                        <input type="email" id="invite-email" placeholder="Email do novo membro"
-                            class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                        <button type="submit"
-                            class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">Convidar</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="flex justify-end mt-6">
-                <button type="button" id="close-settings-btn"
-                    class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Orçamento -->
-    <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="budget-modal-title" class="text-xl font-semibold mb-4">Gerenciar Orçamento</h3>
-            <form id="budget-form">
-                <div class="mb-4">
-                    <label for="budget-category"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria de Despesa</label>
-                    <select id="budget-category" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <!-- Opções de categoria de despesa serão preenchidas via JS -->
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label for="budget-limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Limite
-                        Mensal (R$)</label>
-                    <input type="number" id="budget-limit" step="0.01" min="0" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
-                        placeholder="Ex: 500,00">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-budget-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar
-                        Orçamento</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Dívida -->
-    <div id="debt-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="debt-modal-title" class="text-xl font-semibold mb-4">Nova Dívida</h3>
-            <form id="debt-form">
-                <input type="hidden" id="debt-id">
-                <div class="mb-4">
-                    <label for="debt-company" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Empresa
-                        / Credor</label>
-                    <input type="text" id="debt-company" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="debt-amount"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Total (R$)</label>
-                        <input type="number" id="debt-amount" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div>
-                        <label for="debt-due-date"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de
-                            Vencimento</label>
-                        <input type="date" id="debt-due-date"
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="debt-negotiation"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Detalhes / Negociação</label>
-                    <textarea id="debt-negotiation" rows="3"
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-debt-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar
-                        Dívida</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Tarefa -->
-    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
-            <h3 id="task-modal-title" class="text-xl font-semibold mb-4">Nova Tarefa</h3>
-            <form id="task-form">
-                <input type="hidden" id="task-id">
-                <div class="space-y-4">
-                    <div>
-                        <label for="task-title"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Título</label>
-                        <input type="text" id="task-title" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="task-responsible"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Responsável</label>
-                            <input type="text" id="task-responsible"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label for="task-due-date"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prazo</label>
-                            <input type="date" id="task-due-date"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="task-priority"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prioridade</label>
-                            <select id="task-priority"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option>Normal</option>
-                                <option>Urgente</option>
-                                <option>Baixa</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="task-status"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                            <select id="task-status"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option>Pendente</option>
-                                <option>Em Andamento</option>
-                                <option>Concluída</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" id="cancel-task-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar
-                        Tarefa</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Firebase SDKs -->
+    <!-- Scripts -->
+    <script src="layout.js"></script>
     <script src="premium.js" type="module"></script>
     <script src="app.js" type="module"></script>
+
 </body>
 
 </html>

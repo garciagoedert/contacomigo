@@ -13,430 +13,242 @@
 
         gtag('config', 'G-KRNK2W5VPX');
     </script>
-    <title>Trilha Comigo - Gestor Financeiro</title>
+    <title>Dashboard - Trilha Comigo</title>
 
-    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Chart.js para gráficos -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
     <script src="analytics.js"></script>
-    <style>
-        /* Premium visual enhancements */
-        .gradient-sidebar {
-            background: linear-gradient(180deg, #1a202c 0%, #2d3748 100%);
-        }
-
-        .card-hover {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .header-gradient {
-            background: linear-gradient(135deg, rgba(233, 30, 99, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
-        }
-    </style>
     <script src="https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js"></script>
 </head>
 
-<body class="bg-[var(--cor-fundo)] dark:bg-gray-900 text-[var(--cor-texto)] dark:text-gray-200">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-inter">
 
-    <!-- Tela Principal do Aplicativo (inicialmente oculta) -->
+    <!-- App View Container (Layout Injected by layout.js) -->
     <div id="app-view" class="hidden">
-        <div class="relative min-h-screen md:flex">
-            <!-- Sidebar -->
-            <aside id="sidebar"
-                class="gradient-sidebar text-white w-64 p-6 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out z-30 flex flex-col shadow-2xl">
-                <div class="flex items-center justify-center mb-10">
-                    <!-- Logo para Desktop -->
-                    <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-12 hidden md:block">
-                    <!-- Logo para Mobile -->
-                    <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-12 md:hidden">
+
+        <!-- Main Content Area -->
+        <main class="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Visão Geral</h1>
+                    <p class="text-gray-500 dark:text-gray-400">Bem-vindo de volta! Aqui está o resumo das suas
+                        finanças.</p>
                 </div>
-                <nav class="flex flex-col space-y-2">
-                    <a href="transactions.html" id="show-transactions-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                        <span>Transações</span>
-                    </a>
-                    <a href="coach.html" id="show-coach-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        <span>Coach AI</span>
-                    </a>
-                    <a href="investments.html" id="show-investments-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <span>Investimentos</span>
-                    </a>
-                    <a href="budgets.html" id="show-budgets-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Orçamentos</span>
-                    </a>
-                    <a href="goals.html" id="show-goals-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                        <span>Metas</span>
-                    </a>
-                    <a href="debts.html" id="show-debts-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Dívidas</span>
-                    </a>
-                    <a href="tasks.html" id="show-tasks-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Tarefas</span>
-                    </a>
-                    <a href="calculator.html" id="show-calculator-view-btn"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                        <span>Calculadora</span>
-                    </a>
-                    <a href="settings.html" id="show-settings-view"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                            </path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <span>Configurações</span>
-                    </a>
 
-                    <div class="border-t border-gray-700 my-4"></div>
-
-                    <a href="business_dashboard.html"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 text-gray-300 group">
-                        <div class="p-1 bg-yellow-600 rounded-md mr-3 group-hover:bg-yellow-500 transition-colors">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-yellow-500">Business</span>
-                            <span class="text-xs text-gray-400">Para sua empresa</span>
-                        </div>
-                    </a>
-
-                    <button id="logout-button"
-                        class="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 w-full text-left">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
+                <div class="flex items-center gap-3">
+                    <button onclick="exportReport()"
+                        class="flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                            </path>
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        <span>Sair</span>
+                        Exportar
                     </button>
-                </nav>
-            </aside>
-
-            <!-- Overlay para fechar a sidebar -->
-            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
-
-            <!-- Conteúdo Principal -->
-            <div class="flex-1 flex flex-col">
-                <header class="bg-white dark:bg-gray-800 header-gradient shadow-lg sticky top-0 z-10 backdrop-blur-sm">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
-                        <!-- Container para Mobile: Botão de Menu e Logo Centralizada -->
-                        <div class="flex-1 flex justify-center items-center md:hidden">
-                            <!-- Botão de Menu (absoluto para não afetar a centralização) -->
-                            <button id="menu-btn"
-                                class="absolute left-4 text-[var(--cor-texto)] dark:text-gray-300 focus:outline-none">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16m-7 6h7"></path>
-                                </svg>
-                            </button>
-                            <!-- Logo Mobile -->
-                            <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-12">
-                        </div>
-
-                        <!-- Container para Desktop: Botão à Direita -->
-                        <div class="hidden md:flex flex-1 justify-end space-x-2">
-                            <button id="export-btn-desktop" onclick="exportReport()"
-                                class="flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                Exportar
-                            </button>
-                            <button id="add-transaction-btn-desktop"
-                                class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--cor-principal)] hover:opacity-90">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
-                                Nova Transação
-                            </button>
-                        </div>
-                    </div>
-                </header>
-                <main class="p-4 sm:p-6 lg:p-8">
-                    <!-- AI Coach Section -->
-                    <section id="ai-coach" class="mb-8">
-                        <div
-                            class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
-                            <!-- Background Decoration -->
-                            <div
-                                class="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl">
-                            </div>
-
-                            <div class="relative z-10">
-                                <div id="coach-header"
-                                    class="flex items-center justify-between mb-4 cursor-pointer md:cursor-default">
-                                    <h2 class="text-xl font-bold flex items-center">
-                                        <span class="text-2xl mr-2">🤖</span> Coach Financeiro
-                                    </h2>
-                                    <div class="flex items-center">
-                                        <span id="coach-mood"
-                                            class="text-3xl bg-white/20 rounded-full p-2 mr-2">🤔</span>
-                                        <!-- Chevron visible only on mobile -->
-                                        <svg id="coach-chevron" xmlns="http://www.w3.org/2000/svg"
-                                            class="h-6 w-6 text-white md:hidden transition-transform duration-300"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <!-- Wrapper for collapsible content on mobile -->
-                                <div id="coach-collapsible" class="hidden md:block">
-                                    <div id="coach-loading" class="animate-pulse flex items-center space-x-2">
-                                        <div class="h-2 w-2 bg-white rounded-full animate-bounce"></div>
-                                        <div class="h-2 w-2 bg-white rounded-full animate-bounce delay-75"></div>
-                                        <div class="h-2 w-2 bg-white rounded-full animate-bounce delay-150"></div>
-                                        <span class="text-sm opacity-80 ml-2">Analisando suas finanças...</span>
-                                    </div>
-
-                                    <div id="coach-content" class="hidden space-y-3">
-                                        <p id="coach-summary" class="text-lg font-medium leading-relaxed"></p>
-
-                                        <div class="bg-white/10 rounded-lg p-4 mt-2">
-                                            <h3 class="text-sm uppercase tracking-wide opacity-70 mb-2 font-bold">Dicas
-                                                da
-                                                Semana</h3>
-                                            <ul id="coach-tips"
-                                                class="list-disc list-inside space-y-1 text-sm opacity-90">
-                                            </ul>
-                                        </div>
-
-                                        <div id="coach-alert"
-                                            class="hidden bg-red-500/30 border border-red-400/50 rounded-lg p-3 text-sm flex items-start">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                            </svg>
-                                            <span id="coach-alert-text"></span>
-                                        </div>
-                                    </div>
-
-                                    <button id="refresh-coach-btn"
-                                        class="mt-4 text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition-colors flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                        </svg>
-                                        Atualizar Análise
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Resumo Financeiro -->
-                    <section id="summary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div
-                            class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-2xl shadow-lg card-hover border border-green-200 dark:border-green-700">
-                            <h3
-                                class="text-sm font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">
-                                Receitas</h3>
-                            <p id="total-income" class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">R$
-                                0,00</p>
-                        </div>
-                        <div
-                            class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-6 rounded-2xl shadow-lg card-hover border border-red-200 dark:border-red-700">
-                            <h3 class="text-sm font-semibold text-red-700 dark:text-red-400 uppercase tracking-wide">
-                                Despesas</h3>
-                            <p id="total-expense" class="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">R$ 0,00
-                            </p>
-                        </div>
-                        <div
-                            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-2xl shadow-lg card-hover border border-blue-200 dark:border-blue-700">
-                            <h3 class="text-sm font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wide">
-                                Saldo Atual</h3>
-                            <p id="balance" class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">R$ 0,00</p>
-                        </div>
-                    </section>
-
-                    <!-- Gráfico de Despesas -->
-                    <section id="charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg card-hover">
-                            <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white">Distribuição de Despesas
-                            </h3>
-                            <div class="max-w-sm mx-auto">
-                                <canvas id="expense-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg card-hover">
-                            <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white">Receitas, Despesas e
-                                Investimentos</h3>
-                            <canvas id="income-expense-chart"></canvas>
-                        </div>
-                    </section>
-
-                    <!-- Lista de Transações -->
-                    <!-- Dashboard Content -->
-                    <section id="ai-coach" class="mb-8">
-                        <!-- ...AI Coach content... -->
-                    </section>
-                    <section id="summary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <!-- ...Summary content... -->
-                    </section>
-                    <section id="charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <!-- ...Charts content... -->
-                    </section>
-                    <h2 class="text-lg font-semibold mb-4">Últimas Transações</h2>
-                    <div id="transaction-list" class="space-y-3">
-                        <p id="no-transactions" class="text-center text-gray-500 dark:text-gray-400 py-8">Nenhuma
-                            transação encontrada.</p>
-                    </div>
-                    </section>
-
-
-                    <!-- Visualização de Investimentos (Removido) -->
-
-                    <!-- Visualização de Metas (Removido) -->
-
-                    <!-- Visualização de Dívidas (Removido) -->
-
-                    <!-- Visualização de Tarefas (Removido) -->
-
-                    <!-- Visualização de Calculadora de Investimentos (Removido) -->
-
-                    <!-- Visualização de Orçamentos (Removido) -->
-
-                    <!-- Visualização de Configurações (Removido) -->
-                </main>
+                    <button onclick="document.getElementById('transaction-modal').classList.remove('hidden')"
+                        class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-500/20">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Nova Transação
+                    </button>
+                </div>
             </div>
-        </div>
-        <!-- Botão Flutuante para Adicionar Transação (Apenas Mobile/Tablet) -->
-        <button id="add-transaction-btn-mobile" title="Adicionar Nova Transação"
-            class="md:hidden fixed bottom-6 right-6 bg-[var(--cor-principal)] hover:opacity-90 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--cor-principal)] dark:ring-offset-gray-900 hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-        </button>
+
+            <!-- AI Coach Teaser -->
+            <section id="ai-coach"
+                class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden cursor-pointer transform transition-transform hover:scale-[1.01]"
+                onclick="window.location.href='coach.html'">
+                <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl">
+                </div>
+
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold flex items-center gap-3">
+                            <span class="text-3xl bg-white/20 p-2 rounded-xl">🤖</span>
+                            <div>
+                                Coach Financeiro
+                                <div class="text-xs font-normal opacity-80">Powered by Gemini AI</div>
+                            </div>
+                        </h2>
+                        <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+
+                    <div id="coach-loading" class="animate-pulse flex items-center space-x-2 my-4">
+                        <div class="h-2 w-2 bg-white rounded-full animate-bounce"></div>
+                        <div class="h-2 w-2 bg-white rounded-full animate-bounce delay-75"></div>
+                        <div class="h-2 w-2 bg-white rounded-full animate-bounce delay-150"></div>
+                        <span class="text-sm opacity-80 ml-2">Analisando suas finanças...</span>
+                    </div>
+
+                    <div id="coach-content" class="hidden space-y-4">
+                        <p id="coach-summary" class="text-lg font-medium leading-relaxed opacity-95"></p>
+                        <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                            <h3 class="text-xs uppercase tracking-wider opacity-70 mb-2 font-bold">Dicas da Semana</h3>
+                            <ul id="coach-tips" class="space-y-2 text-sm"></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Summary Cards -->
+            <section id="summary" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                        </svg>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                        Receitas</h3>
+                    <p id="total-income" class="text-3xl font-bold text-gray-900 dark:text-white">R$ 0,00</p>
+                    <div class="mt-4 h-1 w-full bg-green-100 dark:bg-green-900/30 rounded-full overflow-hidden">
+                        <div class="h-full bg-green-500 w-0 transition-all duration-1000" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+                        </svg>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                        Despesas</h3>
+                    <p id="total-expense" class="text-3xl font-bold text-gray-900 dark:text-white">R$ 0,00</p>
+                    <div class="mt-4 h-1 w-full bg-red-100 dark:bg-red-900/30 rounded-full overflow-hidden">
+                        <div class="h-full bg-red-500 w-0 transition-all duration-1000" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Saldo
+                        Atual</h3>
+                    <p id="balance" class="text-3xl font-bold text-gray-900 dark:text-white">R$ 0,00</p>
+                    <div class="mt-4 h-1 w-full bg-blue-100 dark:bg-blue-900/30 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-0 transition-all duration-1000" style="width: 100%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section id="charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-lg font-bold mb-6 text-gray-900 dark:text-white">Fluxo de Caixa</h3>
+                    <div class="aspect-[16/9] w-full">
+                        <canvas id="income-expense-chart"></canvas>
+                    </div>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-lg font-bold mb-6 text-gray-900 dark:text-white">Por Onde Sai o Dinheiro</h3>
+                    <div class="aspect-[16/9] w-full max-w-sm mx-auto">
+                        <canvas id="expense-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Transactions -->
+            <section
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                    <h3 class="font-bold text-gray-900 dark:text-white">Últimas Transações</h3>
+                    <a href="transactions.html" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Ver
+                        todas</a>
+                </div>
+                <div id="transaction-list" class="divide-y divide-gray-100 dark:divide-gray-700">
+                    <p id="no-transactions" class="text-center text-gray-500 dark:text-gray-400 py-12">Nenhuma transação
+                        recente.</p>
+                </div>
+            </section>
+
+        </main>
     </div>
 
+    <!-- Modals -->
     <!-- Modal para Adicionar/Editar Transação -->
     <div id="transaction-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div id="modal-content"
-            class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4 modal-enter">
-            <h3 id="modal-title" class="text-xl font-semibold mb-4">Nova Transação</h3>
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] hidden transition-all">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md m-4 transform transition-all scale-100">
+            <h3 id="modal-title" class="text-xl font-bold mb-6 text-gray-900 dark:text-white">Nova Transação</h3>
             <form id="transaction-form">
                 <input type="hidden" id="transaction-id">
-                <div class="mb-4">
+                <div class="mb-5">
                     <label for="description"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descrição</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descrição</label>
                     <input type="text" id="description" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                        placeholder="Ex: Mercado, Salário">
                 </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
+
+                <div class="grid grid-cols-2 gap-4 mb-5">
                     <div>
-                        <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor
-                            (R$)</label>
-                        <input type="number" id="amount" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="0,00">
+                        <label for="amount"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Valor</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">R$</span>
+                            <input type="number" id="amount" step="0.01" min="0" required
+                                class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                placeholder="0,00">
+                        </div>
                     </div>
                     <div>
                         <label for="date"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data</label>
                         <input type="date" id="date" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                     </div>
                 </div>
+
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</span>
-                        <div class="mt-2 flex space-x-4">
-                            <label class="flex items-center"><input type="radio" name="type" value="income"
-                                    class="form-radio text-[var(--cor-sucesso)]" checked><span
-                                    class="ml-2 text-[var(--cor-sucesso)] dark:text-green-400">Receita</span></label>
-                            <label class="flex items-center"><input type="radio" name="type" value="expense"
-                                    class="form-radio text-red-500"><span
-                                    class="ml-2 text-red-600 dark:text-red-400">Despesa</span></label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="type" value="income" class="peer sr-only" checked>
+                                <div
+                                    class="text-center py-2 rounded-lg border border-gray-200 dark:border-gray-600 peer-checked:bg-green-100 peer-checked:text-green-700 peer-checked:border-green-200 transition-all">
+                                    Receita</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="type" value="expense" class="peer sr-only">
+                                <div
+                                    class="text-center py-2 rounded-lg border border-gray-200 dark:border-gray-600 peer-checked:bg-red-100 peer-checked:text-red-700 peer-checked:border-red-200 transition-all">
+                                    Despesa</div>
+                            </label>
                         </div>
                     </div>
                     <div>
                         <label for="category"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Categoria</label>
                         <select id="category" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="alimentacao">Alimentação</option>
                             <option value="moradia">Moradia</option>
                             <option value="transporte">Transporte</option>
@@ -447,315 +259,51 @@
                         </select>
                     </div>
                 </div>
-                <div id="investment-option" class="mb-4 hidden">
-                    <label class="flex items-center">
+
+                <div class="space-y-3 mb-6">
+                    <label
+                        class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
                         <input type="checkbox" id="is-investment"
-                            class="form-checkbox h-5 w-5 text-[var(--cor-principal)] rounded">
-                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Enviar para investimentos?</span>
+                            class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">É um
+                            investimento/aporte</span>
                     </label>
-                </div>
 
-                <div class="mb-4">
-                    <label class="flex items-center">
+                    <label
+                        class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
                         <input type="checkbox" id="is-recurring"
-                            class="form-checkbox h-5 w-5 text-[var(--cor-principal)] rounded">
-                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Transação Recorrente?</span>
+                            class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Transação Recorrente</span>
                     </label>
                 </div>
 
-                <div id="recurrence-details" class="mb-4 hidden">
+                <div id="recurrence-details" class="mb-6 hidden animate-fade-in">
                     <label for="recurrence-frequency"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frequência</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Frequência</label>
                     <select id="recurrence-frequency"
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         <option value="monthly">Mensal</option>
                         <option value="weekly">Semanal</option>
                         <option value="yearly">Anual</option>
                     </select>
                 </div>
-                <div class="flex justify-end space-x-3">
+
+                <div class="flex justify-end gap-3">
                     <button type="button" id="cancel-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
+                        class="px-5 py-2.5 text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">Cancelar</button>
                     <button type="submit"
-                        class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar</button>
+                        class="px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30">Salvar
+                        Transação</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal para Adicionar/Editar Meta -->
-    <div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="goal-modal-title" class="text-xl font-semibold mb-4">Nova Meta</h3>
-            <form id="goal-form">
-                <input type="hidden" id="goal-id">
-                <div class="mb-4">
-                    <label for="goal-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome da
-                        Meta</label>
-                    <input type="text" id="goal-name" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="goal-target"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Alvo (R$)</label>
-                        <input type="number" id="goal-target" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="goal-current"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Atual (R$)</label>
-                        <input type="number" id="goal-current" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-goal-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar
-                        Meta</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Ativo de Investimento -->
-    <div id="investment-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="investment-modal-title" class="text-xl font-semibold mb-4">Novo Ativo</h3>
-            <form id="investment-form">
-                <input type="hidden" id="investment-id">
-                <div class="mb-4">
-                    <label for="asset-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome do
-                        Ativo (e.g., Ação, Cripto)</label>
-                    <input type="text" id="asset-name" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="asset-quantity"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade</label>
-                        <input type="number" id="asset-quantity" step="any" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div>
-                        <label for="asset-price"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço Médio de Compra
-                            (R$)</label>
-                        <input type="number" id="asset-price" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="current-asset-price"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preço Atual do Ativo
-                        (R$)</label>
-                    <input type="number" id="current-asset-price" step="0.01" min="0" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-investment-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar
-                        Ativo</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de Configurações -->
-    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
-            <h3 class="text-xl font-semibold mb-4">Configurações</h3>
-
-            <!-- Gerenciamento de Categorias -->
-            <div>
-                <h4 class="text-lg font-semibold mb-2">Gerenciar Categorias</h4>
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <h5 class="font-semibold mb-2">Receitas</h5>
-                        <div id="income-categories-list" class="space-y-2"></div>
-                        <form id="add-income-category-form" class="mt-2 flex">
-                            <input type="text" id="new-income-category" placeholder="Nova categoria"
-                                class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                            <button type="submit"
-                                class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">+</button>
-                        </form>
-                    </div>
-                    <div>
-                        <h5 class="font-semibold mb-2">Despesas</h5>
-                        <div id="expense-categories-list" class="space-y-2"></div>
-                        <form id="add-expense-category-form" class="mt-2 flex">
-                            <input type="text" id="new-expense-category" placeholder="Nova categoria"
-                                class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                            <button type="submit"
-                                class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">+</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Gerenciamento Familiar -->
-            <div class="mt-6">
-                <h4 class="text-lg font-semibold mb-2">Gerenciar Família</h4>
-                <div>
-                    <h5 class="font-semibold mb-2">Membros</h5>
-                    <div id="family-members-list" class="space-y-2"></div>
-                    <form id="invite-member-form" class="mt-2 flex">
-                        <input type="email" id="invite-email" placeholder="Email do novo membro"
-                            class="flex-grow px-2 py-1 bg-gray-50 dark:bg-gray-700 border rounded-l-md">
-                        <button type="submit"
-                            class="px-3 py-1 bg-[var(--cor-principal)] text-white rounded-r-md">Convidar</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="flex justify-end mt-6">
-                <button type="button" id="close-settings-btn"
-                    class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Orçamento -->
-    <div id="budget-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="budget-modal-title" class="text-xl font-semibold mb-4">Gerenciar Orçamento</h3>
-            <form id="budget-form">
-                <div class="mb-4">
-                    <label for="budget-category"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria de Despesa</label>
-                    <select id="budget-category" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <!-- Opções de categoria de despesa serão preenchidas via JS -->
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label for="budget-limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Limite
-                        Mensal (R$)</label>
-                    <input type="number" id="budget-limit" step="0.01" min="0" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"
-                        placeholder="Ex: 500,00">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-budget-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300">Cancelar</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md hover:opacity-90">Salvar
-                        Orçamento</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Dívida -->
-    <div id="debt-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md m-4">
-            <h3 id="debt-modal-title" class="text-xl font-semibold mb-4">Nova Dívida</h3>
-            <form id="debt-form">
-                <input type="hidden" id="debt-id">
-                <div class="mb-4">
-                    <label for="debt-company" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Empresa
-                        / Credor</label>
-                    <input type="text" id="debt-company" required
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="debt-amount"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Valor Total (R$)</label>
-                        <input type="number" id="debt-amount" step="0.01" min="0" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div>
-                        <label for="debt-due-date"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de
-                            Vencimento</label>
-                        <input type="date" id="debt-due-date"
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="debt-negotiation"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Detalhes / Negociação</label>
-                    <textarea id="debt-negotiation" rows="3"
-                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm"></textarea>
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-debt-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar
-                        Dívida</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para Adicionar/Editar Tarefa -->
-    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg m-4">
-            <h3 id="task-modal-title" class="text-xl font-semibold mb-4">Nova Tarefa</h3>
-            <form id="task-form">
-                <input type="hidden" id="task-id">
-                <div class="space-y-4">
-                    <div>
-                        <label for="task-title"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Título</label>
-                        <input type="text" id="task-title" required
-                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="task-responsible"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Responsável</label>
-                            <input type="text" id="task-responsible"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label for="task-due-date"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prazo</label>
-                            <input type="date" id="task-due-date"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="task-priority"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prioridade</label>
-                            <select id="task-priority"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option>Normal</option>
-                                <option>Urgente</option>
-                                <option>Baixa</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="task-status"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                            <select id="task-status"
-                                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
-                                <option>Pendente</option>
-                                <option>Em Andamento</option>
-                                <option>Concluída</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" id="cancel-task-btn"
-                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[var(--cor-principal)] text-white rounded-md">Salvar
-                        Tarefa</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Firebase SDKs -->
+    <!-- Scripts -->
+    <script src="layout.js"></script>
     <script src="premium.js" type="module"></script>
     <script src="app.js" type="module"></script>
+
 </body>
 
 </html>

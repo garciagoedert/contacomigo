@@ -102,31 +102,8 @@
                 </div>
 
 
-                <!-- Seleção de Plano -->
-                <div class="space-y-3">
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Escolha seu plano</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <label class="cursor-pointer relative">
-                            <input type="radio" name="plan" value="free" class="peer sr-only" checked>
-                            <div
-                                class="p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 peer-checked:border-[var(--cor-principal)] peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900/20 transition-all text-center">
-                                <div class="font-bold text-gray-900 dark:text-white">Grátis</div>
-                                <div class="text-xs text-gray-500">Para começar</div>
-                            </div>
-                        </label>
-                        <label class="cursor-pointer relative">
-                            <input type="radio" name="plan" value="premium" class="peer sr-only">
-                            <div
-                                class="p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 peer-checked:border-[var(--cor-principal)] peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900/20 transition-all text-center">
-                                <div
-                                    class="absolute -top-2 -right-2 bg-yellow-400 text-xs px-2 py-0.5 rounded-full font-bold text-gray-900">
-                                    PRO</div>
-                                <div class="font-bold text-gray-900 dark:text-white">Premium</div>
-                                <div class="text-xs text-gray-500">R$ 9,90/mês</div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
+                <!-- Seleção de Plano REMOVED (Paid Only App) -->
+                <input type="hidden" name="plan" value="free"> <!-- Starts as free/locked until payment -->
 
                 <p id="register-error" class="text-sm text-red-500 text-center hidden"></p>
                 <button type="submit"
