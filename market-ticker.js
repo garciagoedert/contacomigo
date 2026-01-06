@@ -19,25 +19,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Let's rely on standard Currencies which are dynamic.
 
         let tickerHtml = `
-            <div class="flex items-center gap-6 overflow-hidden whitespace-nowrap">
-                <span class="flex items-center gap-1 font-bold text-green-400">
-                    <span class="text-xs text-gray-400">USD</span> ${usd}
+            <marquee scrollamount="5" class="w-full md:w-auto overflow-hidden whitespace-nowrap">
+                <span class="inline-flex gap-6 items-center">
+                    <span class="flex items-center gap-1 font-bold text-green-400">
+                        <span class="text-xs text-gray-400">USD</span> ${usd}
+                    </span>
+                    <span class="flex items-center gap-1 font-bold text-blue-400">
+                        <span class="text-xs text-gray-400">EUR</span> ${eur}
+                    </span>
+                    <span class="flex items-center gap-1 font-bold text-yellow-400">
+                        <span class="text-xs text-gray-400">BTC</span> ${btc}
+                    </span>
+                    <span class="flex items-center gap-1 font-bold text-white opacity-60">
+                        <span class="text-xs text-gray-400">SELIC</span> 11.25%
+                    </span>
                 </span>
-                <span class="flex items-center gap-1 font-bold text-blue-400">
-                    <span class="text-xs text-gray-400">EUR</span> ${eur}
-                </span>
-                <span class="flex items-center gap-1 font-bold text-yellow-400">
-                    <span class="text-xs text-gray-400">BTC</span> ${btc}
-                </span>
-                 <!-- Placeholder for Selic/CDI - Hardcoded fallback for now as reliable open API is tricky without backend proxy -->
-                <span class="flex items-center gap-1 font-bold text-white opacity-60">
-                    <span class="text-xs text-gray-400">SELIC</span> 11.25%
-                </span>
-            </div>
+            </marquee>
         `;
 
-        // Replace the "Marquee" or content in the container
+        // Replace the content
         marketTicker.innerHTML = tickerHtml;
+        // Ensure parent has flexible width
+        marketTicker.classList.remove('gap-4');
+        marketTicker.classList.add('w-full', 'overflow-hidden');
 
     } catch (error) {
         console.error("Error fetching market data:", error);
