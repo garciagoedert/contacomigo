@@ -214,88 +214,90 @@
             </div>
 
             <!-- Right Column: Sidebar (4 cols) -->
-            <aside class="lg:col-span-4 space-y-8">
-
-                <!-- Login Widget -->
-                <div
-                    class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 sticky-sidebar">
-                    <div class="flex items-center mb-4 gap-3">
-                        <div class="bg-[var(--cor-principal)]/10 p-2 rounded-lg text-[var(--cor-principal)]">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                                </path>
-                            </svg>
-                        </div>
-                        <h3 class="font-bold text-lg">Área do Assinante</h3>
-                    </div>
-                    <p class="text-sm text-gray-500 mb-6 font-medium">Acesse o Trilha Comigo para gerenciar suas
-                        finanças.</p>
-
-                    <form action="login/index.html" class="space-y-4">
-                        <a href="login/index.html"
-                            class="block w-full py-3 bg-slate-900 text-white text-center rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl">
-                            Acessar Minha Conta
-                        </a>
-                        <div class="text-center">
-                            <a href="#" class="text-xs text-gray-400 hover:text-[var(--cor-principal)]">Esqueceu a
-                                senha?</a>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- App Promo Banner -->
-                <div class="relative overflow-hidden group rounded-2xl">
+            <aside class="lg:col-span-4">
+                <div class="sticky top-24 space-y-8">
+                    <!-- Login Widget -->
                     <div
-                        class="absolute inset-0 bg-gradient-to-br from-[var(--cor-principal)] to-purple-800 z-10 opacity-90">
+                        class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center mb-4 gap-3">
+                            <div class="bg-[var(--cor-principal)]/10 p-2 rounded-lg text-[var(--cor-principal)]">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-lg">Área do Assinante</h3>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-6 font-medium">Acesse o Trilha Comigo para gerenciar suas
+                            finanças.</p>
+
+                        <form action="login/index.html" class="space-y-4">
+                            <a href="login/index.html"
+                                class="block w-full py-3 bg-slate-900 text-white text-center rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl">
+                                Acessar Minha Conta
+                            </a>
+                            <div class="text-center">
+                                <a href="#" class="text-xs text-gray-400 hover:text-[var(--cor-principal)]">Esqueceu a
+                                    senha?</a>
+                            </div>
+                        </form>
                     </div>
-                    <img src="imgs/14.png" class="absolute -right-10 -bottom-10 w-48 opacity-20 z-0 transform rotate-12"
-                        alt="Background Element">
 
-                    <div class="relative z-20 p-8 text-white">
-                        <span
-                            class="text-xs font-bold bg-white/20 px-2 py-1 rounded text-white uppercase tracking-wider mb-3 inline-block">App
-                            Financeiro</span>
-                        <h3 class="text-2xl font-black mb-3 leading-tight">Suas finanças em um só lugar.</h3>
-                        <p class="mb-6 opacity-90 text-sm">Controle gastos, defina metas e invista melhor com o Trilha
-                            Comigo Premium.</p>
+                    <!-- App Promo Banner -->
+                    <div class="relative overflow-hidden group rounded-2xl">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-[var(--cor-principal)] to-purple-800 z-10 opacity-90">
+                        </div>
+                        <img src="imgs/14.png"
+                            class="absolute -right-10 -bottom-10 w-48 opacity-20 z-0 transform rotate-12"
+                            alt="Background Element">
 
-                        <ul class="space-y-2 mb-8 text-sm font-medium opacity-95">
-                            <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg> Conexão Bancária</li>
-                            <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg> Gestão de Investimentos</li>
-                            <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg> Orçamento Familiar</li>
-                        </ul>
+                        <div class="relative z-20 p-8 text-white">
+                            <span
+                                class="text-xs font-bold bg-white/20 px-2 py-1 rounded text-white uppercase tracking-wider mb-3 inline-block">App
+                                Financeiro</span>
+                            <h3 class="text-2xl font-black mb-3 leading-tight">Suas finanças em um só lugar.</h3>
+                            <p class="mb-6 opacity-90 text-sm">Controle gastos, defina metas e invista melhor com o
+                                Trilha
+                                Comigo Premium.</p>
 
-                        <a href="login/index.html"
-                            class="block w-full py-3 bg-white text-[var(--cor-principal)] font-bold text-center rounded-xl hover:bg-gray-50 transition-colors shadow-lg">
-                            Começar Agora (Grátis)
-                        </a>
+                            <ul class="space-y-2 mb-8 text-sm font-medium opacity-95">
+                                <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg> Conexão Bancária</li>
+                                <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg> Gestão de Investimentos</li>
+                                <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg> Orçamento Familiar</li>
+                            </ul>
+
+                            <a href="login/index.html"
+                                class="block w-full py-3 bg-white text-[var(--cor-principal)] font-bold text-center rounded-xl hover:bg-gray-50 transition-colors shadow-lg">
+                                Começar Agora (Grátis)
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter Tiny Widget -->
+                    <div class="bg-gray-100 dark:bg-slate-800 p-6 rounded-2xl">
+                        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Newsletter Diária</h3>
+                        <p class="text-xs text-gray-500 mb-4">Receba as principais notícias do mercado toda manhã.</p>
+                        <div class="flex gap-2">
+                            <input type="email" placeholder="Seu e-mail"
+                                class="flex-1 px-3 py-2 rounded-lg text-sm border border-gray-300 dark:border-gray-600 dark:bg-slate-900">
+                            <button class="bg-slate-900 text-white px-3 py-2 rounded-lg text-sm font-bold">OK</button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Newsletter Tiny Widget -->
-                <div class="bg-gray-100 dark:bg-slate-800 p-6 rounded-2xl">
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Newsletter Diária</h3>
-                    <p class="text-xs text-gray-500 mb-4">Receba as principais notícias do mercado toda manhã.</p>
-                    <div class="flex gap-2">
-                        <input type="email" placeholder="Seu e-mail"
-                            class="flex-1 px-3 py-2 rounded-lg text-sm border border-gray-300 dark:border-gray-600 dark:bg-slate-900">
-                        <button class="bg-slate-900 text-white px-3 py-2 rounded-lg text-sm font-bold">OK</button>
-                    </div>
-                </div>
-
             </aside>
         </div>
 
