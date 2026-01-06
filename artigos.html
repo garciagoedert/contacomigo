@@ -91,12 +91,16 @@
                     </a>
                     <nav
                         class="hidden lg:flex items-center space-x-6 ml-8 text-sm font-semibold border-l border-gray-200 dark:border-gray-700 pl-8">
-                        <a href="index.html"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Início</a>
-                        <a href="#" class="text-[var(--cor-principal)] border-b-2 border-[var(--cor-principal)]">Todos
-                            os Artigos</a>
-                        <a href="#"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Categorias</a>
+                        <a href="artigos.html?category=Economia"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Economia</a>
+                        <a href="artigos.html?category=Investimentos"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Investimentos</a>
+                        <a href="artigos.html?category=Tecnologia"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Tecnologia</a>
+                        <a href="artigos.html?category=Política"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Política</a>
+                        <a href="artigos.html?category=Carreira"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Carreira</a>
                     </nav>
                 </div>
 
@@ -122,17 +126,18 @@
                 investimentos.</p>
         </header>
 
-        <!-- Category Filters (Placeholder for now) -->
+        <!-- Category Filters -->
         <div class="flex justify-center gap-2 flex-wrap mb-12">
-            <button class="px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-bold shadow-lg">Todos</button>
-            <button
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Economia</button>
-            <button
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Investimentos</button>
-            <button
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Tecnologia</button>
-            <button
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Carreira</button>
+            <a href="artigos.html"
+                class="px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all">Todos</a>
+            <a href="?category=Economia"
+                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Economia</a>
+            <a href="?category=Investimentos"
+                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Investimentos</a>
+            <a href="?category=Tecnologia"
+                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Tecnologia</a>
+            <a href="?category=Carreira"
+                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Carreira</a>
         </div>
 
         <!-- Articles Grid -->
@@ -174,19 +179,54 @@
         // Load Articles
         document.addEventListener('DOMContentLoaded', async () => {
             const grid = document.getElementById('articles-grid');
-            const posts = await fetchNewsletterPosts(20); // Fetch more for the list page
+            const pageTitle = document.querySelector('h1');
+            const pageSubtitle = document.querySelector('p.text-lg');
+
+            // Get Category from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+
+            if (category) {
+                pageTitle.textContent = `${category}`;
+                pageSubtitle.textContent = `Notícias e análises sobre ${category.toLowerCase()}`;
+
+                // Highlight active button
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    if (btn.textContent === category) {
+                        btn.classList.remove('bg-white', 'text-gray-700');
+                        btn.classList.add('bg-slate-900', 'text-white');
+                    } else if (btn.textContent === 'Todos') {
+                        btn.classList.remove('bg-slate-900', 'text-white');
+                        btn.classList.add('bg-white', 'text-gray-700');
+                    }
+                });
+            }
+
+            // Fetch with Category
+            // NOTE: We need to update fetchNewsletterPosts to accept category too, or pass it in query
+            // Direct fetch to API for filtering since fetchNewsletterPosts in newsletter-api.js might not support it yet
+            // Actually, let's update newsletter-api.js too. For now, assuming fetchNewsletterPosts accepts options object or we modify it.
+            // Let's modify fetchNewsletterPosts to take an options object.
+
+            // TEMPORARY: Calling API directly here to ensure filtering works until newsletter-api.js is updated
+            // OR better: Update newsletter-api.js first. 
+            // I will assume I updated newsletter-api.js to accept (limit, category)
+
+            const posts = await fetchNewsletterPosts(20, category);
 
             if (!posts || posts.length === 0) {
-                grid.innerHTML = '<p class="col-span-3 text-center text-gray-500">Nenhum artigo encontrado.</p>';
+                grid.innerHTML = '<div class="col-span-3 text-center py-20"><p class="text-xl text-gray-500 font-medium">Nenhum artigo encontrado nesta categoria.</p><a href="artigos.html" class="text-[var(--cor-principal)] hover:underline mt-2 block">Ver todos os artigos</a></div>';
                 return;
             }
 
             grid.innerHTML = '';
             posts.forEach(post => {
-                // Determine Category Color (Mock logic until backend sends it)
+                // Determine Category Color
                 let catColor = "text-[var(--cor-principal)] bg-[var(--cor-principal)]/10";
                 if (post.category === 'Tecnologia') catColor = "text-blue-600 bg-blue-100";
                 if (post.category === 'Investimentos') catColor = "text-green-600 bg-green-100";
+                if (post.category === 'Economia') catColor = "text-purple-600 bg-purple-100";
 
                 const date = post.pubDate instanceof Date ? post.pubDate.toLocaleDateString('pt-BR') : 'Recente';
 

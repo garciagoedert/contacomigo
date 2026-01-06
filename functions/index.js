@@ -960,19 +960,18 @@ exports.getNewsletterPosts = functions
                         }
                     });
 
-                    // ALLOW DRAFTS: For single post view by slug, we allow viewing drafts/sent posts.
-                    // If strict public access control is needed later, add a 'preview_token' or similar.
-                    // For now, if you have the slug, you can view it (Draft or Sent).
-                    // if (data.status !== 'sent') {
-                    //    return res.status(404).json({ error: 'Post não disponível (Status mismatch)' });
-                    // }
-
                     return res.json(sanitizedData);
                 } else {
                     // Buscar lista
                     let q = admin.firestore().collection('newsletter_posts')
-                        .where('status', '==', 'sent')
-                        .orderBy('sentAt', 'desc');
+                        .where('status', '==', 'sent');
+
+                    const { category } = req.query;
+                    if (category) {
+                        q = q.where('category', '==', category);
+                    }
+
+                    q = q.orderBy('sentAt', 'desc');
 
                     if (limit) {
                         q = q.limit(parseInt(limit));
@@ -993,7 +992,8 @@ exports.getNewsletterPosts = functions
                                 title: data.title,
                                 thumbnail: data.thumbnail || null,
                                 sentAt: sentAtStr,
-                                date: sentAtStr
+                                date: sentAtStr,
+                                category: data.category // Added field
                             });
                         } catch (err) {
                             console.error(`Error processing doc ${doc.id}:`, err);
@@ -1087,11 +1087,33 @@ exports.generateDailyPost = functions
                 newsContext = "Sem notícias recentes. Escolha um tema evergreen sobre Investimentos, Tecnologia ou Economia.";
             }
 
+
+
+            // 1.5 CHECK DUPLICATES
+            let resentTitlesList = "";
+            try {
+                const recentSnapshot = await admin.firestore().collection('newsletter_posts')
+                    .orderBy('sentAt', 'desc')
+                    .limit(10)
+                    .get();
+
+                if (!recentSnapshot.empty) {
+                    const titles = recentSnapshot.docs.map(doc => doc.data().title);
+                    resentTitlesList = titles.join(', ');
+                    console.log("🚫 Evitando tópicos recentes:", resentTitlesList);
+                }
+            } catch (dupErr) {
+                console.warn("⚠️ Erro ao checar duplicatas:", dupErr);
+            }
+
             const prompt = `
             CONTEXTO DE MUNDO REAL (USE ISSO):
             ${newsContext}
 
-            Você é o Editor-Chefe do "Trilha News". Sua missão é selecionar a notícia mais relevante do dia entre os tópicos acima e criar um artigo profundo.
+            TÓPICOS A EVITAR (JÁ PUBLICADOS RECENTEMENTE):
+            ${resentTitlesList}
+
+            Você é o Editor-Chefe do "Trilha News". Sua missão é selecionar a notícia mais relevante do dia entre os tópicos acima (EVITANDO os já publicados) e criar um artigo profundo.
 
             CATEGORIAS POSSÍVEIS:
             - Economia
@@ -1263,12 +1285,30 @@ exports.debugGenerateDailyPost = functions
                     newsContext = "Sem notícias recentes. Escolha um tema quente.";
                 }
 
+                // 2. CHECK DUPLICATES
+                let resentTitlesList = "";
+                try {
+                    const recentSnapshot = await admin.firestore().collection('newsletter_posts')
+                        .orderBy('sentAt', 'desc')
+                        .limit(10)
+                        .get();
+
+                    if (!recentSnapshot.empty) {
+                        const titles = recentSnapshot.docs.map(doc => doc.data().title);
+                        resentTitlesList = titles.join(', ');
+                        console.log("🚫 Evitando tópicos recentes:", resentTitlesList);
+                    }
+                } catch (dupErr) { console.warn("DupLog fail", dupErr); }
+
                 // SAME PROMPT AS PROD
                 const prompt = `
                 CONTEXTO DE MUNDO REAL:
                 ${newsContext}
 
-                Você é o Editor-Chefe do "Trilha News". Crie o artigo do dia baseado no que é mais relevante acima.
+                TÓPICOS A EVITAR (JÁ PUBLICADOS RECENTEMENTE):
+                ${resentTitlesList}
+
+                Você é o Editor-Chefe do "Trilha News". Crie o artigo do dia baseado no que é mais relevante acima (EVITANDO repetidos).
 
                 CATEGORIAS: Economia, Investimentos, Tecnologia, Política, Carreira.
 
