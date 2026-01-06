@@ -405,7 +405,7 @@
                         </div>
                         <div class="flex-1 flex flex-col justify-center">
                             <div class="flex items-center gap-3 mb-3">
-                                <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Economia</span>
+                                <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase">${post.category || 'Notícia'}</span>
                                 <span class="text-xs text-gray-400">⏱ ${date}</span>
                             </div>
                             <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-[var(--cor-principal)] transition-colors news-headline">${post.title}</h3>
@@ -416,9 +416,24 @@
                 `;
                 feedContainer.innerHTML += html;
             });
+
+            // Load Latest Podcast for Home Widget
+            try {
+                const episodes = await fetchPodcastEpisodes(1);
+                if (episodes && episodes.length > 0) {
+                    const ep = episodes[0];
+                    document.getElementById('home-pod-title').textContent = ep.title;
+                    const cleanDesc = ep.description.replace(/<[^>]*>?/gm, ''); // Remove HTML from description
+                    document.getElementById('home-pod-desc').textContent = cleanDesc;
+                    document.getElementById('home-pod-img').src = ep.thumbnail;
+                    document.getElementById('home-pod-link').href = ep.link; // Or spotify specific link if available in desc? Anchor usually provides general link
+                    document.getElementById('podcast-home-section').style.display = 'block';
+                }
+            } catch (e) { console.error("Podcast widget error", e); }
         });
     </script>
     <script src="market-ticker.js"></script>
+    <script src="podcast-api.js"></script>
 </body>
 
 </html>
