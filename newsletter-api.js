@@ -30,12 +30,12 @@ async function fetchNewsletterPosts(limit = null) {
 
         return posts.map(item => ({
             title: item.title,
-            link: `/artigos/${item.slug}`,
+            link: `/post_viewer.html?slug=${item.slug}`, // Fixed link to point to viewer
             // Backend now ensures sentAt/date is ISO string
             pubDate: item.date ? new Date(item.date) : (item.sentAt ? new Date(item.sentAt) : new Date()),
             thumbnail: item.thumbnail || 'imgs/article-placeholder.jpg',
             description: 'Clique para acessar esta edição da newsletter exclusiva.',
-            category: 'Trilha News'
+            category: item.category || 'Trilha News' // Map new field
         }));
 
     } catch (error) {
