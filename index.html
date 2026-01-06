@@ -4,24 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Trilha Comigo - Controle Financeiro Familiar</title>
     <meta name="description"
         content="Gerencie suas finanças familiares de forma simples e eficiente. Controle receitas, despesas, investimentos e metas em um só lugar.">
+=======
+    <title>Trilha News - Seu Portal de Economia e Finanças</title>
+    <meta name="description"
+        content="Notícias, dicas e artigos sobre economia, investimentos e controle financeiro familiar. Powered by Trilha Comigo.">
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://trilhacomigo.br/">
+<<<<<<< HEAD
     <meta property="og:title" content="Trilha Comigo - Controle Financeiro Familiar">
     <meta property="og:description"
         content="Gerencie suas finanças familiares de forma simples e eficiente. Controle receitas, despesas, investimentos e metas em um só lugar.">
+=======
+    <meta property="og:title" content="Trilha News - Economia na Prática">
+    <meta property="og:description"
+        content="Notícias, dicas e artigos sobre economia, investimentos e controle financeiro familiar.">
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
     <meta property="og:image" content="https://trilhacomigo.br/imgs/14.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://trilhacomigo.br/">
+<<<<<<< HEAD
     <meta property="twitter:title" content="Trilha Comigo - Controle Financeiro Familiar">
     <meta property="twitter:description"
         content="Gerencie suas finanças familiares de forma simples e eficiente. Controle receitas, despesas, investimentos e metas em um só lugar.">
+=======
+    <meta property="twitter:title" content="Trilha News - Economia na Prática">
+    <meta property="twitter:description"
+        content="Notícias, dicas e artigos sobre economia, investimentos e controle financeiro familiar.">
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
     <meta property="twitter:image" content="https://trilhacomigo.br/imgs/14.png">
 
     <!-- Canonical -->
@@ -43,191 +61,277 @@
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
     <script src="analytics.js"></script>
-
     <script src="https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js"></script>
+
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            /* bg-gray-100 */
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif-font {
+            font-family: 'Inter', sans-serif;
+            /* Keeping Inter for modern look, optionally switch to Merriweather for classic news feel */
+        }
+
+        .news-headline {
+            font-family: 'Merriweather', serif;
+            /* Classic news feel for headlines */
+        }
+
         .gradient-animate {
             background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
         }
 
-        .fade-in {
-            animation: fadeIn 0.8s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .hover-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .hover-lift:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .scroll-reveal.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        html {
-            scroll-behavior: smooth;
+        /* Sticky Sidebar */
+        .sticky-sidebar {
+            position: sticky;
+            top: 100px;
         }
     </style>
 </head>
 
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<body class="text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-slate-900">
 
-    <!-- Navbar -->
-    <!-- Navbar -->
-    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300 group">
-        <div class="container mx-auto px-6 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <img src="imgs/14.png" alt="Trilha Comigo Logo" class="h-10 md:h-12 transition-all duration-300">
+    <!-- Top Bar (Date + Trending) -->
+    <div class="bg-slate-900 text-white text-xs py-2 border-b border-gray-800">
+        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
+            <div id="current-date" class="font-medium opacity-80 hidden md:block"></div>
+            <div class="flex gap-4">
+                <span class="text-yellow-400 font-bold">EM ALTA:</span>
+                <marquee scrollamount="5" class="w-64 md:w-96 opacity-90">Tesouro Direto com taxas históricas • dólar
+                    fecha em queda • Aprenda a declarar IR</marquee>
+            </div>
+            <div class="hidden md:flex gap-3">
+                <a href="#" class="hover:text-yellow-400 transition-colors">Newsletter</a>
+                <a href="#" class="hover:text-yellow-400 transition-colors">Podcast</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header
+        class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo Zone -->
+                <div class="flex items-center gap-6">
+                    <a href="index.html" class="flex flex-col">
+                        <span
+                            class="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
+                                class="text-[var(--cor-principal)]">NEWS</span></span>
+                        <span
+                            class="text-[10px] tracking-[0.2em] text-gray-400 uppercase font-semibold">Intelligence</span>
+                    </a>
+
+                    <!-- Desktop Nav -->
+                    <nav
+                        class="hidden lg:flex items-center space-x-6 ml-8 text-sm font-semibold border-l border-gray-200 dark:border-gray-700 pl-8">
+                        <a href="#"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Mercado</a>
+                        <a href="#"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Investimentos</a>
+                        <a href="#" class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Educação
+                            Financeira</a>
+                        <a href="#"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Tecnologia</a>
+                    </nav>
                 </div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features"
-                        class="text-sm font-medium text-white group-[.scrolled]:text-gray-600 dark:text-white dark:group-[.scrolled]:text-gray-300 hover:text-white/80 group-[.scrolled]:hover:text-[var(--cor-principal)] transition-colors">Recursos</a>
-                    <a href="#how-it-works"
-                        class="text-sm font-medium text-white group-[.scrolled]:text-gray-600 dark:text-white dark:group-[.scrolled]:text-gray-300 hover:text-white/80 group-[.scrolled]:hover:text-[var(--cor-principal)] transition-colors">Como
-                        Funciona</a>
-                    <a href="artigos.html"
-                        class="text-sm font-medium text-white group-[.scrolled]:text-gray-600 dark:text-white dark:group-[.scrolled]:text-gray-300 hover:text-white/80 group-[.scrolled]:hover:text-[var(--cor-principal)] transition-colors">Blog</a>
-                    <a href="#testimonials"
-                        class="text-sm font-medium text-white group-[.scrolled]:text-gray-600 dark:text-white dark:group-[.scrolled]:text-gray-300 hover:text-white/80 group-[.scrolled]:hover:text-[var(--cor-principal)] transition-colors">Depoimentos</a>
-                    <a href="#faq"
-                        class="text-sm font-medium text-white group-[.scrolled]:text-gray-600 dark:text-white dark:group-[.scrolled]:text-gray-300 hover:text-white/80 group-[.scrolled]:hover:text-[var(--cor-principal)] transition-colors">FAQ</a>
-                </div>
-
-                <!-- CTA Button (Desktop) -->
-                <div class="hidden md:block">
+                <!-- CTA Zone -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex flex-col items-end mr-2">
+                        <span class="text-xs text-gray-500 font-medium">Oferecimento</span>
+                        <img src="imgs/14.png" class="h-5 opacity-80" alt="Trilha Comigo">
+                    </div>
                     <a href="login/index.html"
-                        class="px-6 py-2.5 bg-[var(--cor-principal)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5">
+                        class="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-gray-300 font-bold rounded-full hover:bg-slate-200 transition-colors text-sm">
                         Entrar
                     </a>
+                    <a href="login/index.html"
+                        class="hidden md:block px-5 py-2.5 bg-[var(--cor-principal)] text-white font-bold rounded-full hover:opacity-90 transition-colors shadow-lg shadow-pink-500/20 text-sm">
+                        Assinar App
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="container mx-auto px-4 md:px-6 py-8">
+
+        <!-- Breaking News / Hero Section -->
+        <section id="hero-section"
+            class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 border-b border-gray-200 dark:border-gray-800 pb-12">
+            <!-- Main Story (Left - 8 cols) -->
+            <div class="lg:col-span-8 group cursor-pointer" id="hero-main">
+                <div class="animate-pulse bg-gray-200 h-96 rounded-xl w-full"></div>
+            </div>
+
+            <!-- Secondary Stories (Right - 4 cols) -->
+            <div class="lg:col-span-4 flex flex-col gap-6" id="hero-side">
+                <div class="animate-pulse bg-gray-200 h-40 rounded-xl w-full"></div>
+                <div class="animate-pulse bg-gray-200 h-40 rounded-xl w-full"></div>
+            </div>
+        </section>
+
+        <!-- Two Column Layout: Feed + Sidebar -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left Column: News Feed (8 cols) -->
+            <div class="lg:col-span-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2
+                        class="text-2xl font-black text-slate-900 dark:text-white border-l-4 border-[var(--cor-principal)] pl-4">
+                        Últimas Notícias</h2>
+                    <div class="flex gap-2">
+                        <button
+                            class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">←</button>
+                        <button
+                            class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">→</button>
+                    </div>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-btn"
-                        class="text-white group-[.scrolled]:text-gray-600 dark:text-white dark:group-[.scrolled]:text-gray-300 focus:outline-none p-2"
-                        aria-label="Menu">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
+                <div id="news-feed" class="flex flex-col gap-8">
+                    <!-- Feed Items injected via JS -->
+                    <div class="animate-pulse flex gap-4">
+                        <div class="w-1/3 bg-gray-200 h-32 rounded-lg"></div>
+                        <div class="w-2/3 space-y-2">
+                            <div class="h-4 bg-gray-200 w-3/4"></div>
+                            <div class="h-4 bg-gray-200 w-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <button
+                        class="px-8 py-3 border-2 border-slate-200 dark:border-gray-700 font-bold rounded-full hover:bg-slate-50 transition-colors">
+                        Carregar Mais Notícias
                     </button>
                 </div>
             </div>
 
-            <!-- Mobile Menu Dropdown -->
-            <div id="mobile-menu"
-                class="hidden md:hidden absolute left-4 right-4 top-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 transform origin-top transition-all duration-300 ease-in-out">
-                <div class="flex flex-col space-y-4">
-                    <a href="#features"
-                        class="font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)] transition-colors"
-                        onclick="toggleMobileMenu()">Recursos</a>
-                    <a href="#how-it-works"
-                        class="font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)] transition-colors"
-                        onclick="toggleMobileMenu()">Como Funciona</a>
-                    <a href="artigos.html"
-                        class="font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)] transition-colors"
-                        onclick="toggleMobileMenu()">Blog</a>
-                    <a href="#testimonials"
-                        class="font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)] transition-colors"
-                        onclick="toggleMobileMenu()">Depoimentos</a>
-                    <a href="#faq"
-                        class="font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--cor-principal)] transition-colors"
-                        onclick="toggleMobileMenu()">FAQ</a>
-                    <div class="pt-4 border-t border-gray-100 dark:border-gray-700">
-                        <a href="login/index.html"
-                            class="block w-full text-center px-6 py-3 bg-[var(--cor-principal)] text-white rounded-lg font-medium hover:opacity-90 transition-all shadow-lg shadow-indigo-500/20">
-                            Entrar
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+            <!-- Right Column: Sidebar (4 cols) -->
+            <aside class="lg:col-span-4 space-y-8">
 
-    <!-- Hero Section -->
-    <section class="gradient-animate text-white min-h-screen flex items-center pt-20">
-        <div class="container mx-auto px-6 py-20">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="fade-in">
+                <!-- Login Widget -->
+                <div
+                    class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 sticky-sidebar">
+                    <div class="flex items-center mb-4 gap-3">
+                        <div class="bg-[var(--cor-principal)]/10 p-2 rounded-lg text-[var(--cor-principal)]">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold text-lg">Área do Assinante</h3>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6 font-medium">Acesse o Trilha Comigo para gerenciar suas
+                        finanças.</p>
+
+                    <form action="login/index.html" class="space-y-4">
+                        <a href="login/index.html"
+                            class="block w-full py-3 bg-slate-900 text-white text-center rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl">
+                            Acessar Minha Conta
+                        </a>
+                        <div class="text-center">
+                            <a href="#" class="text-xs text-gray-400 hover:text-[var(--cor-principal)]">Esqueceu a
+                                senha?</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- App Promo Banner -->
+                <div class="relative overflow-hidden group rounded-2xl">
                     <div
+<<<<<<< HEAD
                         class="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
                         ✨ Teste Grátis por 14 Dias
+=======
+                        class="absolute inset-0 bg-gradient-to-br from-[var(--cor-principal)] to-purple-800 z-10 opacity-90">
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
                     </div>
-                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-                        Controle suas Finanças com <span class="text-yellow-300">Inteligência</span>
-                    </h1>
-                    <p class="text-xl md:text-2xl mb-8 text-white/90">
-                        A plataforma completa para organizar suas despesas, investimentos e alcançar seus objetivos
-                        financeiros em família.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <img src="imgs/14.png" class="absolute -right-10 -bottom-10 w-48 opacity-20 z-0 transform rotate-12"
+                        alt="Background Element">
+
+                    <div class="relative z-20 p-8 text-white">
+                        <span
+                            class="text-xs font-bold bg-white/20 px-2 py-1 rounded text-white uppercase tracking-wider mb-3 inline-block">App
+                            Financeiro</span>
+                        <h3 class="text-2xl font-black mb-3 leading-tight">Suas finanças em um só lugar.</h3>
+                        <p class="mb-6 opacity-90 text-sm">Controle gastos, defina metas e invista melhor com o Trilha
+                            Comigo Premium.</p>
+
+                        <ul class="space-y-2 mb-8 text-sm font-medium opacity-95">
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg> Conexão Bancária</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg> Gestão de Investimentos</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg> Orçamento Familiar</li>
+                        </ul>
+
                         <a href="login/index.html"
+<<<<<<< HEAD
                             class="px-8 py-4 bg-white text-[var(--cor-principal)] rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors text-center shadow-xl">
                             Começar Teste Grátis
                         </a>
                         <a href="#how-it-works"
                             class="px-8 py-4 border-2 border-white rounded-lg text-lg font-bold hover:bg-white/10 transition-colors text-center">
                             Ver Como Funciona
+=======
+                            class="block w-full py-3 bg-white text-[var(--cor-principal)] font-bold text-center rounded-xl hover:bg-gray-50 transition-colors shadow-lg">
+                            Começar Agora (Grátis)
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
                         </a>
                     </div>
+                </div>
 
-                    <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-6 mt-12">
-                        <div class="text-center">
-                            <div class="text-3xl font-bold">1000+</div>
-                            <div class="text-sm text-white/80">Usuários Ativos</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold">R$ 2M+</div>
-                            <div class="text-sm text-white/80">Gerenciados</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold">4.9★</div>
-                            <div class="text-sm text-white/80">Avaliação</div>
-                        </div>
+                <!-- Newsletter Tiny Widget -->
+                <div class="bg-gray-100 dark:bg-slate-800 p-6 rounded-2xl">
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-2">Newsletter Diária</h3>
+                    <p class="text-xs text-gray-500 mb-4">Receba as principais notícias do mercado toda manhã.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Seu e-mail"
+                            class="flex-1 px-3 py-2 rounded-lg text-sm border border-gray-300 dark:border-gray-600 dark:bg-slate-900">
+                        <button class="bg-slate-900 text-white px-3 py-2 rounded-lg text-sm font-bold">OK</button>
                     </div>
                 </div>
 
-                <div class="hidden lg:block fade-in">
-                    <img src="imgs/dashboard-mockup.svg" alt="App Dashboard Mockup"
-                        class="w-full h-auto drop-shadow-2xl hover-lift">
-                </div>
-            </div>
+            </aside>
         </div>
-    </section>
 
+<<<<<<< HEAD
     <!-- Newsletter Section (DISABLED) -->
     <section class="py-12 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden">
         <div class="container mx-auto px-4 md:px-6">
@@ -815,10 +919,25 @@
                     <a href="login/index.html"
                         class="block w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white text-center rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                         Iniciar Trial de 14 Dias
+=======
+        <!-- CTA Section (Footer Pre-roll) -->
+        <section class="mt-20 rounded-3xl overflow-hidden relative bg-slate-900 text-white px-6 py-16 text-center">
+            <div class="absolute inset-0 bg-[url('imgs/dashboard-mockup.svg')] bg-cover opacity-10 bg-center"></div>
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-black mb-6">Pare de perder dinheiro.</h2>
+                <p class="text-lg opacity-80 mb-8">Junte-se a mais de 1.000 famílias que organizaram a vida financeira
+                    com o Trilha Comigo.</p>
+                <div class="flex justify-center gap-4">
+                    <a href="login/index.html"
+                        class="px-8 py-4 bg-[var(--cor-principal)] font-bold rounded-lg hover:bg-pink-600 transition-colors shadow-xl text-lg">
+                        Criar Conta Grátis
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
                     </a>
                 </div>
             </div>
+        </section>
 
+<<<<<<< HEAD
             <p class="text-center mt-12 text-gray-600 dark:text-gray-400">
                 Todos os planos incluem trial gratuito de 14 dias. Cancele quando quiser, sem multas.
             </p>
@@ -954,10 +1073,14 @@
             <p class="mt-4 text-sm opacity-90">✨ Sem cartão de crédito • 14 dias grátis • Configure em 2 minutos</p>
         </div>
     </section>
+=======
+    </main>
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 py-12">
+    <footer class="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8">
         <div class="container mx-auto px-6">
+<<<<<<< HEAD
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <!-- Column 1 -->
                 <div>
@@ -993,111 +1116,98 @@
                             </svg>
                         </a>
                     </div>
+=======
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="flex items-center gap-2 mb-4 md:mb-0">
+                    <img src="imgs/14.png" class="h-8 opacity-80" alt="Logo">
+                    <span class="font-bold text-gray-900 dark:text-white">Trilha News</span>
+>>>>>>> b2f7b58 (Refatoração do index.html para layout de Portal de Notícias)
                 </div>
-
-                <!-- Column 2 -->
-                <div>
-                    <h4 class="font-bold mb-4">Produto</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#features" class="hover:text-white transition-colors">Recursos</a></li>
-                        <li><a href="#how-it-works" class="hover:text-white transition-colors">Como Funciona</a></li>
-                        <li><a href="#testimonials" class="hover:text-white transition-colors">Depoimentos</a></li>
-                        <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <!-- Column 3 -->
-                <div>
-                    <h4 class="font-bold mb-4">Empresa</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition-colors">Sobre Nós</a></li>
-                        <li><a href="/artigos" class="hover:text-white transition-colors">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Contato</a></li>
-                    </ul>
-                </div>
-
-                <!-- Column 4 -->
-                <div>
-                    <h4 class="font-bold mb-4">Legal</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="privacidade.html" class="hover:text-white transition-colors">Privacidade</a></li>
-                        <li><a href="termos.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
-                        <li><a href="seguranca.html" class="hover:text-white transition-colors">Segurança</a></li>
-                    </ul>
+                <div class="flex gap-8 text-sm font-medium text-gray-500">
+                    <a href="#" class="hover:text-[var(--cor-principal)]">Política de Privacidade</a>
+                    <a href="#" class="hover:text-[var(--cor-principal)]">Termos de Uso</a>
+                    <a href="#" class="hover:text-[var(--cor-principal)]">Redação</a>
+                    <a href="#" class="hover:text-[var(--cor-principal)]">Anuncie</a>
                 </div>
             </div>
-
-            <div class="border-t border-gray-800 pt-8 text-center text-sm">
-                <p>&copy; 2025 Trilha Comigo. Todos os direitos reservados.</p>
+            <div class="text-center text-xs text-gray-400">
+                &copy; 2025 Trilha Comigo. Todos os direitos reservados. As informações contidas neste site têm caráter
+                meramente informativo.
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Logic -->
+    <script src="newsletter-api.js"></script>
     <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 10) {
-                navbar.classList.add('bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur-md', 'shadow-sm', 'py-2', 'scrolled');
-                navbar.classList.remove('py-3');
-            } else {
-                navbar.classList.remove('bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur-md', 'shadow-sm', 'py-2', 'scrolled');
-                navbar.classList.add('py-3');
-            }
-        });
+        // Set Date
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', dateOptions).replace(/^\w/, c => c.toUpperCase());
 
-        // Mobile Menu Logic
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        document.addEventListener('DOMContentLoaded', async () => {
+            const posts = await fetchNewsletterPosts(10); // Check existing helper
 
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('hidden');
-            // Animate icon if needed
-        }
+            if (!posts || posts.length === 0) return;
 
-        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            // 1. Hero Main (First Post)
+            const mainPost = posts[0];
+            const heroMainHTML = `
+                <a href="${mainPost.link}" class="relative h-[500px] w-full block rounded-2xl overflow-hidden hover:opacity-95 transition-opacity">
+                    <img src="${mainPost.thumbnail}" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                        <span class="bg-[var(--cor-principal)] text-white text-xs font-bold px-3 py-1 rounded uppercase mb-4 inline-block">Destaque do Dia</span>
+                        <h2 class="text-3xl md:text-5xl font-black text-white mb-4 news-headline leading-tight drop-shadow-lg">${mainPost.title}</h2>
+                        <p class="text-gray-200 text-lg line-clamp-2 max-w-2xl font-medium shadow-black drop-shadow-md">${mainPost.description || 'Leia a matéria completa no Trilha News.'}</p>
+                    </div>
+                </a>
+            `;
+            document.getElementById('hero-main').innerHTML = heroMainHTML;
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
-                toggleMobileMenu();
-            }
-        });
+            // 2. Hero Side (Next 2 posts)
+            const sidePosts = posts.slice(1, 3);
+            const sideContainer = document.getElementById('hero-side');
+            sideContainer.innerHTML = '';
 
-        // Scroll reveal animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                }
+            sidePosts.forEach(post => {
+                const html = `
+                    <a href="${post.link}" class="group flex gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all h-full">
+                        <div class="w-1/3 aspect-square rounded-lg overflow-hidden flex-shrink-0">
+                            <img src="${post.thumbnail}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <span class="text-[10px] font-bold text-[var(--cor-principal)] uppercase mb-1">Análise</span>
+                            <h3 class="font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</h3>
+                        </div>
+                    </a>
+                `;
+                sideContainer.innerHTML += html;
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+            // 3. Feed (Remaining posts)
+            const feedPosts = posts.slice(3);
+            const feedContainer = document.getElementById('news-feed');
+            feedContainer.innerHTML = '';
 
-        // FAQ accordion
-        document.querySelectorAll('.faq-question').forEach(button => {
-            button.addEventListener('click', () => {
-                const answer = button.nextElementSibling;
-                const icon = button.querySelector('svg');
-
-                // Close all other answers
-                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
-                    if (otherAnswer !== answer) {
-                        otherAnswer.classList.add('hidden');
-                        otherAnswer.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
-
-                // Toggle current answer
-                answer.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
+            feedPosts.forEach(post => {
+                const date = post.pubDate instanceof Date ? post.pubDate.toLocaleDateString('pt-BR') : 'Hoje';
+                const html = `
+                    <a href="${post.link}" class="group flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-xl transition-all">
+                        <div class="w-full md:w-1/3 h-48 md:h-auto rounded-xl overflow-hidden relative">
+                            <img src="${post.thumbnail}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Economia</span>
+                                <span class="text-xs text-gray-400">⏱ ${date}</span>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-[var(--cor-principal)] transition-colors news-headline">${post.title}</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-3 mb-4">${post.description}</p>
+                            <span class="text-sm font-bold text-[var(--cor-principal)] flex items-center gap-1">Ler matéria completa <span class="group-hover:translate-x-1 transition-transform">→</span></span>
+                        </div>
+                    </a>
+                `;
+                feedContainer.innerHTML += html;
             });
         });
     </script>
