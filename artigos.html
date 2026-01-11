@@ -227,37 +227,139 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 md:px-6 py-12 flex-grow">
 
-        <header class="mb-12 text-center max-w-3xl mx-auto">
-            <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 news-headline">Acervo de
-                Notícias</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">Explore nossas análises sobre economia, tecnologia e
-                investimentos.</p>
+        <header id="category-header"
+            class="mb-12 text-center max-w-4xl mx-auto border-b border-gray-200 dark:border-gray-800 pb-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-bold uppercase tracking-wider mb-4"
+                id="portal-badge">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                Portal
+            </div>
+            <h1 id="page-title"
+                class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-4 news-headline tracking-tighter">
+                Trilha News
+            </h1>
+            <p id="page-subtitle" class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                Explore nosso acervo completo de notícias e artigos sobre economia, investimentos e tecnologia.
+            </p>
         </header>
 
         <!-- Category Filters -->
-        <div class="flex justify-center gap-2 flex-wrap mb-12">
+        <div class="flex justify-center gap-2 flex-wrap mb-12" id="category-filters">
             <a href="artigos.html"
-                class="px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all">Todos</a>
+                class="px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold shadow-lg shadow-slate-900/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">Todos</a>
             <a href="?category=Economia"
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Economia</a>
+                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Economia</a>
             <a href="?category=Investimentos"
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Investimentos</a>
+                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Investimentos</a>
             <a href="?category=Tecnologia"
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Tecnologia</a>
+                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Tecnologia</a>
             <a href="?category=Política"
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Política</a>
+                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Política</a>
             <a href="?category=Carreira"
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Carreira</a>
+                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Carreira</a>
             <a href="?category=Games"
-                class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-full text-sm font-bold transition-colors">Games</a>
+                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Games</a>
         </div>
 
-        <!-- Articles Grid -->
-        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Loading Skeleton -->
-            <div class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl"></div>
-            <div class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl"></div>
-            <div class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+            <!-- Main Content Column (8 cols) -->
+            <div class="lg:col-span-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-1.5 h-8 bg-[var(--cor-principal)] rounded-full" id="section-accent"></span>
+                        Últimas Publicações
+                    </h2>
+                </div>
+
+                <!-- Articles Grid -->
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Loading Skeleton -->
+                    <div
+                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    </div>
+                    <div
+                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    </div>
+                    <div
+                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    </div>
+                    <div
+                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Column (4 cols) -->
+            <aside class="lg:col-span-4 space-y-12">
+
+                <!-- Sponsor / Ad Unit -->
+                <div
+                    class="bg-slate-100 dark:bg-slate-800 rounded-2xl p-8 text-center relative overflow-hidden group border border-gray-200 dark:border-gray-700">
+                    <div
+                        class="absolute top-0 right-0 bg-gray-200 dark:bg-gray-700 px-2 py-1 text-[10px] uppercase font-bold text-gray-500 rounded-bl-lg">
+                        Publicidade</div>
+                    <div
+                        class="w-full h-64 bg-white dark:bg-slate-900 rounded-xl flex flex-col items-center justify-center mb-4 border border-dashed border-gray-300 dark:border-gray-600 group-hover:border-[var(--cor-principal)] transition-colors">
+                        <span class="text-4xl mb-2">📢</span>
+                        <span class="text-sm font-bold text-gray-400">Espaço do Patrocinador</span>
+                        <span class="text-xs text-gray-400 mt-1">300x250</span>
+                    </div>
+                    <p class="text-sm text-gray-500">Anuncie sua marca aqui e alcance milhares de investidores.</p>
+                    <a href="#"
+                        class="mt-4 inline-block text-xs font-bold text-[var(--cor-principal)] hover:underline">Saiba
+                        mais -></a>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div
+                    class="bg-[var(--cor-principal)] rounded-2xl p-8 text-white relative overflow-hidden shadow-xl shadow-pink-500/20">
+                    <div class="absolute -top-12 -right-12 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-black opacity-10 rounded-full blur-2xl"></div>
+
+                    <h3 class="text-xl font-black mb-2 relative z-10">News Intelligence 🧠</h3>
+                    <p class="text-white/90 text-sm mb-6 relative z-10">Receba nossas análises exclusivas direto no seu
+                        e-mail. Gratuito.</p>
+
+                    <form class="relative z-10 space-y-3"
+                        onsubmit="event.preventDefault(); alert('Inscrição simulada!');">
+                        <input type="email" placeholder="Seu melhor e-mail"
+                            class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:bg-white/30 backdrop-blur-sm transition-all text-sm font-medium">
+                        <button type="submit"
+                            class="w-full px-4 py-3 bg-white text-[var(--cor-principal)] font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-lg text-sm">Inscrever-se</button>
+                    </form>
+                </div>
+
+                <!-- Trending Topics (Placeholder) -->
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="text-xl">🔥</span> Em Alta
+                    </h3>
+                    <div class="space-y-4">
+                        <a href="#" class="block group">
+                            <span class="text-xs font-bold text-gray-400 mb-1 block">#INVESTIMENTOS</span>
+                            <h4
+                                class="font-bold text-slate-700 dark:text-gray-300 group-hover:text-[var(--cor-principal)] transition-colors">
+                                Como montar uma carteira de dividendos em 2026</h4>
+                        </a>
+                        <hr class="border-gray-100 dark:border-gray-800">
+                        <a href="#" class="block group">
+                            <span class="text-xs font-bold text-gray-400 mb-1 block">#TECNOLOGIA</span>
+                            <h4
+                                class="font-bold text-slate-700 dark:text-gray-300 group-hover:text-[var(--cor-principal)] transition-colors">
+                                IA Generativa: O que esperar para o próximo ano?</h4>
+                        </a>
+                        <hr class="border-gray-100 dark:border-gray-800">
+                        <a href="#" class="block group">
+                            <span class="text-xs font-bold text-gray-400 mb-1 block">#ECONOMIA</span>
+                            <h4
+                                class="font-bold text-slate-700 dark:text-gray-300 group-hover:text-[var(--cor-principal)] transition-colors">
+                                Impacto da inflação global nos mercados emergentes</h4>
+                        </a>
+                    </div>
+                </div>
+
+            </aside>
         </div>
 
     </main>
@@ -284,49 +386,65 @@
 
     <script src="newsletter-api.js"></script>
     <script>
-
-
         // Load Articles
         document.addEventListener('DOMContentLoaded', async () => {
             const grid = document.getElementById('articles-grid');
-            const pageTitle = document.querySelector('h1');
-            const pageSubtitle = document.querySelector('p.text-lg');
+            const pageTitle = document.getElementById('page-title');
+            const pageSubtitle = document.getElementById('page-subtitle');
+            const portalBadge = document.getElementById('portal-badge');
+            const sectionAccent = document.getElementById('section-accent');
 
             // Get Category from URL
             const urlParams = new URLSearchParams(window.location.search);
             const category = urlParams.get('category');
 
+            // Category Styling Config
+            const categoryStyles = {
+                'Economia': { color: 'text-purple-600', bg: 'bg-purple-100', dot: 'bg-purple-500', accent: 'bg-purple-500' },
+                'Investimentos': { color: 'text-green-600', bg: 'bg-green-100', dot: 'bg-green-500', accent: 'bg-green-500' },
+                'Tecnologia': { color: 'text-blue-600', bg: 'bg-blue-100', dot: 'bg-blue-500', accent: 'bg-blue-500' },
+                'Política': { color: 'text-red-600', bg: 'bg-red-100', dot: 'bg-red-500', accent: 'bg-red-500' },
+                'Carreira': { color: 'text-yellow-600', bg: 'bg-yellow-100', dot: 'bg-yellow-500', accent: 'bg-yellow-500' },
+                'Games': { color: 'text-orange-600', bg: 'bg-orange-100', dot: 'bg-orange-500', accent: 'bg-orange-500' }
+            };
+
             if (category) {
-                pageTitle.textContent = `${category}`;
-                pageSubtitle.textContent = `Notícias e análises sobre ${category.toLowerCase()}`;
+                // Update Texts
+                const displayCategory = category === 'Tecnologia' ? 'Tech' : category;
+                pageTitle.textContent = `Trilha ${displayCategory}`;
+                pageTitle.classList.add(categoryStyles[category]?.color || 'text-slate-900');
 
-                // Highlight active button
-                const buttons = document.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    if (btn.textContent === category) {
-                        btn.classList.remove('bg-white', 'text-gray-700');
-                        btn.classList.add('bg-slate-900', 'text-white');
-                    } else if (btn.textContent === 'Todos') {
-                        btn.classList.remove('bg-slate-900', 'text-white');
-                        btn.classList.add('bg-white', 'text-gray-700');
-                    }
-                });
+                pageSubtitle.textContent = `O seu portal definitivo sobre ${category.toLowerCase()}. Análises, notícias e tendências do mercado.`;
+
+                // Update Badge
+                if (categoryStyles[category]) {
+                    const style = categoryStyles[category];
+                    portalBadge.className = `inline-flex items-center gap-2 px-3 py-1 rounded-full ${style.bg} ${style.color} text-xs font-bold uppercase tracking-wider mb-4`;
+                    portalBadge.querySelector('span').className = `w-2 h-2 rounded-full ${style.dot}`;
+
+                    // Update Section Accent
+                    if (sectionAccent) sectionAccent.className = `w-1.5 h-8 ${style.accent} rounded-full`;
+
+                    // Highlight active filter button
+                    const buttons = document.querySelectorAll('#category-filters a');
+                    buttons.forEach(btn => {
+                        const href = btn.getAttribute('href');
+                        if (href.includes(category)) {
+                            btn.className = `px-5 py-2.5 ${style.accent} text-white rounded-full text-sm font-bold shadow-lg shadow-${style.color.split('-')[1]}-500/20 hover:scale-105 transition-all`;
+                        } else {
+                            // Reset other buttons to default styling logic if needed, but they are static HTML mostly
+                            if (btn.textContent === 'Todos') {
+                                btn.className = "px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all";
+                            }
+                        }
+                    });
+                }
             }
-
-            // Fetch with Category
-            // NOTE: We need to update fetchNewsletterPosts to accept category too, or pass it in query
-            // Direct fetch to API for filtering since fetchNewsletterPosts in newsletter-api.js might not support it yet
-            // Actually, let's update newsletter-api.js too. For now, assuming fetchNewsletterPosts accepts options object or we modify it.
-            // Let's modify fetchNewsletterPosts to take an options object.
-
-            // TEMPORARY: Calling API directly here to ensure filtering works until newsletter-api.js is updated
-            // OR better: Update newsletter-api.js first. 
-            // I will assume I updated newsletter-api.js to accept (limit, category)
 
             const posts = await fetchNewsletterPosts(20, category);
 
             if (!posts || posts.length === 0) {
-                grid.innerHTML = '<div class="col-span-3 text-center py-20"><p class="text-xl text-gray-500 font-medium">Nenhum artigo encontrado nesta categoria.</p><a href="artigos.html" class="text-[var(--cor-principal)] hover:underline mt-2 block">Ver todos os artigos</a></div>';
+                grid.innerHTML = '<div class="col-span-1 md:col-span-2 text-center py-20"><p class="text-xl text-gray-500 font-medium">Nenhum artigo encontrado nesta categoria.</p><a href="artigos.html" class="text-[var(--cor-principal)] hover:underline mt-2 block">Ver todos os artigos</a></div>';
                 return;
             }
 
@@ -345,7 +463,7 @@
 
                 const cardHtml = `
                     <a href="${post.link}" class="group flex flex-col bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 h-full border border-gray-100 dark:border-gray-700">
-                        <div class="h-56 overflow-hidden relative">
+                        <div class="h-48 overflow-hidden relative">
                             <img src="${post.thumbnail}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="${post.title}">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                             <div class="absolute top-4 left-4">
@@ -357,7 +475,7 @@
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 ${date}
                             </span>
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-snug font-serif news-headline group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3 leading-snug font-serif news-headline group-hover:text-[var(--cor-principal)] transition-colors line-clamp-2">${post.title}</h3>
                             <p class="text-gray-500 text-sm line-clamp-3 mb-6 flex-grow">${post.description}</p>
                             
                             <div class="mt-auto border-t border-gray-100 dark:border-gray-700 pt-4 flex items-center justify-between">
@@ -371,7 +489,6 @@
             });
         });
     </script>
-
 </body>
 
 </html>
