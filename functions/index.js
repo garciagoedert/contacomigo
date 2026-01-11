@@ -1011,6 +1011,30 @@ exports.getNewsletterPosts = functions
         });
     });
 
+// Helper function to determine category based on schedule
+function getCategoryForSchedule() {
+    const now = new Date();
+    // Convert to São Paulo timezone
+    const spTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const dayOfWeek = spTime.getDay(); // 0 = Sunday, 6 = Saturday
+    const hour = spTime.getHours();
+
+    // Rotation schedule: ensures different categories throughout the day
+    const schedule = {
+        0: { 8: 'Economia', 12: 'Tecnologia', 18: 'Games' },      // Sunday
+        1: { 8: 'Economia', 12: 'Tecnologia', 18: 'Games' },      // Monday
+        2: { 8: 'Investimentos', 12: 'Política', 18: 'Economia' }, // Tuesday
+        3: { 8: 'Carreira', 12: 'Games', 18: 'Tecnologia' },      // Wednesday
+        4: { 8: 'Política', 12: 'Economia', 18: 'Investimentos' }, // Thursday
+        5: { 8: 'Tecnologia', 12: 'Carreira', 18: 'Política' },   // Friday
+        6: { 8: 'Games', 12: 'Investimentos', 18: 'Carreira' }    // Saturday
+    };
+
+    const category = schedule[dayOfWeek]?.[hour] || 'Economia'; // Fallback to Economia
+    console.log(`📅 Categoria agendada para ${dayOfWeek} às ${hour}h: ${category}`);
+    return category;
+}
+
 // 4. Generate Daily Post (AI Agent)
 // Runs automatically every day at 08:00 AM (Sao Paulo time)
 exports.generateDailyPost = functions
@@ -1108,6 +1132,10 @@ exports.generateDailyPost = functions
                 console.warn("⚠️ Erro ao checar duplicatas:", dupErr);
             }
 
+            // 2. GET SCHEDULED CATEGORY
+            const targetCategory = getCategoryForSchedule();
+            console.log(`🎯 Categoria forçada: ${targetCategory}`);
+
             const prompt = `
             CONTEXTO DE MUNDO REAL (USE ISSO):
             ${newsContext}
@@ -1115,15 +1143,13 @@ exports.generateDailyPost = functions
             TÓPICOS A EVITAR (JÁ PUBLICADOS RECENTEMENTE):
             ${resentTitlesList}
 
-            Você é o Editor-Chefe do "Trilha News". Sua missão é selecionar a notícia mais relevante do dia entre os tópicos acima (EVITANDO os já publicados) e criar um artigo profundo.
+            CATEGORIA OBRIGATÓRIA: ${targetCategory}
 
-            CATEGORIAS POSSÍVEIS:
-            - Economia
-            - Investimentos
-            - Tecnologia
-            - Política
-            - Carreira
-            - Games
+            Você é o Editor-Chefe do "Trilha News". Sua missão é criar um artigo profundo sobre ${targetCategory}.
+            
+            IMPORTANTE: Você DEVE criar um artigo sobre ${targetCategory}. Escolha a notícia mais relevante relacionada a esta categoria.
+            Se não houver notícias específicas sobre ${targetCategory}, crie um artigo evergreen sobre um tema importante desta categoria.
+
 
             ESTILO E TOM:
             - **Visual**: Limpo, arejado, uso estratégico de negrito.
@@ -1144,7 +1170,7 @@ exports.generateDailyPost = functions
             {
                 "title": "Seu Título Aqui",
                 "subject": "slug-do-artigo",
-                "category": "Uma das categorias acima",
+                "category": "${targetCategory}",
                 "content": "<p>Seu HTML aqui...</p>",
                 "imagePrompt": "A descriptive prompt for the image...",
                 "thumbnail": "IGNORED"
@@ -1157,6 +1183,12 @@ exports.generateDailyPost = functions
             if (cleanedText.startsWith('```json')) cleanedText = cleanedText.replace(/^```json/, '').replace(/```$/, '');
 
             const articleData = JSON.parse(cleanedText);
+
+            // VALIDATE CATEGORY - Ensure AI returned the correct category
+            if (articleData.category !== targetCategory) {
+                console.warn(`⚠️ IA retornou categoria errada: ${articleData.category}, esperado: ${targetCategory}. Corrigindo...`);
+                articleData.category = targetCategory; // Force correct category
+            }
 
             // THUMBNAIL STRATEGY
             let finalThumbnail;
