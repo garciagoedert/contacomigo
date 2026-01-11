@@ -1022,13 +1022,13 @@ function getCategoryForSchedule() {
     // 6 posts per day schedule: 08:00, 10:00, 12:00, 14:00, 16:00, 18:00
     // Ensures ALL 6 categories are covered EVERY DAY
     const schedule = {
-        0: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games' },      // Sunday
-        1: { 8: 'Investimentos', 10: 'Tecnologia', 12: 'Política', 14: 'Carreira', 16: 'Games', 18: 'Economia' },      // Monday
-        2: { 8: 'Tecnologia', 10: 'Política', 12: 'Carreira', 14: 'Games', 16: 'Economia', 18: 'Investimentos' },      // Tuesday
-        3: { 8: 'Política', 10: 'Carreira', 12: 'Games', 14: 'Economia', 16: 'Investimentos', 18: 'Tecnologia' },      // Wednesday
-        4: { 8: 'Carreira', 10: 'Games', 12: 'Economia', 14: 'Investimentos', 16: 'Tecnologia', 18: 'Política' },      // Thursday
-        5: { 8: 'Games', 10: 'Economia', 12: 'Investimentos', 14: 'Tecnologia', 16: 'Política', 18: 'Carreira' },      // Friday
-        6: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games' }       // Saturday
+        0: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games', 20: 'Esportes' },      // Sunday
+        1: { 8: 'Investimentos', 10: 'Tecnologia', 12: 'Política', 14: 'Carreira', 16: 'Games', 18: 'Economia', 20: 'Esportes' },      // Monday
+        2: { 8: 'Tecnologia', 10: 'Política', 12: 'Carreira', 14: 'Games', 16: 'Economia', 18: 'Investimentos', 20: 'Esportes' },      // Tuesday
+        3: { 8: 'Política', 10: 'Carreira', 12: 'Games', 14: 'Economia', 16: 'Investimentos', 18: 'Tecnologia', 20: 'Esportes' },      // Wednesday
+        4: { 8: 'Carreira', 10: 'Games', 12: 'Economia', 14: 'Investimentos', 16: 'Tecnologia', 18: 'Política', 20: 'Esportes' },      // Thursday
+        5: { 8: 'Games', 10: 'Economia', 12: 'Investimentos', 14: 'Tecnologia', 16: 'Política', 18: 'Carreira', 20: 'Esportes' },      // Friday
+        6: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games', 20: 'Esportes' }       // Saturday
     };
 
     const category = schedule[dayOfWeek]?.[hour] || 'Economia'; // Fallback to Economia
@@ -1038,14 +1038,14 @@ function getCategoryForSchedule() {
 }
 
 // 4. Generate Daily Post (AI Agent)
-// Runs automatically 6 times per day at 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 (Sao Paulo time)
+// Runs automatically 7 times per day at 08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00 (Sao Paulo time)
 exports.generateDailyPost = functions
     .runWith({ timeoutSeconds: 540 }) // Aumentado para 9 min (geração + email)
-    .pubsub.schedule('0 8,10,12,14,16,18 * * *') // 6 posts/day - covers all categories daily
+    .pubsub.schedule('0 8,10,12,14,16,18,20 * * *') // 7 posts/day - covers all categories + Esportes daily
     .timeZone('America/Sao_Paulo')
     .onRun(async (context) => {
         try {
-            console.log("🤖 Iniciando Agente de Conteúdo Automático (v3 - Multi-Category)...");
+            console.log("🤖 Iniciando Agente de Conteúdo Automático (v3 - Multi-Category + Esportes)...");
             const API_KEY = process.env.GOOGLE_GENAI_API_KEY || functions.config().google?.genai_api_key;
             if (!API_KEY) throw new Error("Google GenAI API Key not configured.");
 
@@ -1058,7 +1058,7 @@ exports.generateDailyPost = functions
                 properties: {
                     title: { type: SchemaType.STRING, description: "Catchy title", nullable: false },
                     subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
-                    category: { type: SchemaType.STRING, description: "Category: Economia, Investimentos, Tecnologia, Política, Carreira, Games", nullable: false },
+                    category: { type: SchemaType.STRING, description: "Category: Economia, Investimentos, Tecnologia, Política, Carreira, Games, Esportes", nullable: false },
                     content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
                     thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
                     imagePrompt: { type: SchemaType.STRING, description: "A descriptive English prompt for the image generator, describing a scene that represents the article.", nullable: false }
@@ -1085,13 +1085,15 @@ exports.generateDailyPost = functions
                 const feedTech = await parser.parseURL('https://g1.globo.com/dynamo/tecnologia/rss2.xml');
                 const feedPolitics = await parser.parseURL('https://g1.globo.com/dynamo/politica/rss2.xml');
                 const feedGaming = await parser.parseURL('https://www.polygon.com/rss/index.xml'); // Gaming News
+                const feedSports = await parser.parseURL('https://ge.globo.com/rss/noticia/rss.xml'); // Sports News
 
                 const allItems = [
                     ...feedG1.items.slice(0, 2),
                     ...feedInvesting.items.slice(0, 2),
                     ...feedTech.items.slice(0, 2),
                     ...feedPolitics.items.slice(0, 1),
-                    ...feedGaming.items.slice(0, 2)
+                    ...feedGaming.items.slice(0, 2),
+                    ...feedSports.items.slice(0, 3) // Prioritize sports slightly correctly
                 ];
 
                 const articles = allItems.map(item => `- [${item.categories ? item.categories[0] : 'General'}] ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
@@ -1112,10 +1114,8 @@ exports.generateDailyPost = functions
                 console.log("✅ Contexto de notícias obtido.");
             } catch (rssError) {
                 console.error("⚠️ Erro ao buscar RSS (usando fallback):", rssError);
-                newsContext = "Sem notícias recentes. Escolha um tema evergreen sobre Investimentos, Tecnologia ou Economia.";
+                newsContext = "Sem notícias recentes. Escolha um tema evergreen sobre Investimentos, Tecnologia, Esportes ou Economia.";
             }
-
-
 
             // 1.5 CHECK DUPLICATES
             let resentTitlesList = "";
