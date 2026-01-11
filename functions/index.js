@@ -1199,8 +1199,7 @@ exports.generateDailyPost = functions
             // 3. Atualizar estatísticas
             await admin.firestore().collection('newsletter_posts').doc(slug).update({
                 sentCount: 0,
-                emailStats: emailStats,
-                status: 'published_on_site'
+                emailStats: emailStats
             });
 
             console.log("✅ Ciclo diário concluído com sucesso.");
