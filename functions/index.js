@@ -1337,6 +1337,10 @@ exports.debugGenerateDailyPost = functions
                     }
                 } catch (dupErr) { console.warn("DupLog fail", dupErr); }
 
+                // GET SCHEDULED CATEGORY (same as production)
+                const targetCategory = getCategoryForSchedule();
+                console.log(`🎯 Categoria forçada (DEBUG): ${targetCategory}`);
+
                 // SAME PROMPT AS PROD
                 const prompt = `
                 CONTEXTO DE MUNDO REAL:
@@ -1345,9 +1349,12 @@ exports.debugGenerateDailyPost = functions
                 TÓPICOS A EVITAR (JÁ PUBLICADOS RECENTEMENTE):
                 ${resentTitlesList}
 
-                Você é o Editor-Chefe do "Trilha News". Crie o artigo do dia baseado no que é mais relevante acima (EVITANDO repetidos).
+                CATEGORIA OBRIGATÓRIA: ${targetCategory}
 
-                CATEGORIAS: Economia, Investimentos, Tecnologia, Política, Carreira, Games.
+                Você é o Editor-Chefe do "Trilha News". Sua missão é criar um artigo profundo sobre ${targetCategory}.
+                
+                IMPORTANTE: Você DEVE criar um artigo sobre ${targetCategory}. Escolha a notícia mais relevante relacionada a esta categoria.
+                Se não houver notícias específicas sobre ${targetCategory}, crie um artigo evergreen sobre um tema importante desta categoria.
 
                 ESTILO:
                 - Título Curto e Impactante.
@@ -1359,7 +1366,7 @@ exports.debugGenerateDailyPost = functions
                 {
                     "title": "Titulo",
                     "subject": "slug",
-                    "category": "Category",
+                    "category": "${targetCategory}",
                     "content": "HTML...",
                     "imagePrompt": "Image description...",
                     "thumbnail": "IGNORED"
@@ -1372,6 +1379,12 @@ exports.debugGenerateDailyPost = functions
                 if (cleanedText.startsWith('```')) cleanedText = cleanedText.replace(/^```(json)?/, '').replace(/```$/, '');
 
                 const articleData = JSON.parse(cleanedText);
+
+                // VALIDATE CATEGORY
+                if (articleData.category !== targetCategory) {
+                    console.warn(`⚠️ IA retornou categoria errada: ${articleData.category}, esperado: ${targetCategory}. Corrigindo...`);
+                    articleData.category = targetCategory;
+                }
 
                 // THUMBNAIL
                 let finalThumbnail;
