@@ -60,26 +60,7 @@
 
 <body class="text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-slate-900 flex flex-col min-h-screen">
 
-    <!-- Top Bar -->
-    <div class="bg-slate-900 text-white text-xs py-2 border-b border-gray-800">
-        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-            <div id="current-date" class="font-medium opacity-80 hidden md:block"></div>
-            <div class="flex gap-4 items-center overflow-hidden flex-1 md:flex-none justify-center md:justify-start">
-                <!-- Market Ticker -->
-                <div id="ticker-container" class="flex items-center gap-4">
-                    <span id="ticker-label"
-                        class="text-yellow-400 font-bold text-[10px] md:text-xs whitespace-nowrap">MERCADO AGORA:</span>
-                    <div id="ticker-content" class="text-[10px] md:text-xs font-medium flex items-center gap-4">
-                        <span class="animate-pulse">Carregando...</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hidden md:flex gap-3">
-                <a href="#" class="hover:text-yellow-400 transition-colors">Newsletter</a>
-                <a href="podcast.html" class="hover:text-yellow-400 transition-colors">Podcast</a>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Header -->
     <header
@@ -392,7 +373,7 @@
             });
         });
     </script>
-    <script src="market-ticker.js"></script>
+
 </body>
 
 </html>
