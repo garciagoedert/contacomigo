@@ -284,9 +284,7 @@
 
     <script src="newsletter-api.js"></script>
     <script>
-        // Set Date
-        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', dateOptions).replace(/^\w/, c => c.toUpperCase());
+
 
         // Load Articles
         document.addEventListener('DOMContentLoaded', async () => {
