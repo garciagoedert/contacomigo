@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anuncie no Trilha Comigo - Alcance Investidores e Líderes</title>
+    <meta name="description"
+        content="Conecte sua marca a um público qualificado de investidores, profissionais de tecnologia e tomadores de decisão.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter & Merriweather -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="imgs/favicon.png" type="image/png">
+
+    <!-- Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRNK2W5VPX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-KRNK2W5VPX');
+    </script>
+    <script src="analytics.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .serif-font {
+            font-family: 'Merriweather', serif;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-slate-900 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header
+        class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-6">
+                    <a href="index.html" class="flex flex-col">
+                        <span
+                            class="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
+                                class="text-[var(--cor-principal)]">NEWS</span></span>
+                        <span
+                            class="text-[10px] tracking-[0.2em] text-gray-400 uppercase font-semibold">Intelligence</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex items-center space-x-6 ml-8 text-sm font-semibold">
+                    <a href="index.html" class="hover:text-[var(--cor-principal)] transition-colors">Início</a>
+                    <a href="artigos.html" class="hover:text-[var(--cor-principal)] transition-colors">Notícias</a>
+                    <a href="podcast.html" class="hover:text-[var(--cor-principal)] transition-colors">Podcast</a>
+                </nav>
+
+                <!-- CTA Zone -->
+                <div class="flex items-center gap-4">
+                    <!-- Mobile Hamburger Menu Button -->
+                    <button id="mobile-menu-btn"
+                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <a href="login/index.html"
+                        class="hidden md:block px-5 py-2.5 bg-[var(--cor-principal)] text-white font-bold rounded-full hover:opacity-90 transition-colors shadow-lg shadow-pink-500/20 text-sm">
+                        Assinar App
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden">
+        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div id="mobile-menu-panel"
+            class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl transform translate-x-full transition-transform duration-300">
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+                    <span class="text-xl font-black text-slate-900 dark:text-white">Menu</span>
+                    <button id="mobile-menu-close"
+                        class="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-6">
+                    <nav class="space-y-4">
+                        <a href="index.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">🏠
+                            Início</a>
+                        <a href="artigos.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">📰
+                            Notícias</a>
+                        <a href="podcast.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">🎙️
+                            Podcast</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+        function openMobileMenu() { mobileMenu.classList.remove('hidden'); setTimeout(() => { mobileMenuPanel.classList.remove('translate-x-full'); }, 10); }
+        function closeMobileMenu() { mobileMenuPanel.classList.add('translate-x-full'); setTimeout(() => { mobileMenu.classList.add('hidden'); }, 300); }
+        mobileMenuBtn?.addEventListener('click', openMobileMenu);
+        mobileMenuClose?.addEventListener('click', closeMobileMenu);
+        mobileMenuBackdrop?.addEventListener('click', closeMobileMenu);
+    </script>
+
+
+    <!-- Hero Section -->
+    <section class="relative bg-slate-900 text-white overflow-hidden py-24">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-slate-900 mix-blend-overlay"></div>
+        <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">
+                Anuncie para quem <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Decide o
+                    Futuro</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-10">
+                O Trilha Comigo conecta sua marca a uma audiência premium de investidores, executivos e entusiastas de
+                tecnologia.
+            </p>
+            <a href="mailto:marketing@southsea.com.br"
+                class="inline-flex items-center gap-2 px-8 py-4 bg-[var(--cor-principal)] text-white font-bold rounded-full hover:bg-pink-600 transition-all shadow-lg hover:shadow-pink-500/30 transform hover:-translate-y-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                </svg>
+                Falar com o Comercial
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-white dark:bg-slate-900">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="p-8 rounded-2xl bg-gray-50 dark:bg-slate-800 text-center border border-gray-100 dark:border-gray-700">
+                    <span class="text-4xl font-black text-slate-900 dark:text-white block mb-2">+50k</span>
+                    <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Leitores Mensais</span>
+                </div>
+                <div
+                    class="p-8 rounded-2xl bg-gray-50 dark:bg-slate-800 text-center border border-gray-100 dark:border-gray-700">
+                    <span class="text-4xl font-black text-slate-900 dark:text-white block mb-2">High</span>
+                    <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Ticket Médio</span>
+                </div>
+                <div
+                    class="p-8 rounded-2xl bg-gray-50 dark:bg-slate-800 text-center border border-gray-100 dark:border-gray-700">
+                    <span class="text-4xl font-black text-slate-900 dark:text-white block mb-2">Omnichannel</span>
+                    <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">App, Web & Podcast</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formats Section -->
+    <section class="py-16 bg-gray-50 dark:bg-slate-950">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-4">Formatos de Publicidade</h2>
+                <p class="text-gray-500">Diversas maneiras de integrar sua marca ao nosso conteúdo.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div
+                    class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-800">
+                    <div
+                        class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 mb-6">
+                        <span class="text-2xl">🖥️</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Display Ads</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Banners estratégicos na Home, Artigos e em
+                        nossos Portais de Categoria (Games, Economia, etc). Alta visibilidade.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-800">
+                    <div
+                        class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center text-green-600 mb-6">
+                        <span class="text-2xl">✍️</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Branded Content</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Artigos patrocinados escritos por nossa equipe
+                        editorial, focados em contar a história da sua marca com credibilidade.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                    class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-800">
+                    <div
+                        class="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center text-pink-600 mb-6">
+                        <span class="text-2xl">🎙️</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Podcast Spot</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Testemunhais e inserções no TrilhaCast, nosso
+                        podcast de economia descomplicada.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="py-24 bg-white dark:bg-slate-900 text-center">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">Vamos crescer juntos?</h2>
+            <p class="text-xl text-gray-500 mb-10 max-w-2xl mx-auto">Solicite nosso Mídia Kit e descubra as
+                oportunidades para sua empresa.</p>
+
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                <a href="mailto:marketing@southsea.com.br"
+                    class="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-full hover:scale-105 transition-transform shadow-xl">
+                    marketing@southsea.com.br
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 dark:bg-slate-950 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="flex items-center gap-2 mb-4 md:mb-0">
+                    <img src="imgs/14.png" class="h-8 opacity-80" alt="Logo">
+                    <span class="font-bold text-gray-900 dark:text-white">Trilha News</span>
+                </div>
+                <div class="flex gap-8 text-sm font-medium text-gray-500">
+                    <a href="index.html" class="hover:text-[var(--cor-principal)]">Home</a>
+                    <a href="anuncie.html"
+                        class="hover:text-[var(--cor-principal)] text-[var(--cor-principal)]">Anuncie</a>
+                    <a href="#" class="hover:text-[var(--cor-principal)]">Política de Privacidade</a>
+                </div>
+            </div>
+            <div class="text-center text-xs text-gray-400">
+                &copy; 2026 Trilha Comigo. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
