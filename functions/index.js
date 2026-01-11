@@ -1058,12 +1058,14 @@ exports.generateDailyPost = functions
                 const feedInvesting = await parser.parseURL('https://br.investing.com/rss/news_11.rss'); // Stock Markets
                 const feedTech = await parser.parseURL('https://g1.globo.com/dynamo/tecnologia/rss2.xml');
                 const feedPolitics = await parser.parseURL('https://g1.globo.com/dynamo/politica/rss2.xml');
+                const feedGaming = await parser.parseURL('https://www.polygon.com/rss/index.xml'); // Gaming News
 
                 const allItems = [
                     ...feedG1.items.slice(0, 2),
                     ...feedInvesting.items.slice(0, 2),
                     ...feedTech.items.slice(0, 2),
-                    ...feedPolitics.items.slice(0, 1)
+                    ...feedPolitics.items.slice(0, 1),
+                    ...feedGaming.items.slice(0, 2)
                 ];
 
                 const articles = allItems.map(item => `- [${item.categories ? item.categories[0] : 'General'}] ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
@@ -1257,12 +1259,14 @@ exports.debugGenerateDailyPost = functions
                     const feedInvesting = await parser.parseURL('https://br.investing.com/rss/news_11.rss');
                     const feedTech = await parser.parseURL('https://g1.globo.com/dynamo/tecnologia/rss2.xml');
                     const feedPolitics = await parser.parseURL('https://g1.globo.com/dynamo/politica/rss2.xml');
+                    const feedGaming = await parser.parseURL('https://www.polygon.com/rss/index.xml'); // Gaming News
 
                     const allItems = [
                         ...feedG1.items.slice(0, 2),
                         ...feedInvesting.items.slice(0, 2),
                         ...feedTech.items.slice(0, 2),
-                        ...feedPolitics.items.slice(0, 1)
+                        ...feedPolitics.items.slice(0, 1),
+                        ...feedGaming.items.slice(0, 2)
                     ];
 
                     const articles = allItems.map(item => `- [${item.categories ? item.categories[0] : 'General'}] ${item.title}: ${item.contentSnippet || item.content || ''}`).join('\n');
