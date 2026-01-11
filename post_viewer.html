@@ -50,23 +50,6 @@
 
 <body class="text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-slate-900 flex flex-col min-h-screen">
 
-    <!-- Top Bar -->
-    <div class="bg-slate-900 text-white text-xs py-2 border-b border-gray-800">
-        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-            <div id="current-date" class="font-medium opacity-80 hidden md:block"></div>
-            <div class="flex gap-4 items-center">
-                <span class="text-yellow-400 font-bold text-[10px] md:text-xs">MERCADO AGORA:</span>
-                <div id="market-ticker" class="text-[10px] md:text-xs font-medium flex items-center gap-4">
-                    <span class="animate-pulse">Carregando cotações...</span>
-                </div>
-            </div>
-            <div class="hidden md:flex gap-3">
-                <a href="#" class="hover:text-yellow-400 transition-colors">Newsletter</a>
-                <a href="podcast.html" class="hover:text-yellow-400 transition-colors">Podcast</a>
-            </div>
-        </div>
-    </div>
-
     <!-- Header -->
     <header
         class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
@@ -92,13 +75,30 @@
                             class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Política</a>
                         <a href="artigos.html?category=Carreira"
                             class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Carreira</a>
+                        <a href="artigos.html?category=Games"
+                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Games</a>
                     </nav>
                 </div>
 
                 <!-- CTA Zone -->
                 <div class="flex items-center gap-4">
+                    <div class="hidden md:flex flex-col items-end mr-2">
+                        <span class="text-xs text-gray-500 font-medium">Oferecimento</span>
+                        <img src="imgs/14.png" class="h-5 opacity-80" alt="Trilha Comigo">
+                    </div>
+
+                    <!-- Mobile Hamburger Menu Button -->
+                    <button id="mobile-menu-btn"
+                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Buttons -->
                     <a href="login/index.html"
-                        class="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-gray-300 font-bold rounded-full hover:bg-slate-200 transition-colors text-sm">Entrar</a>
+                        class="hidden lg:block px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-gray-300 font-bold rounded-full hover:bg-slate-200 transition-colors text-sm">Entrar</a>
                     <a href="login/index.html"
                         class="hidden md:block px-5 py-2.5 bg-[var(--cor-principal)] text-white font-bold rounded-full hover:opacity-90 transition-colors shadow-lg shadow-pink-500/20 text-sm">Assinar
                         App</a>
@@ -106,6 +106,116 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden">
+        <!-- Backdrop -->
+        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+        <!-- Menu Panel -->
+        <div id="mobile-menu-panel"
+            class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl transform translate-x-full transition-transform duration-300">
+            <div class="flex flex-col h-full">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+                    <span class="text-xl font-black text-slate-900 dark:text-white">Menu</span>
+                    <button id="mobile-menu-close"
+                        class="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Categories -->
+                <div class="flex-1 overflow-y-auto p-6">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Categorias</h3>
+                    <nav class="space-y-2">
+                        <a href="artigos.html?category=Economia"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="text-purple-600 text-2xl">💰</span>
+                            <span
+                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Economia</span>
+                        </a>
+                        <a href="artigos.html?category=Investimentos"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="text-green-600 text-2xl">📈</span>
+                            <span
+                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Investimentos</span>
+                        </a>
+                        <a href="artigos.html?category=Tecnologia"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="text-blue-600 text-2xl">💻</span>
+                            <span
+                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Tecnologia</span>
+                        </a>
+                        <a href="artigos.html?category=Política"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="text-red-600 text-2xl">🏛️</span>
+                            <span
+                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Política</span>
+                        </a>
+                        <a href="artigos.html?category=Carreira"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="text-yellow-600 text-2xl">💼</span>
+                            <span
+                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Carreira</span>
+                        </a>
+                        <a href="artigos.html?category=Games"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="text-orange-600 text-2xl">🎮</span>
+                            <span
+                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Games</span>
+                        </a>
+                    </nav>
+
+                    <div class="border-t border-gray-200 dark:border-gray-800 my-6"></div>
+
+                    <!-- Additional Links -->
+                    <nav class="space-y-2">
+                        <a href="login/index.html"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+                            <span class="text-2xl">🔐</span>
+                            <span class="font-semibold text-slate-900 dark:text-white">Entrar</span>
+                        </a>
+                        <a href="login/index.html"
+                            class="flex items-center gap-3 p-3 rounded-lg bg-[var(--cor-principal)] text-white hover:opacity-90 transition-opacity">
+                            <span class="text-2xl">✨</span>
+                            <span class="font-semibold">Assinar App</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                mobileMenuPanel.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeMobileMenu() {
+            mobileMenuPanel.classList.add('translate-x-full');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+        }
+
+        mobileMenuBtn?.addEventListener('click', openMobileMenu);
+        mobileMenuClose?.addEventListener('click', closeMobileMenu);
+        mobileMenuBackdrop?.addEventListener('click', closeMobileMenu);
+    </script>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 md:px-6 py-12 flex-grow max-w-5xl">
@@ -258,10 +368,6 @@
     </footer>
 
     <script>
-        // Set Date in Top Bar
-        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', dateOptions).replace(/^\w/, c => c.toUpperCase());
-
         async function loadPost() {
             // Get Slug from URL params OR Path
             const urlParams = new URLSearchParams(window.location.search);
@@ -416,9 +522,6 @@
         }
 
         loadPost().then(() => {
-            // Extract slug again or pass it down. 
-            // To keep it simple, we'll re-parse or use a global var if we had one. 
-            // Let's just re-parse safely since it's cheap.
             const urlParams = new URLSearchParams(window.location.search);
             let slug = urlParams.get('slug');
             if (!slug) {
@@ -433,7 +536,6 @@
         });
     </script>
     <script src="newsletter-api.js"></script>
-    <script src="market-ticker.js"></script>
 </body>
 
 </html>
