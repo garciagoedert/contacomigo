@@ -1032,7 +1032,7 @@ exports.generateDailyPost = functions
                 properties: {
                     title: { type: SchemaType.STRING, description: "Catchy title", nullable: false },
                     subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
-                    category: { type: SchemaType.STRING, description: "Category: Economia, Investimentos, Tecnologia, Política, Carreira", nullable: false },
+                    category: { type: SchemaType.STRING, description: "Category: Economia, Investimentos, Tecnologia, Política, Carreira, Games", nullable: false },
                     content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
                     thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
                     imagePrompt: { type: SchemaType.STRING, description: "A descriptive English prompt for the image generator, describing a scene that represents the article.", nullable: false }
@@ -1121,6 +1121,7 @@ exports.generateDailyPost = functions
             - Tecnologia
             - Política
             - Carreira
+            - Games
 
             ESTILO E TOM:
             - **Visual**: Limpo, arejado, uso estratégico de negrito.
@@ -1230,7 +1231,7 @@ exports.debugGenerateDailyPost = functions
                     properties: {
                         title: { type: SchemaType.STRING, description: "Catchy title", nullable: false },
                         subject: { type: SchemaType.STRING, description: "Slug safe subject", nullable: false },
-                        category: { type: SchemaType.STRING, description: "Category: Economia, Investimentos, Tecnologia, Política, Carreira", nullable: false },
+                        category: { type: SchemaType.STRING, description: "Category: Economia, Investimentos, Tecnologia, Política, Carreira, Games", nullable: false },
                         content: { type: SchemaType.STRING, description: "HTML content with h2, h3, p, ul, li tags", nullable: false },
                         thumbnail: { type: SchemaType.STRING, description: "Image URL", nullable: false },
                         imagePrompt: { type: SchemaType.STRING, description: "A descriptive English prompt for the image generator", nullable: false }
@@ -1309,7 +1310,7 @@ exports.debugGenerateDailyPost = functions
 
                 Você é o Editor-Chefe do "Trilha News". Crie o artigo do dia baseado no que é mais relevante acima (EVITANDO repetidos).
 
-                CATEGORIAS: Economia, Investimentos, Tecnologia, Política, Carreira.
+                CATEGORIAS: Economia, Investimentos, Tecnologia, Política, Carreira, Games.
 
                 ESTILO:
                 - Título Curto e Impactante.
