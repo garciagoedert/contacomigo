@@ -1019,27 +1019,28 @@ function getCategoryForSchedule() {
     const dayOfWeek = spTime.getDay(); // 0 = Sunday, 6 = Saturday
     const hour = spTime.getHours();
 
-    // Rotation schedule: ensures different categories throughout the day
+    // 6 posts per day schedule: 08:00, 10:00, 12:00, 14:00, 16:00, 18:00
+    // Ensures ALL 6 categories are covered EVERY DAY
     const schedule = {
-        0: { 8: 'Economia', 12: 'Tecnologia', 18: 'Games' },      // Sunday
-        1: { 8: 'Economia', 12: 'Tecnologia', 18: 'Games' },      // Monday
-        2: { 8: 'Investimentos', 12: 'Política', 18: 'Economia' }, // Tuesday
-        3: { 8: 'Carreira', 12: 'Games', 18: 'Tecnologia' },      // Wednesday
-        4: { 8: 'Política', 12: 'Economia', 18: 'Investimentos' }, // Thursday
-        5: { 8: 'Tecnologia', 12: 'Carreira', 18: 'Política' },   // Friday
-        6: { 8: 'Games', 12: 'Investimentos', 18: 'Carreira' }    // Saturday
+        0: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games' },      // Sunday
+        1: { 8: 'Investimentos', 10: 'Tecnologia', 12: 'Política', 14: 'Carreira', 16: 'Games', 18: 'Economia' },      // Monday
+        2: { 8: 'Tecnologia', 10: 'Política', 12: 'Carreira', 14: 'Games', 16: 'Economia', 18: 'Investimentos' },      // Tuesday
+        3: { 8: 'Política', 10: 'Carreira', 12: 'Games', 14: 'Economia', 16: 'Investimentos', 18: 'Tecnologia' },      // Wednesday
+        4: { 8: 'Carreira', 10: 'Games', 12: 'Economia', 14: 'Investimentos', 16: 'Tecnologia', 18: 'Política' },      // Thursday
+        5: { 8: 'Games', 10: 'Economia', 12: 'Investimentos', 14: 'Tecnologia', 16: 'Política', 18: 'Carreira' },      // Friday
+        6: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games' }       // Saturday
     };
 
     const category = schedule[dayOfWeek]?.[hour] || 'Economia'; // Fallback to Economia
-    console.log(`📅 Categoria agendada para ${dayOfWeek} às ${hour}h: ${category}`);
+    console.log(`📅 Categoria agendada para dia ${dayOfWeek} às ${hour}h: ${category}`);
     return category;
 }
 
 // 4. Generate Daily Post (AI Agent)
-// Runs automatically every day at 08:00 AM (Sao Paulo time)
+// Runs automatically 6 times per day at 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 (Sao Paulo time)
 exports.generateDailyPost = functions
     .runWith({ timeoutSeconds: 540 }) // Aumentado para 9 min (geração + email)
-    .pubsub.schedule('0 8,12,18 * * *') // 08:00, 12:00, 18:00 Daily
+    .pubsub.schedule('0 8,10,12,14,16,18 * * *') // 6 posts/day - covers all categories daily
     .timeZone('America/Sao_Paulo')
     .onRun(async (context) => {
         try {
