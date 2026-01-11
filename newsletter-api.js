@@ -5,9 +5,10 @@ const API_URL = 'https://us-central1-financeapp-6da16.cloudfunctions.net/getNews
 /**
  * Fetches newsletter posts from Internal API.
  * @param {number} limit Optional limit
+ * @param {string} category Optional category filter
  * @returns {Promise<Array>} Array of post objects
  */
-async function fetchNewsletterPosts(limit = null) {
+async function fetchNewsletterPosts(limit = null, category = null) {
     try {
         // Handle Localhost vs Prod URL
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -15,8 +16,12 @@ async function fetchNewsletterPosts(limit = null) {
             ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1/getNewsletterPosts'
             : API_URL;
 
-        if (limit) {
-            url += `?limit=${limit}`;
+        const params = [];
+        if (limit) params.push(`limit=${limit}`);
+        if (category) params.push(`category=${encodeURIComponent(category)}`);
+
+        if (params.length > 0) {
+            url += `?${params.join('&')}`;
         }
 
         const response = await fetch(url);
