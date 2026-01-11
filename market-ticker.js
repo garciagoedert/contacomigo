@@ -1,34 +1,60 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const marketTicker = document.getElementById('market-ticker');
-    if (!marketTicker) return;
+    const tickerLabel = document.getElementById('ticker-label');
+    const tickerContent = document.getElementById('ticker-content');
 
-    try {
-        // Fetch Currency Data (USD, EUR, BTC) from AwesomeAPI
-        const currencyResponse = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL');
-        const currencyData = await currencyResponse.json();
+    if (!tickerLabel || !tickerContent) return;
 
-        const usd = parseFloat(currencyData.USDBRL.bid).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const eur = parseFloat(currencyData.EURBRL.bid).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const btc = parseFloat(currencyData.BTCBRL.bid).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    let marketData = null;
+    let newsHeadlines = [];
+    let currentMode = 'market'; // 'market' or 'news'
 
-        // SELIC/CDI Strategy
-        // Since BCB API often has CORS or complexity, we will set a fallback/static value 
-        // OR try to fetch from a proxy if available. For now, let's use a "nice to have" approach.
-        // We will hardcode a recent approximate value if fetch fails, or use a reliable public JSON if found.
-        // For this MVP, we will stick to Currencies + "CDI/Selic" if we can find them, otherwise static recent.
-        // Let's rely on standard Currencies which are dynamic.
+    // Fetch Market Data
+    async function fetchMarketData() {
+        try {
+            const currencyResponse = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL');
+            const currencyData = await currencyResponse.json();
 
-        let tickerHtml = `
-            <marquee scrollamount="5" class="w-full md:w-auto overflow-hidden whitespace-nowrap">
+            const usd = parseFloat(currencyData.USDBRL.bid).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const eur = parseFloat(currencyData.EURBRL.bid).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const btc = parseFloat(currencyData.BTCBRL.bid).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            marketData = { usd, eur, btc };
+        } catch (error) {
+            console.error("Error fetching market data:", error);
+        }
+    }
+
+    // Fetch Latest News Headlines
+    async function fetchNewsHeadlines() {
+        try {
+            const posts = await fetchNewsletterPosts(5); // Get 5 latest posts
+            newsHeadlines = posts.map(post => post.title);
+        } catch (error) {
+            console.error("Error fetching news headlines:", error);
+        }
+    }
+
+    // Display Market Data
+    function showMarket() {
+        if (!marketData) {
+            tickerContent.innerHTML = '<span class="text-gray-500">Carregando...</span>';
+            return;
+        }
+
+        tickerLabel.textContent = 'MERCADO AGORA:';
+        tickerLabel.className = 'text-yellow-400 font-bold text-[10px] md:text-xs whitespace-nowrap';
+
+        tickerContent.innerHTML = `
+            <marquee scrollamount="3" class="flex-1">
                 <span class="inline-flex gap-6 items-center">
                     <span class="flex items-center gap-1 font-bold text-green-400">
-                        <span class="text-xs text-gray-400">USD</span> ${usd}
+                        <span class="text-xs text-gray-400">USD</span> ${marketData.usd}
                     </span>
                     <span class="flex items-center gap-1 font-bold text-blue-400">
-                        <span class="text-xs text-gray-400">EUR</span> ${eur}
+                        <span class="text-xs text-gray-400">EUR</span> ${marketData.eur}
                     </span>
                     <span class="flex items-center gap-1 font-bold text-yellow-400">
-                        <span class="text-xs text-gray-400">BTC</span> ${btc}
+                        <span class="text-xs text-gray-400">BTC</span> ${marketData.btc}
                     </span>
                     <span class="flex items-center gap-1 font-bold text-white opacity-60">
                         <span class="text-xs text-gray-400">SELIC</span> 11.25%
@@ -36,15 +62,41 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </span>
             </marquee>
         `;
-
-        // Replace the content
-        marketTicker.innerHTML = tickerHtml;
-        // Ensure parent has flexible width
-        marketTicker.classList.remove('gap-4');
-        marketTicker.classList.add('w-full', 'overflow-hidden');
-
-    } catch (error) {
-        console.error("Error fetching market data:", error);
-        if (marketTicker) marketTicker.innerHTML = '<span class="text-gray-500 text-xs">Mercado Indisponível</span>';
     }
+
+    // Display News Headlines
+    function showNews() {
+        if (newsHeadlines.length === 0) {
+            tickerContent.innerHTML = '<span class="text-gray-500">Carregando notícias...</span>';
+            return;
+        }
+
+        tickerLabel.textContent = 'ÚLTIMAS NOTÍCIAS:';
+        tickerLabel.className = 'text-pink-400 font-bold text-[10px] md:text-xs whitespace-nowrap';
+
+        const headlinesText = newsHeadlines.join(' • ');
+        tickerContent.innerHTML = `
+            <marquee scrollamount="3" class="flex-1">
+                <span class="font-medium">${headlinesText}</span>
+            </marquee>
+        `;
+    }
+
+    // Toggle between market and news
+    function toggleTicker() {
+        currentMode = currentMode === 'market' ? 'news' : 'market';
+
+        if (currentMode === 'market') {
+            showMarket();
+        } else {
+            showNews();
+        }
+    }
+
+    // Initialize
+    await Promise.all([fetchMarketData(), fetchNewsHeadlines()]);
+    showMarket(); // Start with market data
+
+    // Alternate every 5 seconds
+    setInterval(toggleTicker, 5000);
 });
