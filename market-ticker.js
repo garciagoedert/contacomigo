@@ -42,43 +42,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         tickerLabel.textContent = 'MERCADO AGORA:';
-        tickerLabel.className = 'text-yellow-400 font-bold text-[10px] md:text-xs whitespace-nowrap';
+        tickerLabel.className = 'text-yellow-400 font-bold text-[10px] md:text-xs whitespace-nowrap mr-2';
+
+        // Remove old classes that might conflict
+        tickerContent.className = "text-[10px] md:text-xs font-medium flex items-center flex-1 min-w-0";
 
         tickerContent.innerHTML = `
-            <marquee scrollamount="3" class="flex-1">
-                <span class="inline-flex gap-6 items-center">
-                    <span class="flex items-center gap-1 font-bold text-green-400">
-                        <span class="text-xs text-gray-400">USD</span> ${marketData.usd}
+            <div class="marquee-container w-full overflow-hidden whitespace-nowrap relative">
+                <div class="animate-marquee inline-block">
+                    <span class="inline-flex gap-6 items-center">
+                        <span class="flex items-center gap-1 font-bold text-green-400">
+                            <span class="text-xs text-gray-400">USD</span> ${marketData.usd}
+                        </span>
+                        <span class="flex items-center gap-1 font-bold text-blue-400">
+                            <span class="text-xs text-gray-400">EUR</span> ${marketData.eur}
+                        </span>
+                        <span class="flex items-center gap-1 font-bold text-yellow-400">
+                            <span class="text-xs text-gray-400">BTC</span> ${marketData.btc}
+                        </span>
+                        <span class="flex items-center gap-1 font-bold text-white opacity-60">
+                            <span class="text-xs text-gray-400">SELIC</span> 11.25%
+                        </span>
                     </span>
-                    <span class="flex items-center gap-1 font-bold text-blue-400">
-                        <span class="text-xs text-gray-400">EUR</span> ${marketData.eur}
-                    </span>
-                    <span class="flex items-center gap-1 font-bold text-yellow-400">
-                        <span class="text-xs text-gray-400">BTC</span> ${marketData.btc}
-                    </span>
-                    <span class="flex items-center gap-1 font-bold text-white opacity-60">
-                        <span class="text-xs text-gray-400">SELIC</span> 11.25%
-                    </span>
-                </span>
-            </marquee>
+                </div>
+            </div>
         `;
     }
 
     // Display News Headlines
     function showNews() {
         if (newsHeadlines.length === 0) {
-            tickerContent.innerHTML = '<span class="text-gray-500">Carregando notícias...</span>';
+            // Se não tiver notícias, tenta buscar novamente ou mantém no mercado
+            fetchNewsHeadlines();
+            showMarket();
+            currentMode = 'market';
             return;
         }
 
         tickerLabel.textContent = 'ÚLTIMAS NOTÍCIAS:';
-        tickerLabel.className = 'text-pink-400 font-bold text-[10px] md:text-xs whitespace-nowrap';
+        tickerLabel.className = 'text-pink-500 font-bold text-[10px] md:text-xs whitespace-nowrap mr-2';
 
-        const headlinesText = newsHeadlines.join(' • ');
+        tickerContent.className = "text-[10px] md:text-xs font-medium flex items-center flex-1 min-w-0 text-white";
+
+        const headlinesText = newsHeadlines.join('  •  ');
+
         tickerContent.innerHTML = `
-            <marquee scrollamount="3" class="flex-1">
-                <span class="font-medium">${headlinesText}</span>
-            </marquee>
+            <div class="marquee-container w-full overflow-hidden whitespace-nowrap relative">
+                <div class="animate-marquee inline-block">
+                    <span class="font-medium">${headlinesText}</span>
+                </div>
+            </div>
         `;
     }
 
