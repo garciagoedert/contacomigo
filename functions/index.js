@@ -1033,6 +1033,7 @@ function getCategoryForSchedule() {
 
     const category = schedule[dayOfWeek]?.[hour] || 'Economia'; // Fallback to Economia
     console.log(`📅 Categoria agendada para dia ${dayOfWeek} às ${hour}h: ${category}`);
+
     return category;
 }
 
