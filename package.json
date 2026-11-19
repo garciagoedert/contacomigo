@@ -1,0 +1,17 @@
+{
+  "name": "trilha-news",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "generate-post": "node scripts/generate-daily-post.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "^3.6.1",
+    "firebase-admin": "^14.5.1",
+    "resend": "^6.39.0",
+    "rss-parser": "^3.13.0"
+  }
+}

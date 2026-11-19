@@ -172,15 +172,7 @@
             formMessage.classList.add('hidden');
 
             try {
-                // Determine API URL based on environment
-                const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://127.0.0.1:5001/southsea-finance/us-central1/subscribeToNewsletter'
-                    : '/api/subscribeToNewsletter'; // Proxy rewrites in firebase.json or vercel.json
-
-                // Fallback direct URL if strictly needed, but let's try relative for now or full production URL
-                const FINAL_URL = API_URL.startsWith('/') && window.location.hostname.includes('firebaseapp.com')
-                    ? `https://us-central1-southsea-finance.cloudfunctions.net/subscribeToNewsletter`
-                    : API_URL;
+                const FINAL_URL = '/api/subscribeToNewsletter';
 
                 const response = await fetch(FINAL_URL, {
                     method: 'POST',

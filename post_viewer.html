@@ -251,6 +251,7 @@
                     <!-- Thumbnail -->
                     <div id="thumbnail-container" class="mt-8 hidden">
                         <img id="post-thumbnail" src="" alt="Capa do Artigo"
+                            onerror="this.onerror=null;this.src='imgs/bannertrilha.png'"
                             class="w-full h-auto max-h-[500px] object-cover rounded-xl shadow-sm">
                     </div>
                 </div>
@@ -359,6 +360,7 @@
         </div>
     </footer>
 
+    <script src="newsletter-api.js"></script>
     <script>
         async function loadPost() {
             // Get Slug from URL params OR Path
@@ -384,18 +386,11 @@
             }
 
             try {
-                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                let functionUrl = isLocalhost
-                    ? `http://127.0.0.1:5001/financeapp-6da16/us-central1/getNewsletterPosts?slug=${slug}`
-                    : `https://us-central1-financeapp-6da16.cloudfunctions.net/getNewsletterPosts?slug=${slug}`;
+                const data = await fetchNewsletterPostBySlug(slug);
 
-                const response = await fetch(functionUrl);
-
-                if (!response.ok) {
+                if (!data) {
                     throw new Error('Post not found');
                 }
-
-                const data = await response.json();
 
                 // Render Title and Date
                 document.title = `${data.title} | Trilha News`;
@@ -527,7 +522,6 @@
             loadRecommendedPosts(slug);
         });
     </script>
-    <script src="newsletter-api.js"></script>
 </body>
 
 </html>

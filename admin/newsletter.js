@@ -462,10 +462,7 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
     try {
         const token = await auth.currentUser.getIdToken();
 
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        let functionUrl = isLocalhost
-            ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1/sendNewsletter'
-            : 'https://us-central1-financeapp-6da16.cloudfunctions.net/sendNewsletter';
+        const functionUrl = '/api/sendNewsletter';
 
         const payload = {
             token,
@@ -474,7 +471,6 @@ async function sendEmailAction(isTest = true, saveOnly = false) {
             htmlContent: content,
             isTest,
             testEmail: isTest ? testEmail : null,
-            saveOnly,
             saveOnly,
             publishOnly, // New Flag
             slug: currentEditingSlug // Send SLUG if editing
@@ -692,10 +688,7 @@ window.resendPost = async function (slug) {
 
         // 2. Prepare Payload using existing endpoint
         const token = await auth.currentUser.getIdToken();
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        let functionUrl = isLocalhost
-            ? 'http://127.0.0.1:5001/financeapp-6da16/us-central1/sendNewsletter'
-            : 'https://us-central1-financeapp-6da16.cloudfunctions.net/sendNewsletter';
+        const functionUrl = '/api/sendNewsletter';
 
         const payload = {
             token,

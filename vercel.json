@@ -9,15 +9,11 @@
         {
             "source": "/artigos/:slug",
             "destination": "/post_viewer"
-        },
-        {
-            "source": "/api/getNewsletterPosts",
-            "destination": "https://us-central1-financeapp-6da16.cloudfunctions.net/getNewsletterPosts"
         }
     ],
     "headers": [
         {
-            "source": "/(.*)",
+            "source": "/((?!api/).*)",
             "headers": [
                 {
                     "key": "Cache-Control",
