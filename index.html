@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trilha News - Seu Portal de Economia, Negócios e Atualidades</title>
+    <title>Trilha News — Economia, Mercados, Tecnologia e Política</title>
     <meta name="description"
-        content="Análises, notícias e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes. Trilha News.">
+        content="Portal de notícias, análises e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.trilhacomigo.com/">
-    <meta property="og:title" content="Trilha News - Economia e Inteligência de Mercado">
+    <meta property="og:title" content="Trilha News — Economia e Inteligência de Mercado">
     <meta property="og:description"
         content="Análises, notícias e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes.">
     <meta property="og:image" content="https://www.trilhacomigo.com/imgs/covers/economia-1.jpg">
@@ -19,7 +19,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.trilhacomigo.com/">
-    <meta property="twitter:title" content="Trilha News - Economia e Inteligência de Mercado">
+    <meta property="twitter:title" content="Trilha News — Economia e Inteligência de Mercado">
     <meta property="twitter:description"
         content="Análises, notícias e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes.">
     <meta property="twitter:image" content="https://www.trilhacomigo.com/imgs/covers/economia-1.jpg">
@@ -39,165 +39,177 @@
         gtag('config', 'G-KRNK2W5VPX');
     </script>
 
-    <!-- Google Fonts: Inter & Merriweather -->
+    <!-- Google Fonts: Newsreader + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700;800;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400&family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
     <script src="analytics.js"></script>
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .news-headline {
-            font-family: 'Merriweather', serif;
-        }
-    </style>
 </head>
 
-<body class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 min-h-screen flex flex-col">
+<body class="bg-[#FAFAF9] text-[#0A0A0B] min-h-screen flex flex-col">
 
-    <!-- Header / Navbar -->
-    <header
-        class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 dark:border-slate-800">
+    <!-- Level 1: Dark Utility Masthead -->
+    <div class="bg-[#0A0A0B] text-zinc-300 text-xs border-b border-zinc-800">
+        <div class="container mx-auto px-4 md:px-6 h-10 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+                <span class="inline-flex items-center gap-1.5 font-black uppercase tracking-widest text-[10px] text-white shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-[var(--cor-principal)] animate-pulse" aria-hidden="true"></span>
+                    Edição Diária
+                </span>
+                <span class="text-zinc-600 hidden sm:inline" aria-hidden="true">|</span>
+                <span id="current-date-label" class="uppercase tracking-wider text-[11px] text-zinc-400 truncate hidden sm:inline"></span>
+            </div>
+            <div class="flex items-center gap-4 shrink-0">
+                <a href="podcast.html"
+                    class="hidden sm:inline-flex items-center gap-1.5 font-semibold text-zinc-300 hover:text-white transition-colors">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
+                    TrilhaCast Podcast
+                </a>
+                <a href="#newsletter-box"
+                    class="inline-flex items-center px-3 py-1 bg-[var(--cor-principal)] hover:brightness-110 text-white font-bold uppercase tracking-wider text-[10px] rounded-sm transition-all">
+                    Assinar Newsletter
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level 2: Main Masthead & Desk Navigation -->
+    <header class="bg-white border-b-2 border-[#0A0A0B] sticky top-0 z-50">
         <div class="container mx-auto px-4 md:px-6">
-            <div class="flex justify-between items-center h-20 gap-4">
-                <!-- Brand + Desktop Nav -->
-                <div class="flex items-center gap-6 min-w-0">
-                    <a href="index.html" class="flex flex-col shrink-0" aria-current="page">
-                        <span
-                            class="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
-                                class="text-[var(--cor-principal)]">NEWS</span></span>
-                        <span
-                            class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-0.5">Intelligence</span>
-                    </a>
+            <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+                <a href="index.html" class="flex flex-col shrink-0" aria-current="page">
+                    <span class="text-2xl md:text-3xl font-black tracking-tighter text-[#0A0A0B] leading-none">
+                        TRILHA<span class="text-[var(--cor-principal)]">NEWS</span>
+                    </span>
+                    <span class="text-[9px] md:text-[10px] tracking-[0.28em] text-zinc-500 uppercase font-bold mt-1">
+                        Intelligence
+                    </span>
+                </a>
 
-                    <nav aria-label="Editorias"
-                        class="hidden lg:flex items-center space-x-1 ml-6 text-sm font-semibold border-l border-slate-200 dark:border-slate-700 pl-6">
-                        <a href="artigos.html?category=Economia"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Economia</a>
-                        <a href="artigos.html?category=Investimentos"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Investimentos</a>
-                        <a href="artigos.html?category=Tecnologia"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Tecnologia</a>
-                        <a href="artigos.html?category=Política"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Política</a>
-                        <a href="artigos.html?category=Carreira"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Carreira</a>
-                        <a href="artigos.html?category=Games"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Games</a>
-                        <a href="artigos.html?category=Esportes"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Esportes</a>
-                    </nav>
-                </div>
+                <nav aria-label="Editorias"
+                    class="hidden lg:flex items-center gap-6 text-[13px] font-bold uppercase tracking-wide text-zinc-800">
+                    <a href="artigos.html?category=Economia"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Economia</a>
+                    <a href="artigos.html?category=Investimentos"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Investimentos</a>
+                    <a href="artigos.html?category=Tecnologia"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Tecnologia</a>
+                    <a href="artigos.html?category=Política"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Política</a>
+                    <a href="artigos.html?category=Carreira"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Carreira</a>
+                    <a href="artigos.html?category=Games"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Games</a>
+                    <a href="artigos.html?category=Esportes"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Esportes</a>
+                    <a href="artigos.html"
+                        class="py-1 border-b-2 border-transparent text-zinc-500 hover:border-[#0A0A0B] hover:text-[#0A0A0B] transition-colors">Acervo</a>
+                </nav>
 
-                <!-- Right Actions -->
-                <div class="flex items-center gap-3 shrink-0">
-                    <a href="podcast.html"
-                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors">
-                        <span class="w-2 h-2 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
-                        Podcast
-                    </a>
-                    <a href="#newsletter-box"
-                        class="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wide hover:bg-[var(--cor-principal)] dark:hover:bg-[var(--cor-principal)] dark:hover:text-white transition-colors shadow-sm">
-                        Newsletter
-                    </a>
-
-                    <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-controls="mobile-menu"
-                        aria-expanded="false"
-                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
+                <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-controls="mobile-menu"
+                    aria-expanded="false"
+                    class="lg:hidden p-2 text-[#0A0A0B] border border-zinc-300 hover:bg-zinc-100 rounded-sm transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </header>
 
+    <!-- Breaking / Latest Wire Strip -->
+    <div id="breaking-strip" class="bg-zinc-100 border-b border-zinc-200">
+        <div class="container mx-auto px-4 md:px-6 py-2.5 flex items-center gap-4">
+            <span
+                class="bg-[var(--cor-principal)] text-white font-black uppercase text-[10px] tracking-widest px-2.5 py-1 rounded-sm shrink-0">
+                ÚLTIMAS
+            </span>
+            <div id="breaking-items"
+                class="flex items-center gap-6 overflow-x-auto snap-x text-xs font-semibold text-zinc-800 whitespace-nowrap">
+                <span class="text-zinc-400">Carregando manchetes do dia...</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden" role="dialog" aria-modal="true"
         aria-label="Menu de navegação">
-        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
         <div id="mobile-menu-panel"
-            class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl transform translate-x-full transition-transform duration-300">
+            class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white border-l-4 border-[#0A0A0B] shadow-2xl transform translate-x-full transition-transform duration-300">
             <div class="flex flex-col h-full">
-                <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
-                    <span class="text-xl font-black text-slate-900 dark:text-white">Menu</span>
+                <div class="flex items-center justify-between p-5 border-b-2 border-[#0A0A0B]">
+                    <span class="text-lg font-black tracking-tight text-[#0A0A0B]">TRILHA<span
+                            class="text-[var(--cor-principal)]">NEWS</span></span>
                     <button id="mobile-menu-close" type="button" aria-label="Fechar menu"
-                        class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        class="p-2 hover:bg-zinc-100 rounded-sm transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
 
-                <div class="flex-1 overflow-y-auto p-6">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Editorias</h3>
-                    <nav aria-label="Editorias mobile" class="space-y-2">
+                <div class="flex-1 overflow-y-auto p-5">
+                    <h3 class="text-[11px] font-black text-zinc-400 uppercase tracking-widest mb-3">Editorias</h3>
+                    <nav aria-label="Editorias mobile" class="divide-y divide-zinc-200">
                         <a href="artigos.html?category=Economia"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Economia</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-purple-700 pl-3">Economia</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Investimentos"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Investimentos</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-emerald-700 pl-3">Investimentos</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Tecnologia"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Tecnologia</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-blue-700 pl-3">Tecnologia</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Política"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Política</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-rose-700 pl-3">Política</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Carreira"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Carreira</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-amber-600 pl-3">Carreira</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Games"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Games</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-orange-600 pl-3">Games</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Esportes"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Esportes</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-teal-700 pl-3">Esportes</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                        <a href="artigos.html"
+                            class="flex items-center justify-between py-3 font-bold text-sm text-zinc-600 hover:text-[#0A0A0B]">
+                            <span class="border-l-4 border-zinc-900 pl-3">Acervo Completo</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                     </nav>
 
-                    <div class="border-t border-slate-200 dark:border-slate-800 my-6"></div>
-
-                    <div class="space-y-2">
+                    <div class="mt-6 space-y-2.5">
                         <a href="podcast.html"
-                            class="flex items-center justify-between p-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold text-sm text-slate-800 dark:text-slate-100">
+                            class="flex items-center justify-between px-4 py-3 bg-zinc-100 font-bold text-xs uppercase tracking-wider text-[#0A0A0B]">
                             <span>TrilhaCast Podcast</span>
                             <span aria-hidden="true">→</span>
                         </a>
                         <a href="newsletter.html"
-                            class="flex items-center justify-between p-3 rounded-lg bg-slate-900 text-white font-semibold text-sm">
+                            class="flex items-center justify-between px-4 py-3 bg-[var(--cor-principal)] text-white font-bold text-xs uppercase tracking-wider">
                             <span>Assinar Newsletter</span>
                             <span aria-hidden="true">→</span>
                         </a>
@@ -235,258 +247,303 @@
         mobileMenuBackdrop?.addEventListener('click', closeMobileMenu);
     </script>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 md:px-6 pt-6 pb-16 flex-grow">
+    <!-- Main Front Page -->
+    <main class="flex-grow">
 
-        <!-- Editorial Context Bar -->
-        <div
-            class="flex flex-wrap items-center justify-between gap-3 pb-5 mb-8 border-b border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-            <div class="flex items-center gap-2.5">
-                <span
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-[var(--cor-principal)] font-bold uppercase tracking-wider text-[10px]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--cor-principal)]" aria-hidden="true"></span>
-                    Edição Diária
-                </span>
-                <span id="current-date-label" class="font-medium capitalize"></span>
-            </div>
-            <a href="artigos.html"
-                class="font-semibold text-slate-600 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors flex items-center gap-1">
-                Ver todas as matérias <span aria-hidden="true">→</span>
-            </a>
-        </div>
+        <!-- ZONA 1: Broadsheet Asymmetric Cover (6 + 3 + 3) -->
+        <section id="hero-section" class="container mx-auto px-4 md:px-6 pt-8 pb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left (6 cols): Main Headline + Photo + Sub-headlines -->
+                <div class="lg:col-span-6" id="hero-main">
+                    <div class="animate-pulse space-y-4">
+                        <div class="aspect-[16/10] bg-zinc-200 rounded-sm w-full"></div>
+                        <div class="h-4 bg-zinc-200 w-32"></div>
+                        <div class="h-10 bg-zinc-200 w-full"></div>
+                        <div class="h-10 bg-zinc-200 w-3/4"></div>
+                        <div class="h-4 bg-zinc-200 w-full"></div>
+                    </div>
+                </div>
 
-        <!-- Breaking News / Hero Section -->
-        <section id="hero-section"
-            class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-14 pb-12 border-b border-slate-200/80 dark:border-slate-800">
-            <!-- Main Story (8 cols) -->
-            <div class="lg:col-span-8" id="hero-main">
-                <div class="animate-pulse bg-slate-200 dark:bg-slate-800 h-[460px] md:h-[520px] rounded-2xl w-full"></div>
-            </div>
+                <!-- Center (3 cols): 2 Visual Stories -->
+                <div class="lg:col-span-3 lg:border-l lg:border-zinc-200 lg:pl-6 flex flex-col divide-y divide-zinc-200"
+                    id="hero-side">
+                    <div class="animate-pulse pb-5 space-y-3">
+                        <div class="aspect-[16/10] bg-zinc-200 rounded-sm w-full"></div>
+                        <div class="h-3 bg-zinc-200 w-24"></div>
+                        <div class="h-6 bg-zinc-200 w-full"></div>
+                    </div>
+                    <div class="animate-pulse pt-5 space-y-3">
+                        <div class="aspect-[16/10] bg-zinc-200 rounded-sm w-full"></div>
+                        <div class="h-3 bg-zinc-200 w-24"></div>
+                        <div class="h-6 bg-zinc-200 w-full"></div>
+                    </div>
+                </div>
 
-            <!-- Secondary Stories (4 cols - aligned full height) -->
-            <div class="lg:col-span-4 grid grid-rows-2 gap-5 lg:h-[520px]" id="hero-side">
-                <div class="animate-pulse bg-slate-200 dark:bg-slate-800 rounded-2xl w-full min-h-[200px]"></div>
-                <div class="animate-pulse bg-slate-200 dark:bg-slate-800 rounded-2xl w-full min-h-[200px]"></div>
+                <!-- Right (3 cols): Radar do Dia (01-05) -->
+                <aside class="lg:col-span-3 lg:border-l lg:border-zinc-200 lg:pl-6">
+                    <div class="border-t-2 border-[var(--cor-principal)] pt-2 mb-4 flex items-center justify-between">
+                        <h2 class="text-xs font-black uppercase tracking-widest text-[#0A0A0B]">Radar do Dia</h2>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Mais recentes</span>
+                    </div>
+                    <ol id="radar-list" class="divide-y divide-zinc-200">
+                        <li class="py-3.5 animate-pulse space-y-2">
+                            <div class="h-3 bg-zinc-200 w-20"></div>
+                            <div class="h-4 bg-zinc-200 w-full"></div>
+                        </li>
+                        <li class="py-3.5 animate-pulse space-y-2">
+                            <div class="h-3 bg-zinc-200 w-20"></div>
+                            <div class="h-4 bg-zinc-200 w-full"></div>
+                        </li>
+                        <li class="py-3.5 animate-pulse space-y-2">
+                            <div class="h-3 bg-zinc-200 w-20"></div>
+                            <div class="h-4 bg-zinc-200 w-full"></div>
+                        </li>
+                    </ol>
+                </aside>
             </div>
         </section>
 
-        <!-- Two Column Layout: Feed + Clean Sidebar -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-
-            <!-- Left Column: News Feed (8 cols) -->
-            <div class="lg:col-span-8">
-                <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
-                    <h2
-                        class="text-2xl font-black text-slate-900 dark:text-white border-l-4 border-[var(--cor-principal)] pl-4">
-                        Últimas Notícias
-                    </h2>
-                    <a href="artigos.html"
-                        class="text-xs font-bold uppercase tracking-wider text-[var(--cor-principal)] hover:underline">
-                        Explorar acervo →
+        <!-- ZONA 2: Full-Bleed Dark Band — Mercados & Economia -->
+        <section id="spotlight-band" class="bg-[#0A0A0B] text-white py-14 border-y-4 border-[var(--cor-principal)]">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="flex flex-wrap items-end justify-between gap-4 border-b border-zinc-800 pb-4 mb-8">
+                    <div>
+                        <span
+                            class="text-[11px] font-black uppercase tracking-widest text-[var(--cor-principal)] block mb-1">Caderno
+                            Especial</span>
+                        <h2 class="text-2xl md:text-3xl font-black tracking-tight text-white">Mercados &amp; Economia</h2>
+                    </div>
+                    <a href="artigos.html?category=Economia"
+                        class="text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-[var(--cor-principal)] transition-colors">
+                        Ver caderno completo →
                     </a>
                 </div>
 
-                <!-- Quick Category Filters -->
-                <div id="home-category-filters" class="flex items-center gap-2 overflow-x-auto pb-3 mb-6">
-                    <button type="button" data-category=""
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition-colors">
-                        Todos
-                    </button>
-                    <button type="button" data-category="Economia"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Economia
-                    </button>
-                    <button type="button" data-category="Investimentos"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Investimentos
-                    </button>
-                    <button type="button" data-category="Tecnologia"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Tecnologia
-                    </button>
-                    <button type="button" data-category="Política"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Política
-                    </button>
-                    <button type="button" data-category="Carreira"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Carreira
-                    </button>
-                    <button type="button" data-category="Games"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Games
-                    </button>
-                    <button type="button" data-category="Esportes"
-                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
-                        Esportes
-                    </button>
-                </div>
-
-                <div id="news-feed" class="flex flex-col gap-6">
-                    <!-- Feed Skeleton -->
-                    <div class="animate-pulse flex flex-col md:flex-row gap-5 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700">
-                        <div class="w-full md:w-64 bg-slate-200 dark:bg-slate-700 h-44 rounded-xl shrink-0"></div>
-                        <div class="flex-1 space-y-3 py-2">
-                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-24"></div>
-                            <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
-                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
-                        </div>
+                <div id="spotlight-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="animate-pulse space-y-3">
+                        <div class="aspect-[16/10] bg-zinc-800 rounded-sm"></div>
+                        <div class="h-4 bg-zinc-800 w-3/4"></div>
                     </div>
-                </div>
-
-                <div class="mt-10 text-center">
-                    <button type="button" onclick="window.location.href='artigos.html'"
-                        class="px-8 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-bold text-sm text-slate-800 dark:text-slate-100 rounded-full hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors shadow-sm">
-                        Carregar Mais Notícias
-                    </button>
+                    <div class="animate-pulse space-y-3">
+                        <div class="aspect-[16/10] bg-zinc-800 rounded-sm"></div>
+                        <div class="h-4 bg-zinc-800 w-3/4"></div>
+                    </div>
+                    <div class="animate-pulse space-y-3 hidden lg:block">
+                        <div class="aspect-[16/10] bg-zinc-800 rounded-sm"></div>
+                        <div class="h-4 bg-zinc-800 w-3/4"></div>
+                    </div>
+                    <div class="animate-pulse space-y-3 hidden lg:block">
+                        <div class="aspect-[16/10] bg-zinc-800 rounded-sm"></div>
+                        <div class="h-4 bg-zinc-800 w-3/4"></div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Right Column: Clean Editorial Sidebar (4 cols) -->
-            <aside class="lg:col-span-4">
-                <div class="sticky top-24 space-y-6">
+        <!-- ZONA 3: Newsroom Feed + Clean Editorial Sidebar -->
+        <section class="container mx-auto px-4 md:px-6 pt-14">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-                    <!-- Premium Newsletter Card -->
-                    <div id="newsletter-box"
-                        class="bg-slate-900 text-white p-7 rounded-2xl shadow-lg relative overflow-hidden">
-                        <div
-                            class="absolute -top-12 -right-12 w-36 h-36 bg-[var(--cor-principal)] opacity-25 rounded-full blur-2xl pointer-events-none">
+                <!-- Left Column (8 cols): Últimas Notícias -->
+                <div class="lg:col-span-8">
+                    <div class="section-rule pt-4 mb-4 flex flex-wrap items-end justify-between gap-4">
+                        <h2 class="text-2xl md:text-3xl font-black tracking-tight text-[#0A0A0B]">Últimas Notícias</h2>
+                        <a href="artigos.html"
+                            class="text-xs font-bold uppercase tracking-wider text-[var(--cor-principal)] hover:underline">
+                            Explorar acervo →
+                        </a>
+                    </div>
+
+                    <!-- Sharp Tab Filters -->
+                    <div id="home-category-filters"
+                        class="flex items-center gap-5 overflow-x-auto border-b border-zinc-200 mb-2 text-xs uppercase tracking-wider">
+                        <button type="button" data-category=""
+                            class="shrink-0 py-3 font-black text-[#0A0A0B] border-b-2 border-[var(--cor-principal)] transition-colors">
+                            Todos
+                        </button>
+                        <button type="button" data-category="Economia"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Economia
+                        </button>
+                        <button type="button" data-category="Investimentos"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Investimentos
+                        </button>
+                        <button type="button" data-category="Tecnologia"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Tecnologia
+                        </button>
+                        <button type="button" data-category="Política"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Política
+                        </button>
+                        <button type="button" data-category="Carreira"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Carreira
+                        </button>
+                        <button type="button" data-category="Games"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Games
+                        </button>
+                        <button type="button" data-category="Esportes"
+                            class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">
+                            Esportes
+                        </button>
+                    </div>
+
+                    <div id="news-feed" class="divide-y divide-zinc-200">
+                        <div class="animate-pulse py-6 flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-64 aspect-[16/10] bg-zinc-200 rounded-sm shrink-0"></div>
+                            <div class="flex-1 space-y-3 py-1">
+                                <div class="h-3 bg-zinc-200 w-24"></div>
+                                <div class="h-6 bg-zinc-200 w-4/5"></div>
+                                <div class="h-4 bg-zinc-200 w-full"></div>
+                                <div class="h-4 bg-zinc-200 w-2/3"></div>
+                            </div>
                         </div>
-                        <span
-                            class="inline-block text-[10px] font-bold uppercase tracking-widest text-rose-300 mb-2 relative z-10">Resumo
-                            Matinal</span>
-                        <h3 class="text-xl font-black text-white mb-2 relative z-10">Newsletter Diária</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed mb-5 relative z-10">Receba os principais
-                            movimentos de economia, investimentos e tecnologia direto no seu e-mail.</p>
-                        <form id="sidebar-newsletter-form" class="space-y-3 relative z-10">
-                            <label for="sidebar-newsletter-email" class="sr-only">Seu e-mail</label>
-                            <input id="sidebar-newsletter-email" type="email" required placeholder="seu@email.com"
-                                autocomplete="email"
-                                class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-[var(--cor-principal)] focus:bg-white/15 transition-colors">
-                            <button type="submit"
-                                class="w-full bg-[var(--cor-principal)] hover:brightness-110 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm">
-                                Inscrever-se gratuitamente
-                            </button>
-                        </form>
-                        <p id="sidebar-newsletter-msg" class="text-xs mt-3 hidden relative z-10"></p>
                     </div>
 
-                    <!-- Explore Editorials Card -->
-                    <div
-                        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700">
-                        <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white mb-4">
-                            Explorar Editorias
-                        </h3>
-                        <ul class="divide-y divide-slate-100 dark:divide-slate-700/70 text-sm">
-                            <li>
-                                <a href="artigos.html?category=Economia"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                                        Economia
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="artigos.html?category=Investimentos"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                        Investimentos
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="artigos.html?category=Tecnologia"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                        Tecnologia
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="artigos.html?category=Política"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                                        Política
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="artigos.html?category=Carreira"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                                        Carreira
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="artigos.html?category=Games"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                                        Games
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="artigos.html?category=Esportes"
-                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
-                                    <span class="flex items-center gap-2.5 font-medium">
-                                        <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-                                        Esportes
-                                    </span>
-                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
-                                        aria-hidden="true">→</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <div class="mt-8 pt-6 border-t border-zinc-200">
+                        <a href="artigos.html"
+                            class="block w-full text-center py-4 bg-[#0A0A0B] hover:bg-[var(--cor-principal)] text-white text-xs font-black uppercase tracking-widest rounded-sm transition-colors">
+                            Explorar Todo o Acervo →
+                        </a>
                     </div>
-
                 </div>
-            </aside>
-        </div>
 
-        <!-- Dynamic Podcast Section (Index) -->
-        <section class="mt-20 mb-6" id="podcast-home-section" style="display:none;">
-            <div class="bg-slate-900 rounded-3xl overflow-hidden relative text-white p-8 md:p-12">
-                <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
+                <!-- Right Column (4 cols): Trilha Briefing + Cadernos -->
+                <aside class="lg:col-span-4 lg:border-l lg:border-zinc-200 lg:pl-8">
+                    <div class="sticky top-24 space-y-8">
+
+                        <!-- Trilha Briefing Newsletter Box -->
+                        <div id="newsletter-box" class="bg-[#0A0A0B] text-white p-7 border-t-4 border-[var(--cor-principal)]">
+                            <span
+                                class="inline-block text-[10px] font-black uppercase tracking-widest text-[var(--cor-principal)] mb-2">
+                                Trilha Briefing
+                            </span>
+                            <h3 class="text-2xl font-bold news-headline text-white mb-2">O essencial do mercado antes da
+                                abertura</h3>
+                            <p class="text-xs text-zinc-400 leading-relaxed mb-5">
+                                Análises diretas de economia, investimentos, tecnologia e política sem ruído, direto no
+                                seu e-mail.
+                            </p>
+                            <form id="sidebar-newsletter-form" class="space-y-3">
+                                <label for="sidebar-newsletter-email" class="sr-only">Seu e-mail</label>
+                                <input id="sidebar-newsletter-email" type="email" required placeholder="seu@email.com"
+                                    autocomplete="email"
+                                    class="w-full px-3.5 py-2.5 rounded-sm text-sm bg-zinc-900 border border-zinc-700 text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--cor-principal)] transition-colors">
+                                <button type="submit"
+                                    class="w-full bg-[var(--cor-principal)] hover:brightness-110 text-white px-4 py-2.5 rounded-sm text-xs font-black uppercase tracking-wider transition-all">
+                                    Inscrever-se gratuitamente
+                                </button>
+                            </form>
+                            <p id="sidebar-newsletter-msg" class="text-xs mt-3 hidden"></p>
+                        </div>
+
+                        <!-- Editorial Desks Index -->
+                        <div class="border-t-2 border-[#0A0A0B] pt-4">
+                            <h3 class="text-xs font-black uppercase tracking-widest text-[#0A0A0B] mb-3">
+                                Cadernos &amp; Editorias
+                            </h3>
+                            <ul class="divide-y divide-zinc-200 text-sm">
+                                <li>
+                                    <a href="artigos.html?category=Economia"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-purple-700 pl-3 font-bold">Economia</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="artigos.html?category=Investimentos"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-emerald-700 pl-3 font-bold">Investimentos</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="artigos.html?category=Tecnologia"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-blue-700 pl-3 font-bold">Tecnologia</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="artigos.html?category=Política"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-rose-700 pl-3 font-bold">Política</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="artigos.html?category=Carreira"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-amber-600 pl-3 font-bold">Carreira</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="artigos.html?category=Games"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-orange-600 pl-3 font-bold">Games</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="artigos.html?category=Esportes"
+                                        class="flex items-center justify-between py-3 text-zinc-800 hover:text-[var(--cor-principal)] transition-colors group">
+                                        <span class="border-l-4 border-teal-700 pl-3 font-bold">Esportes</span>
+                                        <span class="text-zinc-400 group-hover:text-[var(--cor-principal)]"
+                                            aria-hidden="true">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ZONA 4: 3-Column Desks (Tecnologia | Política | Esportes & Games) -->
+        <section id="desks-section" class="container mx-auto px-4 md:px-6 mt-16">
+            <div class="section-rule pt-6">
+                <div id="desks-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-0 lg:divide-x lg:divide-zinc-200">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ZONA 5: Dynamic Podcast Section -->
+        <section class="container mx-auto px-4 md:px-6 mt-16 mb-16" id="podcast-home-section" style="display:none;">
+            <div class="bg-[#0A0A0B] border-t-4 border-[#1DB954] text-white p-8 md:p-12">
+                <div class="flex flex-col md:flex-row items-center gap-10">
                     <div class="md:w-1/3">
                         <img id="home-pod-img" src="" alt="Capa do episódio TrilhaCast" loading="lazy"
-                            class="rounded-2xl shadow-2xl rotate-2 border-4 border-white/10 w-full max-w-sm mx-auto">
+                            class="w-full max-w-xs mx-auto border border-zinc-700 shadow-2xl">
                     </div>
                     <div class="md:w-2/3 space-y-4 text-center md:text-left">
-                        <h2 class="text-xs font-bold tracking-widest text-[#1DB954] uppercase">Novo Episódio do
-                            TrilhaCast</h2>
-                        <h3 id="home-pod-title" class="text-2xl md:text-4xl font-black leading-tight"></h3>
-                        <p id="home-pod-desc" class="feed-excerpt text-slate-300 line-clamp-2"></p>
-                        <div class="pt-4 flex flex-col md:flex-row gap-4 justify-center md:justify-start">
+                        <span class="inline-block text-[11px] font-black tracking-widest text-[#1DB954] uppercase">
+                            Novo Episódio do TrilhaCast
+                        </span>
+                        <h3 id="home-pod-title" class="text-2xl md:text-4xl font-bold news-headline leading-tight"></h3>
+                        <p id="home-pod-desc" class="feed-excerpt text-zinc-300 line-clamp-2 max-w-2xl"></p>
+                        <div class="pt-4 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                             <a id="home-pod-link" href="#" target="_blank" rel="noopener noreferrer"
-                                class="px-6 py-3 bg-[#1DB954] text-white font-bold rounded-full hover:brightness-110 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                class="px-6 py-3 bg-[#1DB954] text-white text-xs font-black uppercase tracking-wider rounded-sm hover:brightness-110 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path
                                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
                                 </svg>
                                 Ouvir no Spotify
                             </a>
                             <a href="podcast.html"
-                                class="px-6 py-3 border border-white/20 hover:bg-white/10 rounded-full font-bold text-white transition-colors">
+                                class="px-6 py-3 border border-zinc-700 hover:border-white text-xs font-black uppercase tracking-wider rounded-sm text-white transition-colors">
                                 Ver todos os episódios
                             </a>
                         </div>
@@ -497,27 +554,54 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-14 pb-8 mt-auto">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-                <a href="index.html" class="flex flex-col items-center md:items-start">
-                    <span
-                        class="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
-                            class="text-[var(--cor-principal)]">NEWS</span></span>
-                    <span class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-1">Economia
-                        &amp; Inteligência</span>
-                </a>
-                <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
-                    <a href="index.html" class="hover:text-[var(--cor-principal)] transition-colors">Home</a>
-                    <a href="artigos.html" class="hover:text-[var(--cor-principal)] transition-colors">Artigos</a>
-                    <a href="podcast.html" class="hover:text-[var(--cor-principal)] transition-colors">Podcast</a>
-                    <a href="privacidade.html" class="hover:text-[var(--cor-principal)] transition-colors">Privacidade</a>
-                    <a href="termos.html" class="hover:text-[var(--cor-principal)] transition-colors">Termos de Uso</a>
+    <!-- Dark Editorial Footer -->
+    <footer class="bg-[#0A0A0B] text-zinc-400 border-t-4 border-[var(--cor-principal)] pt-14 pb-10 mt-16">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-zinc-800">
+                <div class="md:col-span-5">
+                    <a href="index.html" class="inline-flex flex-col mb-4">
+                        <span class="text-2xl font-black tracking-tighter text-white leading-none">
+                            TRILHA<span class="text-[var(--cor-principal)]">NEWS</span>
+                        </span>
+                        <span class="text-[10px] tracking-[0.25em] text-zinc-500 uppercase font-bold mt-1">
+                            Economia &amp; Inteligência
+                        </span>
+                    </a>
+                    <p class="text-sm text-zinc-400 max-w-sm leading-relaxed">
+                        Jornalismo direto e análises práticas sobre mercados, economia, tecnologia, política e cultura
+                        digital.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-white mb-4">Editorias</h4>
+                    <div class="grid grid-cols-2 gap-y-2.5 gap-x-4 text-sm">
+                        <a href="artigos.html?category=Economia" class="hover:text-white transition-colors">Economia</a>
+                        <a href="artigos.html?category=Investimentos" class="hover:text-white transition-colors">Investimentos</a>
+                        <a href="artigos.html?category=Tecnologia" class="hover:text-white transition-colors">Tecnologia</a>
+                        <a href="artigos.html?category=Política" class="hover:text-white transition-colors">Política</a>
+                        <a href="artigos.html?category=Carreira" class="hover:text-white transition-colors">Carreira</a>
+                        <a href="artigos.html?category=Games" class="hover:text-white transition-colors">Games</a>
+                        <a href="artigos.html?category=Esportes" class="hover:text-white transition-colors">Esportes</a>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-white mb-4">Institucional</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="index.html" class="hover:text-white transition-colors">Primeira Página</a></li>
+                        <li><a href="artigos.html" class="hover:text-white transition-colors">Acervo Completo</a></li>
+                        <li><a href="podcast.html" class="hover:text-white transition-colors">TrilhaCast Podcast</a></li>
+                        <li><a href="newsletter.html" class="hover:text-white transition-colors">Newsletter</a></li>
+                        <li><a href="privacidade.html" class="hover:text-white transition-colors">Privacidade</a></li>
+                        <li><a href="termos.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="text-center text-xs text-slate-400">
-                &copy; 2026 Trilha News. Todos os direitos reservados.
+
+            <div class="pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-zinc-500">
+                <span>&copy; 2026 Trilha News. Todos os direitos reservados.</span>
+                <span>Atualizado diariamente com inteligência editorial</span>
             </div>
         </div>
     </footer>
@@ -530,44 +614,264 @@
             return pubDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
         }
 
+        function renderBreakingStrip(posts) {
+            const container = document.getElementById('breaking-items');
+            if (!container || !posts || posts.length === 0) return;
+
+            container.innerHTML = posts.slice(0, 4).map((post, idx) => `
+                <a href="${post.link}" class="snap-start inline-flex items-center gap-2 hover:text-[var(--cor-principal)] transition-colors shrink-0">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-[var(--cor-principal)]">${post.category}</span>
+                    <span>${post.title}</span>
+                    ${idx < 3 ? '<span class="text-zinc-300 ml-3" aria-hidden="true">•</span>' : ''}
+                </a>
+            `).join('');
+        }
+
+        function renderHeroCover(posts) {
+            const heroMainEl = document.getElementById('hero-main');
+            const sideContainer = document.getElementById('hero-side');
+            const radarList = document.getElementById('radar-list');
+
+            const mainPost = posts[0];
+            const mainDate = formatPostDate(mainPost.pubDate);
+            const mainKicker = getCategoryKickerColor(mainPost.category);
+            const mainRead = mainPost.readingTime || 4;
+
+            const usedSlugs = new Set([mainPost.slug]);
+
+            // Center column: next 2 posts
+            const sidePosts = posts.slice(1, 3);
+            sidePosts.forEach(p => usedSlugs.add(p.slug));
+
+            // 2 sub-headlines below main story (prefer same category, fallback to remaining)
+            const sameCatSub = posts.filter(p => !usedSlugs.has(p.slug) && p.category === mainPost.category).slice(0, 2);
+            const subStories = [...sameCatSub];
+            for (const p of posts) {
+                if (subStories.length >= 2) break;
+                if (!usedSlugs.has(p.slug) && !subStories.some(s => s.slug === p.slug)) {
+                    subStories.push(p);
+                }
+            }
+            subStories.forEach(p => usedSlugs.add(p.slug));
+
+            const subStoriesHTML = subStories.length > 0
+                ? `<div class="mt-6 pt-5 border-t border-zinc-200 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    ${subStories.map(sub => `
+                        <a href="${sub.link}" class="group block border-l-2 border-zinc-300 hover:border-[var(--cor-principal)] pl-3.5 transition-colors">
+                            <span class="block text-[10px] font-black uppercase tracking-wider ${getCategoryKickerColor(sub.category)} mb-1">${sub.category}</span>
+                            <span class="block text-sm font-bold news-headline text-[#0A0A0B] group-hover:text-[var(--cor-principal)] leading-snug line-clamp-2">${sub.title}</span>
+                        </a>
+                    `).join('')}
+                   </div>`
+                : '';
+
+            heroMainEl.innerHTML = `
+                <article class="news-card group">
+                    <img src="${mainPost.thumbnail}" alt="${mainPost.title}" fetchpriority="high"
+                        onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                        class="rounded-sm mb-4">
+                    <div class="flex flex-wrap items-center gap-2.5 text-[11px] font-black uppercase tracking-widest mb-2.5">
+                        <span class="${mainKicker}">${mainPost.category || 'Destaque'}</span>
+                        <span class="text-zinc-300" aria-hidden="true">•</span>
+                        <span class="text-zinc-500 font-semibold">${mainDate}</span>
+                        <span class="text-zinc-300" aria-hidden="true">•</span>
+                        <span class="text-zinc-500 font-semibold normal-case tracking-normal">${mainRead} min de leitura</span>
+                    </div>
+                    <h1 class="news-headline headline-hero font-extrabold text-[#0A0A0B] mb-3">
+                        <a href="${mainPost.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${mainPost.title}</a>
+                    </h1>
+                    <p class="feed-excerpt text-zinc-700 text-base md:text-lg leading-relaxed line-clamp-3">
+                        ${mainPost.description}
+                    </p>
+                </article>
+                ${subStoriesHTML}
+            `;
+
+            // Center 3 cols
+            sideContainer.innerHTML = sidePosts.map((post, idx) => {
+                const date = formatPostDate(post.pubDate);
+                const kicker = getCategoryKickerColor(post.category);
+                const padClass = idx === 0 ? 'pb-5' : 'pt-5';
+                return `
+                    <article class="news-card group ${padClass}">
+                        <img src="${post.thumbnail}" alt="${post.title}"
+                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                            class="rounded-sm mb-3">
+                        <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
+                            <span class="${kicker}">${post.category || 'Análise'}</span>
+                            <span class="text-zinc-400 font-semibold normal-case tracking-normal">${post.readingTime || 4} min</span>
+                        </div>
+                        <h2 class="text-lg font-bold text-[#0A0A0B] news-headline leading-snug mb-2">
+                            <a href="${post.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</a>
+                        </h2>
+                        <p class="feed-excerpt text-xs text-zinc-600 line-clamp-2 mb-2">${post.description}</p>
+                        <span class="text-[11px] font-medium text-zinc-400">${date}</span>
+                    </article>
+                `;
+            }).join('');
+
+            // Right 3 cols: Radar do Dia (01-05)
+            const radarPosts = posts.filter(p => !usedSlugs.has(p.slug)).slice(0, 5);
+            radarPosts.forEach(p => usedSlugs.add(p.slug));
+
+            radarList.innerHTML = radarPosts.map((post, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+                const kicker = getCategoryKickerColor(post.category);
+                const date = formatPostDate(post.pubDate);
+                return `
+                    <li class="py-3.5">
+                        <a href="${post.link}" class="group flex items-start gap-3.5">
+                            <span class="text-2xl font-black text-zinc-300 group-hover:text-[var(--cor-principal)] tabular-nums leading-none transition-colors shrink-0">${num}</span>
+                            <div class="min-w-0">
+                                <span class="block text-[10px] font-black uppercase tracking-wider ${kicker} mb-1">${post.category}</span>
+                                <h3 class="text-sm font-bold text-[#0A0A0B] news-headline leading-snug group-hover:text-[var(--cor-principal)] transition-colors line-clamp-3">${post.title}</h3>
+                                <span class="block text-[11px] text-zinc-400 mt-1">${date} · ${post.readingTime || 4} min</span>
+                            </div>
+                        </a>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function renderSpotlightBand(posts) {
+            const grid = document.getElementById('spotlight-grid');
+            if (!grid) return;
+
+            const markets = posts.filter(p => p.category === 'Economia' || p.category === 'Investimentos');
+            const selected = [...markets];
+            for (const p of posts) {
+                if (selected.length >= 4) break;
+                if (!selected.some(s => s.slug === p.slug)) {
+                    selected.push(p);
+                }
+            }
+
+            grid.innerHTML = selected.slice(0, 4).map(post => {
+                const date = formatPostDate(post.pubDate);
+                const darkKicker = getCategoryDarkKickerColor(post.category);
+                return `
+                    <article class="news-card feed-card-deferred group flex flex-col">
+                        <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
+                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                            class="rounded-sm mb-3.5 opacity-95 group-hover:opacity-100 transition-opacity">
+                        <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
+                            <span class="${darkKicker}">${post.category}</span>
+                            <span class="text-zinc-500 font-semibold normal-case tracking-normal">${post.readingTime || 4} min</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white news-headline leading-snug mb-2">
+                            <a href="${post.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</a>
+                        </h3>
+                        <p class="feed-excerpt text-xs text-zinc-400 line-clamp-2 mt-auto">${date} — ${post.description}</p>
+                    </article>
+                `;
+            }).join('');
+        }
+
         function renderFeedList(container, feedPosts) {
             container.innerHTML = '';
 
             if (!feedPosts || feedPosts.length === 0) {
                 container.innerHTML = `
-                    <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-2xl p-8 text-center">
-                        <p class="text-sm text-slate-500">Nenhuma matéria encontrada para esta editoria no momento.</p>
+                    <div class="py-10 text-center">
+                        <p class="text-sm text-zinc-500">Nenhuma matéria encontrada para esta editoria no momento.</p>
                     </div>
                 `;
                 return;
             }
 
-            feedPosts.forEach(post => {
+            container.innerHTML = feedPosts.map(post => {
                 const date = formatPostDate(post.pubDate);
-                const badgeClasses = getCategoryBadgeClasses(post.category);
-                const html = `
-                    <a href="${post.link}"
-                        class="feed-card-deferred group flex flex-col md:flex-row bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 overflow-hidden hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-lg transition-all">
-                        <div class="w-full md:w-64 h-48 md:h-auto shrink-0 overflow-hidden relative bg-slate-200 dark:bg-slate-700">
-                            <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
-                                onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        </div>
-                        <div class="flex-1 p-6 flex flex-col justify-center">
-                            <div class="flex items-center gap-3 mb-2.5">
-                                <span class="${badgeClasses} text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">${post.category || 'Notícia'}</span>
-                                <span class="text-xs text-slate-400 font-medium">${date}</span>
+                const kicker = getCategoryKickerColor(post.category);
+                return `
+                    <article class="news-card news-card-horizontal feed-card-deferred group py-6 flex flex-col md:flex-row gap-6">
+                        <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
+                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                            class="rounded-sm">
+                        <div class="flex-1 flex flex-col justify-center min-w-0">
+                            <div class="flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest mb-2">
+                                <span class="${kicker}">${post.category || 'Notícia'}</span>
+                                <span class="text-zinc-300" aria-hidden="true">•</span>
+                                <span class="text-zinc-500 font-semibold normal-case tracking-normal">${date}</span>
+                                <span class="text-zinc-300" aria-hidden="true">•</span>
+                                <span class="text-zinc-500 font-semibold normal-case tracking-normal">${post.readingTime || 4} min de leitura</span>
                             </div>
-                            <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-[var(--cor-principal)] transition-colors news-headline leading-snug">${post.title}</h3>
-                            <p class="feed-excerpt text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed">${post.description}</p>
-                            <span class="text-xs font-bold uppercase tracking-wider text-[var(--cor-principal)] flex items-center gap-1 mt-auto">
-                                Ler matéria <span class="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+                            <h3 class="text-xl md:text-2xl font-bold text-[#0A0A0B] news-headline leading-snug mb-2">
+                                <a href="${post.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</a>
+                            </h3>
+                            <p class="feed-excerpt text-zinc-600 text-sm line-clamp-2 mb-3">${post.description}</p>
+                            <span class="text-[11px] font-black uppercase tracking-wider text-[#0A0A0B] group-hover:text-[var(--cor-principal)] transition-colors">
+                                Ler matéria →
                             </span>
                         </div>
-                    </a>
+                    </article>
                 `;
-                container.innerHTML += html;
-            });
+            }).join('');
+        }
+
+        function renderDesksSection(posts) {
+            const desksGrid = document.getElementById('desks-grid');
+            if (!desksGrid) return;
+
+            const desks = [
+                {
+                    title: 'Tecnologia',
+                    href: 'artigos.html?category=Tecnologia',
+                    accent: 'border-blue-700',
+                    match: p => p.category === 'Tecnologia'
+                },
+                {
+                    title: 'Política',
+                    href: 'artigos.html?category=Política',
+                    accent: 'border-rose-700',
+                    match: p => p.category === 'Política'
+                },
+                {
+                    title: 'Esportes & Games',
+                    href: 'artigos.html?category=Esportes',
+                    accent: 'border-teal-700',
+                    match: p => p.category === 'Esportes' || p.category === 'Games'
+                }
+            ];
+
+            desksGrid.innerHTML = desks.map((desk, colIdx) => {
+                const deskPosts = posts.filter(desk.match).slice(0, 3);
+                if (deskPosts.length === 0) return '';
+
+                const lead = deskPosts[0];
+                const rest = deskPosts.slice(1);
+                const padClass = colIdx === 0 ? 'lg:pr-7' : (colIdx === 1 ? 'lg:px-7' : 'lg:pl-7');
+
+                return `
+                    <div class="${padClass}">
+                        <div class="flex items-center justify-between border-b border-zinc-200 pb-3 mb-5">
+                            <h2 class="text-lg font-black uppercase tracking-wide text-[#0A0A0B] border-l-4 ${desk.accent} pl-3">${desk.title}</h2>
+                            <a href="${desk.href}" class="text-xs font-bold uppercase tracking-wider text-[var(--cor-principal)] hover:underline">Ver mais →</a>
+                        </div>
+
+                        <article class="news-card feed-card-deferred group pb-5 border-b border-zinc-200">
+                            <img src="${lead.thumbnail}" alt="${lead.title}" loading="lazy"
+                                onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                                class="rounded-sm mb-3">
+                            <span class="block text-[10px] font-black uppercase tracking-wider ${getCategoryKickerColor(lead.category)} mb-1">${lead.category}</span>
+                            <h3 class="text-lg font-bold text-[#0A0A0B] news-headline leading-snug mb-2">
+                                <a href="${lead.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${lead.title}</a>
+                            </h3>
+                            <p class="feed-excerpt text-xs text-zinc-600 line-clamp-2">${lead.description}</p>
+                        </article>
+
+                        <ul class="divide-y divide-zinc-200">
+                            ${rest.map(item => `
+                                <li class="py-3.5">
+                                    <a href="${item.link}" class="group block">
+                                        <span class="block text-[10px] font-black uppercase tracking-wider ${getCategoryKickerColor(item.category)} mb-1">${item.category}</span>
+                                        <span class="block text-sm font-bold text-[#0A0A0B] news-headline leading-snug group-hover:text-[var(--cor-principal)] transition-colors">${item.title}</span>
+                                    </a>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            }).join('');
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -581,8 +885,6 @@
                 });
             }
 
-            const heroMainEl = document.getElementById('hero-main');
-            const sideContainer = document.getElementById('hero-side');
             const feedContainer = document.getElementById('news-feed');
             const filterButtons = document.querySelectorAll('#home-category-filters button');
 
@@ -610,95 +912,47 @@
                         throw new Error(data.error || 'Erro ao inscrever.');
                     }
                     sidebarMsg.textContent = data.message || 'Inscrição realizada com sucesso!';
-                    sidebarMsg.className = 'text-xs mt-3 text-emerald-300 font-semibold relative z-10';
+                    sidebarMsg.className = 'text-xs mt-3 text-emerald-400 font-semibold';
                     sidebarForm.reset();
                 } catch (err) {
                     sidebarMsg.textContent = err.message || 'Não foi possível inscrever agora.';
-                    sidebarMsg.className = 'text-xs mt-3 text-rose-300 font-semibold relative z-10';
+                    sidebarMsg.className = 'text-xs mt-3 text-rose-400 font-semibold';
                 } finally {
                     if (submitBtn) submitBtn.disabled = false;
                 }
             });
 
-            const posts = await fetchNewsletterPosts(12);
+            const posts = await fetchNewsletterPosts(24);
             let initialFeedPosts = [];
 
             if (!posts || posts.length === 0) {
-                heroMainEl.innerHTML = `
-                    <div class="h-80 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-8 text-center">
-                        <p class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-2">Não foi possível carregar as notícias agora</p>
-                        <p class="text-sm text-slate-500 mb-6">Verifique sua conexão ou tente recarregar a página em instantes.</p>
+                document.getElementById('hero-main').innerHTML = `
+                    <div class="p-10 bg-white border border-zinc-200 text-center">
+                        <p class="text-lg font-bold text-[#0A0A0B] mb-2">Não foi possível carregar as notícias agora</p>
+                        <p class="text-sm text-zinc-500 mb-6">Verifique sua conexão ou tente recarregar a página em instantes.</p>
                         <button type="button" onclick="window.location.reload()"
-                            class="px-6 py-2.5 bg-[var(--cor-principal)] text-white text-sm font-bold rounded-full hover:opacity-90 transition-opacity">
+                            class="px-6 py-2.5 bg-[var(--cor-principal)] text-white text-xs font-black uppercase tracking-wider rounded-sm">
                             Tentar novamente
                         </button>
                     </div>
                 `;
-                sideContainer.innerHTML = '';
-                feedContainer.innerHTML = `
-                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 text-center">
-                        <p class="text-sm text-slate-500">Nenhuma notícia disponível no momento.</p>
-                    </div>
-                `;
+                document.getElementById('hero-side').innerHTML = '';
+                document.getElementById('radar-list').innerHTML = '';
+                document.getElementById('spotlight-band').style.display = 'none';
+                document.getElementById('desks-section').style.display = 'none';
+                feedContainer.innerHTML = '<div class="py-8 text-center text-sm text-zinc-500">Nenhuma notícia disponível no momento.</div>';
             } else {
-                // 1. Hero Main (First Post - LCP Image)
-                const mainPost = posts[0];
-                const mainDate = formatPostDate(mainPost.pubDate);
-                const mainBadge = getCategoryBadgeClasses(mainPost.category);
-                heroMainEl.innerHTML = `
-                    <a href="${mainPost.link}" class="group relative h-[460px] md:h-[520px] w-full block rounded-2xl overflow-hidden shadow-md">
-                        <img src="${mainPost.thumbnail}" alt="${mainPost.title}" fetchpriority="high"
-                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
-                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-950/10"></div>
-                        <div class="absolute bottom-0 left-0 p-6 md:p-10 w-full">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="${mainBadge} text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">${mainPost.category || 'Destaque'}</span>
-                                <span class="text-xs font-medium text-slate-200">${mainDate}</span>
-                            </div>
-                            <h1 class="text-2xl md:text-4xl font-black text-white mb-3 news-headline leading-tight drop-shadow-sm">${mainPost.title}</h1>
-                            <p class="feed-excerpt text-slate-200 text-sm md:text-base line-clamp-2 max-w-2xl leading-relaxed">${mainPost.description}</p>
-                        </div>
-                    </a>
-                `;
+                renderBreakingStrip(posts);
+                renderHeroCover(posts);
+                renderSpotlightBand(posts);
 
-                // 2. Hero Side (Next 2 posts filling full 520px desktop height)
-                const sidePosts = posts.slice(1, 3);
-                sideContainer.innerHTML = '';
-
-                sidePosts.forEach(post => {
-                    const sideDate = formatPostDate(post.pubDate);
-                    const sideBadge = getCategoryBadgeClasses(post.category);
-                    const html = `
-                        <a href="${post.link}" class="group flex gap-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-600 transition-all h-full">
-                            <div class="w-2/5 sm:w-40 lg:w-44 shrink-0 overflow-hidden bg-slate-200 dark:bg-slate-700">
-                                <img src="${post.thumbnail}" alt="${post.title}"
-                                    onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="flex-1 py-4 pr-5 flex flex-col justify-between min-w-0">
-                                <div>
-                                    <span class="${sideBadge} inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2">${post.category || 'Análise'}</span>
-                                    <h2 class="text-sm md:text-base font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-3 news-headline group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</h2>
-                                </div>
-                                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2">
-                                    <span>${sideDate}</span>
-                                    <span class="font-bold text-[var(--cor-principal)] group-hover:translate-x-0.5 transition-transform" aria-hidden="true">Ler →</span>
-                                </div>
-                            </div>
-                        </a>
-                    `;
-                    sideContainer.innerHTML += html;
-                });
-
-                // 3. Initial Feed (Remaining posts)
-                initialFeedPosts = posts.slice(3);
+                initialFeedPosts = posts.slice(3, 12);
                 renderFeedList(feedContainer, initialFeedPosts);
+                renderDesksSection(posts);
             }
 
-            // Interactive Category Filters for Feed
-            const activeBtnClass = 'shrink-0 px-4 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition-colors';
-            const inactiveBtnClass = 'shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors';
+            const activeBtnClass = 'shrink-0 py-3 font-black text-[#0A0A0B] border-b-2 border-[var(--cor-principal)] transition-colors';
+            const inactiveBtnClass = 'shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors';
 
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -713,12 +967,12 @@
                     }
 
                     feedContainer.innerHTML = `
-                        <div class="animate-pulse flex flex-col md:flex-row gap-5 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700">
-                            <div class="w-full md:w-64 bg-slate-200 dark:bg-slate-700 h-44 rounded-xl shrink-0"></div>
-                            <div class="flex-1 space-y-3 py-2">
-                                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-24"></div>
-                                <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
-                                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                        <div class="animate-pulse py-6 flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-64 aspect-[16/10] bg-zinc-200 rounded-sm shrink-0"></div>
+                            <div class="flex-1 space-y-3 py-1">
+                                <div class="h-3 bg-zinc-200 w-24"></div>
+                                <div class="h-6 bg-zinc-200 w-4/5"></div>
+                                <div class="h-4 bg-zinc-200 w-full"></div>
                             </div>
                         </div>
                     `;
@@ -728,7 +982,7 @@
                 });
             });
 
-            // Load Latest Podcast for Home Widget
+            // Load Latest Podcast
             try {
                 const episodes = await fetchPodcastEpisodes(1);
                 if (episodes && episodes.length > 0) {

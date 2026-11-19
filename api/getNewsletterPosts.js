@@ -109,6 +109,16 @@ function extractExcerpt(htmlContent, category) {
 }
 
 /**
+ * Estimate reading time in whole minutes (~220 words per minute).
+ */
+function estimateReadingTime(htmlContent) {
+    const plain = stripTags(htmlContent);
+    if (!plain) return 1;
+    const words = plain.split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 220));
+}
+
+/**
  * Decode a single Firestore REST Typed Value into a native JS value.
  */
 function decodeValue(value) {
@@ -189,6 +199,7 @@ module.exports = async function handler(req, res) {
             data.slug = data.slug || cleanSlug;
             data.thumbnail = resolveThumbnail(data.thumbnail, data.category, data.slug);
             data.description = data.description || extractExcerpt(data.content, data.category);
+            data.readingTime = data.readingTime || estimateReadingTime(data.content);
 
             res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
             return res.status(200).json(data);
@@ -263,7 +274,8 @@ module.exports = async function handler(req, res) {
                     sentAt: sentAtStr,
                     date: sentAtStr,
                     category: data.category || null,
-                    description: extractExcerpt(data.content, data.category)
+                    description: extractExcerpt(data.content, data.category),
+                    readingTime: estimateReadingTime(data.content)
                 });
             }
         }

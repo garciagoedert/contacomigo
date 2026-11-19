@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trilha News - Todos os Artigos</title>
+    <title>Trilha News — Acervo e Editorias</title>
     <meta name="description"
-        content="Explore nosso acervo completo de notícias e artigos sobre economia, investimentos e tecnologia.">
+        content="Explore nosso acervo completo de reportagens e análises sobre economia, investimentos, tecnologia, política, carreira, games e esportes.">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts: Inter & Merriweather -->
+    <!-- Google Fonts: Newsreader + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@400;500;600;700;800;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400&family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
@@ -30,174 +30,163 @@
         gtag('config', 'G-KRNK2W5VPX');
     </script>
     <script src="analytics.js"></script>
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-
-        h1,
-        h2,
-        h3 {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .news-headline {
-            font-family: 'Merriweather', serif;
-        }
-
-        .category-badge {
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 2px 8px;
-            border-radius: 4px;
-            letter-spacing: 0.05em;
-        }
-    </style>
 </head>
 
-<body class="text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-slate-900 flex flex-col min-h-screen">
+<body class="bg-[#FAFAF9] text-[#0A0A0B] flex flex-col min-h-screen">
 
+    <!-- Level 1: Dark Utility Masthead -->
+    <div class="bg-[#0A0A0B] text-zinc-300 text-xs border-b border-zinc-800">
+        <div class="container mx-auto px-4 md:px-6 h-10 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+                <span class="inline-flex items-center gap-1.5 font-black uppercase tracking-widest text-[10px] text-white shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-[var(--cor-principal)] animate-pulse" aria-hidden="true"></span>
+                    Edição Diária
+                </span>
+                <span class="text-zinc-600 hidden sm:inline" aria-hidden="true">|</span>
+                <span id="current-date-label" class="uppercase tracking-wider text-[11px] text-zinc-400 truncate hidden sm:inline"></span>
+            </div>
+            <div class="flex items-center gap-4 shrink-0">
+                <a href="podcast.html"
+                    class="hidden sm:inline-flex items-center gap-1.5 font-semibold text-zinc-300 hover:text-white transition-colors">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
+                    TrilhaCast Podcast
+                </a>
+                <a href="#newsletter-box"
+                    class="inline-flex items-center px-3 py-1 bg-[var(--cor-principal)] hover:brightness-110 text-white font-bold uppercase tracking-wider text-[10px] rounded-sm transition-all">
+                    Assinar Newsletter
+                </a>
+            </div>
+        </div>
+    </div>
 
-
-    <!-- Header -->
-    <header
-        class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200/80 dark:border-slate-800">
+    <!-- Level 2: Main Masthead & Desk Navigation -->
+    <header class="bg-white border-b-2 border-[#0A0A0B] sticky top-0 z-50">
         <div class="container mx-auto px-4 md:px-6">
-            <div class="flex justify-between items-center h-20 gap-4">
-                <div class="flex items-center gap-6 min-w-0">
-                    <a href="index.html" class="flex flex-col shrink-0">
-                        <span
-                            class="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
-                                class="text-[var(--cor-principal)]">NEWS</span></span>
-                        <span
-                            class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-0.5">Intelligence</span>
-                    </a>
-                    <nav id="desktop-nav" aria-label="Editorias"
-                        class="hidden lg:flex items-center space-x-1 ml-6 text-sm font-semibold border-l border-slate-200 dark:border-slate-700 pl-6">
-                        <a href="artigos.html?category=Economia" data-nav-category="Economia"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Economia</a>
-                        <a href="artigos.html?category=Investimentos" data-nav-category="Investimentos"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Investimentos</a>
-                        <a href="artigos.html?category=Tecnologia" data-nav-category="Tecnologia"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Tecnologia</a>
-                        <a href="artigos.html?category=Política" data-nav-category="Política"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Política</a>
-                        <a href="artigos.html?category=Carreira" data-nav-category="Carreira"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Carreira</a>
-                        <a href="artigos.html?category=Games" data-nav-category="Games"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Games</a>
-                        <a href="artigos.html?category=Esportes" data-nav-category="Esportes"
-                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Esportes</a>
-                    </nav>
-                </div>
+            <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+                <a href="index.html" class="flex flex-col shrink-0">
+                    <span class="text-2xl md:text-3xl font-black tracking-tighter text-[#0A0A0B] leading-none">
+                        TRILHA<span class="text-[var(--cor-principal)]">NEWS</span>
+                    </span>
+                    <span class="text-[9px] md:text-[10px] tracking-[0.28em] text-zinc-500 uppercase font-bold mt-1">
+                        Intelligence
+                    </span>
+                </a>
 
-                <!-- Right Actions -->
-                <div class="flex items-center gap-3 shrink-0">
-                    <a href="podcast.html"
-                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors">
-                        <span class="w-2 h-2 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
-                        Podcast
-                    </a>
-                    <a href="newsletter.html"
-                        class="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wide hover:bg-[var(--cor-principal)] dark:hover:bg-[var(--cor-principal)] dark:hover:text-white transition-colors shadow-sm">
-                        Newsletter
-                    </a>
+                <nav id="desktop-nav" aria-label="Editorias"
+                    class="hidden lg:flex items-center gap-6 text-[13px] font-bold uppercase tracking-wide text-zinc-800">
+                    <a href="artigos.html?category=Economia" data-nav-category="Economia"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Economia</a>
+                    <a href="artigos.html?category=Investimentos" data-nav-category="Investimentos"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Investimentos</a>
+                    <a href="artigos.html?category=Tecnologia" data-nav-category="Tecnologia"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Tecnologia</a>
+                    <a href="artigos.html?category=Política" data-nav-category="Política"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Política</a>
+                    <a href="artigos.html?category=Carreira" data-nav-category="Carreira"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Carreira</a>
+                    <a href="artigos.html?category=Games" data-nav-category="Games"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Games</a>
+                    <a href="artigos.html?category=Esportes" data-nav-category="Esportes"
+                        class="py-1 border-b-2 border-transparent hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">Esportes</a>
+                    <a href="artigos.html" data-nav-category=""
+                        class="py-1 border-b-2 border-transparent text-zinc-500 hover:border-[#0A0A0B] hover:text-[#0A0A0B] transition-colors">Acervo</a>
+                </nav>
 
-                    <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-controls="mobile-menu"
-                        aria-expanded="false"
-                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
+                <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-controls="mobile-menu"
+                    aria-expanded="false"
+                    class="lg:hidden p-2 text-[#0A0A0B] border border-zinc-300 hover:bg-zinc-100 rounded-sm transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden">
-        <!-- Backdrop -->
-        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden" role="dialog" aria-modal="true"
+        aria-label="Menu de navegação">
+        <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-        <!-- Menu Panel -->
         <div id="mobile-menu-panel"
-            class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl transform translate-x-full transition-transform duration-300">
+            class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white border-l-4 border-[#0A0A0B] shadow-2xl transform translate-x-full transition-transform duration-300">
             <div class="flex flex-col h-full">
-                <!-- Header -->
-                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-                    <span class="text-xl font-black text-slate-900 dark:text-white">Menu</span>
-                    <button id="mobile-menu-close"
-                        class="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center justify-between p-5 border-b-2 border-[#0A0A0B]">
+                    <span class="text-lg font-black tracking-tight text-[#0A0A0B]">TRILHA<span
+                            class="text-[var(--cor-principal)]">NEWS</span></span>
+                    <button id="mobile-menu-close" type="button" aria-label="Fechar menu"
+                        class="p-2 hover:bg-zinc-100 rounded-sm transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
 
-                <!-- Categories -->
-                <div class="flex-1 overflow-y-auto p-6">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Categorias</h3>
-                    <nav class="space-y-2">
+                <div class="flex-1 overflow-y-auto p-5">
+                    <h3 class="text-[11px] font-black text-zinc-400 uppercase tracking-widest mb-3">Editorias</h3>
+                    <nav aria-label="Editorias mobile" class="divide-y divide-zinc-200">
                         <a href="artigos.html?category=Economia"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-purple-600 text-2xl">💰</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Economia</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-purple-700 pl-3">Economia</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Investimentos"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-green-600 text-2xl">📈</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Investimentos</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-emerald-700 pl-3">Investimentos</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Tecnologia"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-blue-600 text-2xl">💻</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Tecnologia</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-blue-700 pl-3">Tecnologia</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Política"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-red-600 text-2xl">🏛️</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Política</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-rose-700 pl-3">Política</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Carreira"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-yellow-600 text-2xl">💼</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Carreira</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-amber-600 pl-3">Carreira</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Games"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-orange-600 text-2xl">🎮</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Games</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-orange-600 pl-3">Games</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                         <a href="artigos.html?category=Esportes"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-red-600 text-2xl">⚽</span>
-                            <span
-                                class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Esportes</span>
+                            class="flex items-center justify-between py-3 font-bold text-sm text-[#0A0A0B] hover:text-[var(--cor-principal)]">
+                            <span class="border-l-4 border-teal-700 pl-3">Esportes</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                        <a href="artigos.html"
+                            class="flex items-center justify-between py-3 font-bold text-sm text-zinc-600 hover:text-[#0A0A0B]">
+                            <span class="border-l-4 border-zinc-900 pl-3">Acervo Completo</span>
+                            <span aria-hidden="true">→</span>
                         </a>
                     </nav>
 
-                    <div class="border-t border-gray-200 dark:border-gray-800 my-6"></div>
-
-
+                    <div class="mt-6 space-y-2.5">
+                        <a href="podcast.html"
+                            class="flex items-center justify-between px-4 py-3 bg-zinc-100 font-bold text-xs uppercase tracking-wider text-[#0A0A0B]">
+                            <span>TrilhaCast Podcast</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                        <a href="newsletter.html"
+                            class="flex items-center justify-between px-4 py-3 bg-[var(--cor-principal)] text-white font-bold text-xs uppercase tracking-wider">
+                            <span>Assinar Newsletter</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileMenuPanel = document.getElementById('mobile-menu-panel');
@@ -206,6 +195,7 @@
 
         function openMobileMenu() {
             mobileMenu.classList.remove('hidden');
+            mobileMenuBtn?.setAttribute('aria-expanded', 'true');
             setTimeout(() => {
                 mobileMenuPanel.classList.remove('translate-x-full');
             }, 10);
@@ -213,6 +203,7 @@
 
         function closeMobileMenu() {
             mobileMenuPanel.classList.add('translate-x-full');
+            mobileMenuBtn?.setAttribute('aria-expanded', 'false');
             setTimeout(() => {
                 mobileMenu.classList.add('hidden');
             }, 300);
@@ -224,167 +215,238 @@
     </script>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 md:px-6 py-12 flex-grow">
+    <main class="container mx-auto px-4 md:px-6 pt-8 pb-16 flex-grow">
 
-        <header id="category-header"
-            class="mb-12 text-center max-w-4xl mx-auto border-b border-gray-200 dark:border-gray-800 pb-8">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-bold uppercase tracking-wider mb-4"
-                id="portal-badge">
-                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                Portal
+        <!-- Bold Desk / Section Header -->
+        <section id="category-header" class="border-t-4 border-[#0A0A0B] pt-6 pb-6 mb-6 border-b border-zinc-200">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div id="portal-badge"
+                        class="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-[var(--cor-principal)] mb-2">
+                        <span class="w-2 h-2 bg-[var(--cor-principal)]" aria-hidden="true"></span>
+                        Caderno Editorial
+                    </div>
+                    <h1 id="page-title" class="news-headline headline-section font-extrabold text-[#0A0A0B]">
+                        Acervo Trilha News
+                    </h1>
+                    <p id="page-subtitle" class="feed-excerpt text-base md:text-lg text-zinc-600 max-w-2xl mt-2">
+                        Reportagens, análises e cobertura completa sobre economia, mercados, tecnologia e política.
+                    </p>
+                </div>
+                <a href="index.html"
+                    class="text-xs font-bold uppercase tracking-wider text-zinc-500 hover:text-[#0A0A0B] transition-colors shrink-0">
+                    ← Voltar à Capa
+                </a>
             </div>
-            <h1 id="page-title"
-                class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-4 news-headline tracking-tighter">
-                Trilha News
-            </h1>
-            <p id="page-subtitle" class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                Explore nosso acervo completo de notícias e artigos sobre economia, investimentos e tecnologia.
-            </p>
-        </header>
+        </section>
 
-        <!-- Category Filters -->
-        <div class="flex justify-center gap-2 flex-wrap mb-12" id="category-filters">
-            <a href="artigos.html"
-                class="px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold shadow-lg shadow-slate-900/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">Todos</a>
-            <a href="?category=Economia"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Economia</a>
-            <a href="?category=Investimentos"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Investimentos</a>
-            <a href="?category=Tecnologia"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Tecnologia</a>
-            <a href="?category=Política"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Política</a>
-            <a href="?category=Carreira"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Carreira</a>
-            <a href="?category=Games"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Games</a>
-            <a href="?category=Esportes"
-                class="px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)]">Esportes</a>
+        <!-- Sharp Desk Filter Tabs -->
+        <div id="category-filters"
+            class="flex items-center gap-6 overflow-x-auto border-b border-zinc-200 mb-10 text-xs uppercase tracking-wider">
+            <a href="artigos.html" data-filter=""
+                class="shrink-0 py-3 font-black text-[#0A0A0B] border-b-2 border-[var(--cor-principal)] transition-colors">Todos</a>
+            <a href="?category=Economia" data-filter="Economia"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Economia</a>
+            <a href="?category=Investimentos" data-filter="Investimentos"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Investimentos</a>
+            <a href="?category=Tecnologia" data-filter="Tecnologia"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Tecnologia</a>
+            <a href="?category=Política" data-filter="Política"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Política</a>
+            <a href="?category=Carreira" data-filter="Carreira"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Carreira</a>
+            <a href="?category=Games" data-filter="Games"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Games</a>
+            <a href="?category=Esportes" data-filter="Esportes"
+                class="shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors">Esportes</a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
             <!-- Main Content Column (8 cols) -->
             <div class="lg:col-span-8">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                        <span class="w-1.5 h-8 bg-[var(--cor-principal)] rounded-full" id="section-accent"></span>
-                        Últimas Publicações
-                    </h2>
-                </div>
-
-                <!-- Articles Grid -->
-                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Loading Skeleton -->
-                    <div
-                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    </div>
-                    <div
-                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    </div>
-                    <div
-                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    </div>
-                    <div
-                        class="animate-pulse bg-white dark:bg-slate-800 h-96 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar Column (4 cols) -->
-            <aside class="lg:col-span-4 space-y-8">
-
-                <!-- Newsletter Widget -->
-                <div
-                    class="bg-slate-900 rounded-2xl p-7 text-white relative overflow-hidden shadow-lg">
-                    <div class="absolute -top-12 -right-12 w-32 h-32 bg-[var(--cor-principal)] opacity-25 rounded-full blur-2xl pointer-events-none"></div>
-
-                    <span class="inline-block text-[10px] font-bold uppercase tracking-widest text-rose-300 mb-2 relative z-10">Resumo Matinal</span>
-                    <h3 class="text-xl font-black mb-2 relative z-10">News Intelligence</h3>
-                    <p class="text-slate-300 text-xs leading-relaxed mb-5 relative z-10">Receba nossas análises exclusivas direto no seu
-                        e-mail. Gratuito.</p>
-
-                    <form id="articles-newsletter-form" class="relative z-10 space-y-3">
-                        <label for="articles-newsletter-email" class="sr-only">Seu melhor e-mail</label>
-                        <input id="articles-newsletter-email" type="email" required placeholder="seu@email.com"
-                            autocomplete="email"
-                            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-[var(--cor-principal)] focus:bg-white/15 transition-all text-sm">
-                        <button type="submit"
-                            class="w-full px-4 py-3 bg-[var(--cor-principal)] hover:brightness-110 text-white font-bold rounded-xl transition-all shadow-sm text-sm">Inscrever-se gratuitamente</button>
-                    </form>
-                    <p id="articles-newsletter-msg" class="text-xs mt-3 hidden relative z-10"></p>
-                </div>
-
-                <!-- Trending Topics (Populated dynamically) -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700">
-                    <h3 class="text-base font-black text-slate-900 dark:text-white mb-5 flex items-center gap-2">
-                        <span class="w-1.5 h-5 bg-[var(--cor-principal)] rounded-full" aria-hidden="true"></span>
-                        Em Alta no Portal
-                    </h3>
-                    <div id="trending-list" class="space-y-4">
-                        <div class="animate-pulse space-y-3">
-                            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-20"></div>
-                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-                            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-24"></div>
-                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+                <!-- Category Lead Feature -->
+                <div id="category-lead" class="mb-10 pb-8 border-b border-zinc-200">
+                    <div class="animate-pulse flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-[55%] aspect-[16/10] bg-zinc-200 rounded-sm"></div>
+                        <div class="flex-1 space-y-3 py-2">
+                            <div class="h-3 bg-zinc-200 w-24"></div>
+                            <div class="h-8 bg-zinc-200 w-full"></div>
+                            <div class="h-4 bg-zinc-200 w-full"></div>
+                            <div class="h-4 bg-zinc-200 w-2/3"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Grid Header -->
+                <div class="flex items-center justify-between mb-6 border-t-2 border-[#0A0A0B] pt-3">
+                    <h2 class="text-sm font-black uppercase tracking-widest text-[#0A0A0B] flex items-center gap-2">
+                        <span class="w-2 h-2 bg-[var(--cor-principal)]" id="section-accent" aria-hidden="true"></span>
+                        Últimas Publicações
+                    </h2>
+                </div>
+
+                <!-- Articles 2-Column Grid -->
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="animate-pulse bg-white border border-zinc-200 h-80"></div>
+                    <div class="animate-pulse bg-white border border-zinc-200 h-80"></div>
+                    <div class="animate-pulse bg-white border border-zinc-200 h-80"></div>
+                    <div class="animate-pulse bg-white border border-zinc-200 h-80"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar Column (4 cols) -->
+            <aside class="lg:col-span-4 lg:border-l lg:border-zinc-200 lg:pl-8">
+                <div class="sticky top-24 space-y-8">
+
+                    <!-- Trilha Briefing Newsletter Box -->
+                    <div id="newsletter-box" class="bg-[#0A0A0B] text-white p-7 border-t-4 border-[var(--cor-principal)]">
+                        <span
+                            class="inline-block text-[10px] font-black uppercase tracking-widest text-[var(--cor-principal)] mb-2">
+                            Trilha Briefing
+                        </span>
+                        <h3 class="text-2xl font-bold news-headline text-white mb-2">News Intelligence</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-5">
+                            Receba nossas análises exclusivas direto no seu e-mail. Gratuito.
+                        </p>
+
+                        <form id="articles-newsletter-form" class="space-y-3">
+                            <label for="articles-newsletter-email" class="sr-only">Seu melhor e-mail</label>
+                            <input id="articles-newsletter-email" type="email" required placeholder="seu@email.com"
+                                autocomplete="email"
+                                class="w-full px-3.5 py-2.5 rounded-sm bg-zinc-900 border border-zinc-700 text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--cor-principal)] transition-colors text-sm">
+                            <button type="submit"
+                                class="w-full px-4 py-2.5 bg-[var(--cor-principal)] hover:brightness-110 text-white font-black uppercase tracking-wider rounded-sm transition-all text-xs">
+                                Inscrever-se gratuitamente
+                            </button>
+                        </form>
+                        <p id="articles-newsletter-msg" class="text-xs mt-3 hidden"></p>
+                    </div>
+
+                    <!-- Em Alta no Portal (Numbered 01-04) -->
+                    <div class="border-t-2 border-[#0A0A0B] pt-4">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-[#0A0A0B] mb-4">
+                            Em Alta no Portal
+                        </h3>
+                        <ol id="trending-list" class="divide-y divide-zinc-200">
+                            <li class="py-3 animate-pulse space-y-2">
+                                <div class="h-3 bg-zinc-200 w-20"></div>
+                                <div class="h-4 bg-zinc-200 w-full"></div>
+                            </li>
+                            <li class="py-3 animate-pulse space-y-2">
+                                <div class="h-3 bg-zinc-200 w-20"></div>
+                                <div class="h-4 bg-zinc-200 w-full"></div>
+                            </li>
+                        </ol>
+                    </div>
+
+                </div>
             </aside>
         </div>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-14 pb-8 mt-auto">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-                <a href="index.html" class="flex flex-col items-center md:items-start">
-                    <span
-                        class="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
-                            class="text-[var(--cor-principal)]">NEWS</span></span>
-                    <span class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-1">Economia
-                        &amp; Inteligência</span>
-                </a>
-                <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
-                    <a href="index.html" class="hover:text-[var(--cor-principal)] transition-colors">Home</a>
-                    <a href="artigos.html" class="hover:text-[var(--cor-principal)] transition-colors">Artigos</a>
-                    <a href="podcast.html" class="hover:text-[var(--cor-principal)] transition-colors">Podcast</a>
-                    <a href="privacidade.html" class="hover:text-[var(--cor-principal)] transition-colors">Privacidade</a>
-                    <a href="termos.html" class="hover:text-[var(--cor-principal)] transition-colors">Termos de Uso</a>
+    <!-- Dark Editorial Footer -->
+    <footer class="bg-[#0A0A0B] text-zinc-400 border-t-4 border-[var(--cor-principal)] pt-14 pb-10 mt-16">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-10 border-b border-zinc-800">
+                <div class="md:col-span-5">
+                    <a href="index.html" class="inline-flex flex-col mb-4">
+                        <span class="text-2xl font-black tracking-tighter text-white leading-none">
+                            TRILHA<span class="text-[var(--cor-principal)]">NEWS</span>
+                        </span>
+                        <span class="text-[10px] tracking-[0.25em] text-zinc-500 uppercase font-bold mt-1">
+                            Economia &amp; Inteligência
+                        </span>
+                    </a>
+                    <p class="text-sm text-zinc-400 max-w-sm leading-relaxed">
+                        Jornalismo direto e análises práticas sobre mercados, economia, tecnologia, política e cultura
+                        digital.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-white mb-4">Editorias</h4>
+                    <div class="grid grid-cols-2 gap-y-2.5 gap-x-4 text-sm">
+                        <a href="artigos.html?category=Economia" class="hover:text-white transition-colors">Economia</a>
+                        <a href="artigos.html?category=Investimentos" class="hover:text-white transition-colors">Investimentos</a>
+                        <a href="artigos.html?category=Tecnologia" class="hover:text-white transition-colors">Tecnologia</a>
+                        <a href="artigos.html?category=Política" class="hover:text-white transition-colors">Política</a>
+                        <a href="artigos.html?category=Carreira" class="hover:text-white transition-colors">Carreira</a>
+                        <a href="artigos.html?category=Games" class="hover:text-white transition-colors">Games</a>
+                        <a href="artigos.html?category=Esportes" class="hover:text-white transition-colors">Esportes</a>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-white mb-4">Institucional</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="index.html" class="hover:text-white transition-colors">Primeira Página</a></li>
+                        <li><a href="artigos.html" class="hover:text-white transition-colors">Acervo Completo</a></li>
+                        <li><a href="podcast.html" class="hover:text-white transition-colors">TrilhaCast Podcast</a></li>
+                        <li><a href="newsletter.html" class="hover:text-white transition-colors">Newsletter</a></li>
+                        <li><a href="privacidade.html" class="hover:text-white transition-colors">Privacidade</a></li>
+                        <li><a href="termos.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="text-center text-xs text-slate-400">
-                &copy; 2026 Trilha News. Todos os direitos reservados.
+
+            <div class="pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-zinc-500">
+                <span>&copy; 2026 Trilha News. Todos os direitos reservados.</span>
+                <span>Atualizado diariamente com inteligência editorial</span>
             </div>
         </div>
     </footer>
 
     <script src="newsletter-api.js"></script>
     <script>
+        function formatArticleDate(pubDate) {
+            if (!(pubDate instanceof Date) || Number.isNaN(pubDate.getTime())) return 'Recente';
+            return pubDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
         function renderTrendingList(trendingContainer, trendingPosts) {
             if (!trendingContainer) return;
             if (!trendingPosts || trendingPosts.length === 0) {
-                trendingContainer.innerHTML = '<p class="text-xs text-slate-500">Nenhuma matéria recente disponível.</p>';
+                trendingContainer.innerHTML = '<li class="py-3 text-xs text-zinc-500">Nenhuma matéria recente disponível.</li>';
                 return;
             }
 
-            trendingContainer.innerHTML = trendingPosts.slice(0, 4).map((post, idx) => `
-                ${idx > 0 ? '<hr class="border-slate-100 dark:border-slate-700/70">' : ''}
-                <a href="${post.link}" class="block group py-1">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-[var(--cor-principal)] mb-1 block">#${(post.category || 'Notícia').toUpperCase()}</span>
-                    <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200 group-hover:text-[var(--cor-principal)] transition-colors leading-snug line-clamp-2 news-headline">${post.title}</h4>
-                </a>
-            `).join('');
+            trendingContainer.innerHTML = trendingPosts.slice(0, 4).map((post, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+                const kicker = getCategoryKickerColor(post.category);
+                return `
+                    <li class="py-3.5">
+                        <a href="${post.link}" class="group flex items-start gap-3.5">
+                            <span class="text-2xl font-black text-zinc-300 group-hover:text-[var(--cor-principal)] tabular-nums leading-none transition-colors shrink-0">${num}</span>
+                            <div class="min-w-0">
+                                <span class="block text-[10px] font-black uppercase tracking-wider ${kicker} mb-1">${post.category || 'Notícia'}</span>
+                                <h4 class="font-bold text-sm text-[#0A0A0B] news-headline leading-snug group-hover:text-[var(--cor-principal)] transition-colors line-clamp-2">${post.title}</h4>
+                                <span class="block text-[11px] text-zinc-400 mt-1">${post.readingTime || 4} min de leitura</span>
+                            </div>
+                        </a>
+                    </li>
+                `;
+            }).join('');
         }
 
-        // Load Articles
         document.addEventListener('DOMContentLoaded', async () => {
+            const dateLabel = document.getElementById('current-date-label');
+            if (dateLabel) {
+                dateLabel.textContent = new Date().toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            const leadContainer = document.getElementById('category-lead');
             const grid = document.getElementById('articles-grid');
             const pageTitle = document.getElementById('page-title');
             const pageSubtitle = document.getElementById('page-subtitle');
             const portalBadge = document.getElementById('portal-badge');
+            const categoryHeader = document.getElementById('category-header');
             const sectionAccent = document.getElementById('section-accent');
             const trendingContainer = document.getElementById('trending-list');
 
@@ -412,110 +474,144 @@
                         throw new Error(data.error || 'Erro ao inscrever.');
                     }
                     nlMsg.textContent = data.message || 'Inscrição realizada com sucesso!';
-                    nlMsg.className = 'text-xs mt-3 text-emerald-300 font-semibold relative z-10';
+                    nlMsg.className = 'text-xs mt-3 text-emerald-400 font-semibold';
                     nlForm.reset();
                 } catch (err) {
                     nlMsg.textContent = err.message || 'Não foi possível inscrever agora.';
-                    nlMsg.className = 'text-xs mt-3 text-rose-300 font-semibold relative z-10';
+                    nlMsg.className = 'text-xs mt-3 text-rose-400 font-semibold';
                 } finally {
                     if (submitBtn) submitBtn.disabled = false;
                 }
             });
 
-            // Get Category from URL
             const urlParams = new URLSearchParams(window.location.search);
-            const category = urlParams.get('category');
+            const category = urlParams.get('category') || '';
+
+            document.querySelectorAll('#desktop-nav a[data-nav-category]').forEach(link => {
+                if (link.getAttribute('data-nav-category') === category) {
+                    link.setAttribute('aria-current', 'page');
+                }
+            });
+
+            const categoryStyles = {
+                'Economia': { color: 'text-purple-700', border: 'border-purple-700', accent: 'bg-purple-700' },
+                'Investimentos': { color: 'text-emerald-700', border: 'border-emerald-700', accent: 'bg-emerald-700' },
+                'Tecnologia': { color: 'text-blue-700', border: 'border-blue-700', accent: 'bg-blue-700' },
+                'Política': { color: 'text-rose-700', border: 'border-rose-700', accent: 'bg-rose-700' },
+                'Carreira': { color: 'text-amber-700', border: 'border-amber-600', accent: 'bg-amber-600' },
+                'Games': { color: 'text-orange-700', border: 'border-orange-600', accent: 'bg-orange-600' },
+                'Esportes': { color: 'text-teal-700', border: 'border-teal-700', accent: 'bg-teal-700' }
+            };
 
             if (category) {
-                document.querySelectorAll('#desktop-nav a[data-nav-category]').forEach(link => {
-                    if (link.getAttribute('data-nav-category') === category) {
-                        link.setAttribute('aria-current', 'page');
+                pageTitle.textContent = category;
+                document.title = `${category} — Trilha News`;
+                pageSubtitle.textContent = `Cobertura completa, análises e reportagens do caderno de ${category.toLowerCase()}.`;
+
+                const style = categoryStyles[category];
+                if (style) {
+                    categoryHeader.className = `border-t-4 ${style.border} pt-6 pb-6 mb-6 border-b border-zinc-200`;
+                    portalBadge.className = `inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest ${style.color} mb-2`;
+                    portalBadge.innerHTML = `<span class="w-2 h-2 ${style.accent}" aria-hidden="true"></span> Editoria`;
+                    if (sectionAccent) sectionAccent.className = `w-2 h-2 ${style.accent}`;
+                }
+
+                document.querySelectorAll('#category-filters a').forEach(btn => {
+                    const targetCat = btn.getAttribute('data-filter') || '';
+                    if (targetCat === category) {
+                        btn.className = 'shrink-0 py-3 font-black text-[#0A0A0B] border-b-2 border-[var(--cor-principal)] transition-colors';
+                    } else {
+                        btn.className = 'shrink-0 py-3 font-bold text-zinc-500 border-b-2 border-transparent hover:text-[#0A0A0B] transition-colors';
                     }
                 });
             }
 
-            // Category Styling Config
-            const categoryStyles = {
-                'Economia': { color: 'text-purple-600', bg: 'bg-purple-100', dot: 'bg-purple-500', accent: 'bg-purple-500' },
-                'Investimentos': { color: 'text-emerald-600', bg: 'bg-emerald-100', dot: 'bg-emerald-500', accent: 'bg-emerald-500' },
-                'Tecnologia': { color: 'text-blue-600', bg: 'bg-blue-100', dot: 'bg-blue-500', accent: 'bg-blue-500' },
-                'Política': { color: 'text-rose-600', bg: 'bg-rose-100', dot: 'bg-rose-500', accent: 'bg-rose-500' },
-                'Carreira': { color: 'text-amber-600', bg: 'bg-amber-100', dot: 'bg-amber-500', accent: 'bg-amber-500' },
-                'Games': { color: 'text-orange-600', bg: 'bg-orange-100', dot: 'bg-orange-500', accent: 'bg-orange-500' },
-                'Esportes': { color: 'text-teal-600', bg: 'bg-teal-100', dot: 'bg-teal-500', accent: 'bg-teal-500' }
-            };
-
-            if (category) {
-                const displayCategory = category === 'Tecnologia' ? 'Tech' : category;
-                pageTitle.textContent = `Trilha ${displayCategory}`;
-                pageTitle.classList.add(categoryStyles[category]?.color || 'text-slate-900');
-                document.title = `Trilha ${displayCategory} - Trilha News`;
-
-                pageSubtitle.textContent = `O seu portal definitivo sobre ${category.toLowerCase()}. Análises, notícias e tendências do mercado.`;
-
-                if (categoryStyles[category]) {
-                    const style = categoryStyles[category];
-                    portalBadge.className = `inline-flex items-center gap-2 px-3 py-1 rounded-full ${style.bg} ${style.color} text-xs font-bold uppercase tracking-wider mb-4`;
-                    portalBadge.querySelector('span').className = `w-2 h-2 rounded-full ${style.dot}`;
-
-                    if (sectionAccent) sectionAccent.className = `w-1.5 h-8 ${style.accent} rounded-full`;
-
-                    const buttons = document.querySelectorAll('#category-filters a');
-                    buttons.forEach(btn => {
-                        const href = btn.getAttribute('href');
-                        if (href.includes(category)) {
-                            btn.className = `px-5 py-2.5 ${style.accent} text-white rounded-full text-sm font-bold shadow-md hover:scale-105 transition-all`;
-                        } else if (btn.textContent === 'Todos') {
-                            btn.className = "px-5 py-2.5 bg-white dark:bg-slate-800 hover:bg-gray-50 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-bold transition-all";
-                        }
-                    });
-                }
-            }
-
             const [posts, trendingPool] = await Promise.all([
-                fetchNewsletterPosts(20, category),
+                fetchNewsletterPosts(21, category || null),
                 category ? fetchNewsletterPosts(4) : Promise.resolve(null)
             ]);
 
             renderTrendingList(trendingContainer, trendingPool || posts);
 
             if (!posts || posts.length === 0) {
-                grid.innerHTML = '<div class="col-span-1 md:col-span-2 text-center py-20"><p class="text-xl text-gray-500 font-medium">Nenhum artigo encontrado nesta categoria.</p><a href="artigos.html" class="text-[var(--cor-principal)] hover:underline mt-2 block">Ver todos os artigos</a></div>';
+                leadContainer.style.display = 'none';
+                grid.innerHTML = `
+                    <div class="col-span-1 md:col-span-2 text-center py-16 bg-white border border-zinc-200">
+                        <p class="text-lg font-bold text-[#0A0A0B] mb-2">Nenhum artigo encontrado nesta editoria.</p>
+                        <a href="artigos.html" class="text-xs font-black uppercase tracking-wider text-[var(--cor-principal)] hover:underline">
+                            Ver todas as editorias →
+                        </a>
+                    </div>
+                `;
                 return;
             }
 
-            grid.innerHTML = '';
-            posts.forEach((post, index) => {
-                const badgeClasses = getCategoryBadgeClasses(post.category);
-                const deferredClass = index >= 2 ? 'feed-card-deferred' : '';
-                const date = post.pubDate instanceof Date ? post.pubDate.toLocaleDateString('pt-BR') : 'Recente';
+            // 1. Lead Story (First Post)
+            const lead = posts[0];
+            const leadDate = formatArticleDate(lead.pubDate);
+            const leadKicker = getCategoryKickerColor(lead.category);
+            leadContainer.innerHTML = `
+                <article class="news-card news-card-lead group flex flex-col md:flex-row gap-6">
+                    <img src="${lead.thumbnail}" alt="${lead.title}" fetchpriority="high"
+                        onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                        class="rounded-sm">
+                    <div class="flex-1 flex flex-col justify-center min-w-0">
+                        <div class="flex flex-wrap items-center gap-2 text-[11px] font-black uppercase tracking-widest mb-2">
+                            <span class="${leadKicker}">${lead.category || 'Destaque'}</span>
+                            <span class="text-zinc-300" aria-hidden="true">•</span>
+                            <span class="text-zinc-500 font-semibold normal-case tracking-normal">${leadDate}</span>
+                            <span class="text-zinc-300" aria-hidden="true">•</span>
+                            <span class="text-zinc-500 font-semibold normal-case tracking-normal">${lead.readingTime || 4} min</span>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-[#0A0A0B] news-headline leading-tight mb-3">
+                            <a href="${lead.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${lead.title}</a>
+                        </h2>
+                        <p class="feed-excerpt text-zinc-600 text-sm md:text-base line-clamp-3 mb-4">${lead.description}</p>
+                        <span class="text-xs font-black uppercase tracking-wider text-[#0A0A0B] group-hover:text-[var(--cor-principal)] transition-colors">
+                            Ler reportagem →
+                        </span>
+                    </div>
+                </article>
+            `;
 
-                const cardHtml = `
-                    <a href="${post.link}" class="${deferredClass} group flex flex-col bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 h-full border border-slate-200/80 dark:border-slate-700">
-                        <div class="h-48 overflow-hidden relative bg-slate-200 dark:bg-slate-700">
-                            <img src="${post.thumbnail}" loading="lazy" onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="${post.title}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                            <div class="absolute top-4 left-4">
-                                <span class="${badgeClasses} category-badge rounded-full shadow-sm">${post.category || 'Notícia'}</span>
-                            </div>
+            // 2. Remaining Grid Posts
+            const gridPosts = posts.slice(1);
+            if (gridPosts.length === 0) {
+                grid.innerHTML = '<p class="text-sm text-zinc-500 col-span-2 py-4">Mais publicações em breve.</p>';
+                return;
+            }
+
+            grid.innerHTML = gridPosts.map((post, index) => {
+                const kicker = getCategoryKickerColor(post.category);
+                const deferredClass = index >= 2 ? 'feed-card-deferred' : '';
+                const date = formatArticleDate(post.pubDate);
+
+                return `
+                    <article class="news-card ${deferredClass} bg-white border border-zinc-200 flex flex-col h-full group hover:border-[#0A0A0B] transition-colors">
+                        <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
+                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                            class="transition-transform duration-500 group-hover:scale-[1.02]">
+                        <div class="p-5 flex flex-col flex-grow">
+                            <header class="mb-2">
+                                <div class="flex items-center justify-between gap-2 text-[11px] font-black uppercase tracking-wider mb-1.5">
+                                    <span class="${kicker}">${post.category || 'Notícia'}</span>
+                                    <span class="text-zinc-400 font-medium normal-case tracking-normal">${post.readingTime || 4} min</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-[#0A0A0B] leading-snug news-headline">
+                                    <a href="${post.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</a>
+                                </h3>
+                            </header>
+                            <p class="feed-excerpt text-zinc-600 text-sm line-clamp-3 mb-4 flex-grow">${post.description}</p>
+                            <footer class="flex items-center justify-between text-xs text-zinc-500 pt-3 border-t border-zinc-200 mt-auto">
+                                <span>${date}</span>
+                                <span class="text-[#0A0A0B] font-bold uppercase tracking-wider text-[11px] group-hover:text-[var(--cor-principal)] transition-colors">
+                                    Ler matéria →
+                                </span>
+                            </footer>
                         </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <span class="text-xs text-slate-400 font-medium mb-2.5 block flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                ${date}
-                            </span>
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2.5 leading-snug news-headline group-hover:text-[var(--cor-principal)] transition-colors line-clamp-2">${post.title}</h3>
-                            <p class="feed-excerpt text-slate-600 dark:text-slate-400 text-sm line-clamp-3 mb-5 flex-grow leading-relaxed">${post.description}</p>
-                            
-                            <div class="mt-auto border-t border-slate-100 dark:border-slate-700 pt-4 flex items-center justify-between">
-                                <span class="text-sm font-bold text-[var(--cor-principal)] group-hover:underline">Ler artigo completo</span>
-                                <svg class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                            </div>
-                        </div>
-                    </a>
+                    </article>
                 `;
-                grid.innerHTML += cardHtml;
-            });
+            }).join('');
         });
     </script>
 </body>

@@ -99,18 +99,53 @@ function extractEditorialExcerpt(htmlContent, category) {
     return `${cut}...`;
 }
 
+function estimateEditorialReadingTime(htmlContent) {
+    const plain = stripHtmlTagsClient(htmlContent);
+    if (!plain) return 1;
+    const words = plain.split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 220));
+}
+
+function getCategoryKickerColor(category) {
+    const key = normalizeCategoryKey(category);
+    const map = {
+        economia: 'text-purple-700',
+        investimentos: 'text-emerald-700',
+        tecnologia: 'text-blue-700',
+        politica: 'text-rose-700',
+        carreira: 'text-amber-700',
+        games: 'text-orange-700',
+        esportes: 'text-teal-700'
+    };
+    return map[key] || 'text-[#E11D48]';
+}
+
+function getCategoryDarkKickerColor(category) {
+    const key = normalizeCategoryKey(category);
+    const map = {
+        economia: 'text-purple-300',
+        investimentos: 'text-emerald-300',
+        tecnologia: 'text-blue-300',
+        politica: 'text-rose-300',
+        carreira: 'text-amber-300',
+        games: 'text-orange-300',
+        esportes: 'text-teal-300'
+    };
+    return map[key] || 'text-rose-300';
+}
+
 function getCategoryBadgeClasses(category) {
     const key = normalizeCategoryKey(category);
     const map = {
-        economia: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
-        investimentos: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200',
-        tecnologia: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
-        politica: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200',
-        carreira: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200',
-        games: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
-        esportes: 'bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-200'
+        economia: 'bg-purple-700 text-white rounded-sm',
+        investimentos: 'bg-emerald-700 text-white rounded-sm',
+        tecnologia: 'bg-blue-700 text-white rounded-sm',
+        politica: 'bg-rose-700 text-white rounded-sm',
+        carreira: 'bg-amber-600 text-white rounded-sm',
+        games: 'bg-orange-600 text-white rounded-sm',
+        esportes: 'bg-teal-700 text-white rounded-sm'
     };
-    return map[key] || 'bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-200';
+    return map[key] || 'bg-[#E11D48] text-white rounded-sm';
 }
 
 function decodeFirestoreValue(value) {
@@ -150,6 +185,7 @@ function mapPostSummary(item) {
         pubDate: item.date ? new Date(item.date) : (item.sentAt ? new Date(item.sentAt) : new Date()),
         thumbnail: resolveEditorialThumbnail(item.thumbnail, category, item.slug),
         description: item.description || extractEditorialExcerpt(item.content, category),
+        readingTime: item.readingTime || estimateEditorialReadingTime(item.content),
         category
     };
 }
@@ -217,7 +253,8 @@ async function fetchPostsFromFirestoreRest(limit = null, category = null) {
                 sentAt: sentAtStr,
                 date: sentAtStr,
                 category: data.category || null,
-                description: extractEditorialExcerpt(data.content, data.category)
+                description: extractEditorialExcerpt(data.content, data.category),
+                readingTime: estimateEditorialReadingTime(data.content)
             };
         });
 }
@@ -239,6 +276,7 @@ async function fetchPostBySlugFromFirestoreRest(slug) {
     data.slug = data.slug || cleanSlug;
     data.thumbnail = resolveEditorialThumbnail(data.thumbnail, data.category, data.slug);
     data.description = data.description || extractEditorialExcerpt(data.content, data.category);
+    data.readingTime = data.readingTime || estimateEditorialReadingTime(data.content);
     return data;
 }
 
@@ -297,6 +335,7 @@ async function fetchNewsletterPostBySlug(slug) {
             const data = await response.json();
             if (data && !data.error) {
                 data.thumbnail = resolveEditorialThumbnail(data.thumbnail, data.category, data.slug || cleanSlug);
+                data.readingTime = data.readingTime || estimateEditorialReadingTime(data.content);
                 return data;
             }
         }
@@ -315,43 +354,44 @@ async function fetchNewsletterPostBySlug(slug) {
 }
 
 /**
- * Renders a post card HTML string with lazy image loading and deferred rendering.
+ * Renders a semantic editorial news card with stretched primary link and lazy image loading.
  */
 function createPostCard(post) {
     let dateStr;
     try {
-        dateStr = post.pubDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
+        dateStr = post.pubDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
     } catch (e) {
         dateStr = 'Recente';
     }
 
-    const badgeClasses = getCategoryBadgeClasses(post.category);
+    const kickerColor = getCategoryKickerColor(post.category);
+    const readMins = post.readingTime || 4;
 
     return `
-    <a href="${post.link}"
-        class="feed-card-deferred bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-700 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-600 transition-all hover:-translate-y-1 flex flex-col h-full group">
-        <div class="aspect-[16/10] overflow-hidden bg-slate-200 dark:bg-slate-700 relative">
-            <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
-                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                 onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'">
-            <div class="absolute top-3 left-3">
-                <span class="${badgeClasses} text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
-                    ${post.category}
-                </span>
-            </div>
-        </div>
-        <div class="p-6 flex flex-col flex-grow">
-            <h3 class="text-lg font-bold mb-2.5 text-slate-900 dark:text-white line-clamp-2 news-headline group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</h3>
-            <p class="feed-excerpt text-slate-600 dark:text-slate-400 mb-4 text-sm flex-grow line-clamp-3 leading-relaxed">
+    <article class="news-card feed-card-deferred bg-white border border-zinc-200 flex flex-col h-full group hover:border-zinc-900 transition-colors">
+        <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
+             class="transition-transform duration-500 group-hover:scale-[1.02]"
+             onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'">
+        <div class="p-5 flex flex-col flex-grow">
+            <header class="mb-2">
+                <div class="flex items-center justify-between gap-2 text-[11px] font-bold uppercase tracking-wider mb-1.5">
+                    <span class="${kickerColor}">${post.category || 'Notícia'}</span>
+                    <span class="text-zinc-400 font-medium normal-case tracking-normal">${readMins} min</span>
+                </div>
+                <h3 class="text-lg font-bold text-[#0A0A0B] leading-snug news-headline">
+                    <a href="${post.link}" class="card-link group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</a>
+                </h3>
+            </header>
+            <p class="feed-excerpt text-zinc-600 text-sm line-clamp-3 mb-4 flex-grow">
                 ${post.description}
             </p>
-            <div class="flex items-center justify-between text-xs text-slate-500 mt-auto pt-4 border-t border-slate-100 dark:border-slate-700">
+            <footer class="flex items-center justify-between text-xs text-zinc-500 pt-3 border-t border-zinc-200 mt-auto">
                 <span>${dateStr}</span>
-                <span class="text-[var(--cor-principal)] font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                    Ler matéria <span aria-hidden="true">→</span>
+                <span class="text-[#0A0A0B] font-bold uppercase tracking-wider text-[11px] group-hover:text-[var(--cor-principal)] transition-colors">
+                    Ler matéria →
                 </span>
-            </div>
+            </footer>
         </div>
-    </a>
+    </article>
     `;
 }
