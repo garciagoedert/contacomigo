@@ -88,8 +88,9 @@ module.exports = async function handler(req, res) {
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         };
 
-        if (category) {
-            postData.category = category;
+        const normalizedCategory = typeof category === 'string' ? category.trim() : '';
+        if (normalizedCategory) {
+            postData.category = normalizedCategory;
         }
 
         const postRef = db.collection('newsletter_posts').doc(slug);
@@ -105,9 +106,14 @@ module.exports = async function handler(req, res) {
 
         if (publishOnly) {
             const docSnap = await postRef.get();
-            if (!docSnap.exists) {
+            const existingData = docSnap.exists ? docSnap.data() : null;
+            if (!existingData?.sentAt) {
                 postData.sentAt = admin.firestore.FieldValue.serverTimestamp();
+            }
+            if (existingData?.sentCount === undefined) {
                 postData.sentCount = 0;
+            }
+            if (!existingData?.createdAt) {
                 postData.createdAt = admin.firestore.FieldValue.serverTimestamp();
             }
 

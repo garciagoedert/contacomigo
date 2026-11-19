@@ -4,24 +4,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newsletter Admin - Trilha Comigo</title>
+    <title>Redação &amp; Newsletter Admin — Trilha News</title>
+    <link rel="icon" href="../imgs/favicon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Simple WYSIWYG Editor (Quill) -->
+
+    <!-- Google Fonts: Newsreader + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400&family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- WYSIWYG Editor (Quill) -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <style>
+        :root {
+            --cor-principal: #E11D48;
+            --cor-ink: #0A0A0B;
+            --cor-paper: #FAFAF9;
+            --cor-border: #E4E4E7;
+        }
+
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--cor-paper);
+            color: var(--cor-ink);
+        }
+
+        .font-editorial {
+            font-family: 'Newsreader', Georgia, serif;
+        }
+
+        /* Visually hidden utility keeping content accessible to screen readers */
+        .visually-hidden:where(:not(:focus-within, :active)) {
+            position: absolute !important;
+            clip-path: inset(50%) !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            padding: 0 !important;
+            border: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        /* Accessible Editorial Form Controls */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .field-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #18181B;
+            padding: 4px 0;
+            margin: -4px 0;
+        }
+
+        .field-control {
+            font: inherit;
+            font-size: max(1rem, 1em);
+            line-height: 1.4;
+            min-height: 48px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.625rem 0.875rem;
+            background-color: #FFFFFF;
+            border: 1px solid #71717A;
+            border-radius: 2px;
+            color: var(--cor-ink);
+            transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        @media (pointer: coarse) {
+            .field-control {
+                min-height: 52px;
+            }
+        }
+
+        .field-control::placeholder {
+            color: #71717A;
+        }
+
+        .field-control:focus-visible {
+            outline: 2px solid var(--cor-ink);
+            outline-offset: 2px;
+            border-color: var(--cor-ink);
+        }
+
+        .select-control {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 2.75rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%230A0A0B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.875rem center;
+            background-size: 16px 16px;
+            cursor: pointer;
+        }
+
+        /* Late validation: never style raw :invalid before user interaction */
+        .field-control:is(:user-invalid, .user-invalid-fallback) {
+            border-color: var(--cor-principal);
+            background-color: #FFF1F2;
+        }
+
+        .error-msg {
+            display: none;
+            color: #BE123C;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            margin-top: 0.125rem;
+        }
+
+        .field-control:is(:user-invalid, .user-invalid-fallback) + .error-msg {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        /* Editorial Quill Toolbar & Container Integration */
+        .ql-toolbar.ql-snow {
+            border: 1px solid #71717A;
+            border-bottom: 1px solid #D4D4D8;
+            border-radius: 2px 2px 0 0;
+            background-color: #F4F4F5;
+            padding: 8px 10px;
             font-family: 'Inter', sans-serif;
         }
 
-        /* --- EDITOR STYLES FOR EMAIL PREVIEW --- */
-        /* These styles match the user's specific email template to ensure WYSIWYG accuracy */
+        .ql-container.ql-snow {
+            border: 1px solid #71717A;
+            border-top: none;
+            border-radius: 0 0 2px 2px;
+        }
 
-        /* Scoped to .ql-editor so it doesn't break the admin UI */
+        /* --- EDITOR STYLES FOR EMAIL PREVIEW --- */
+        /* Scoped to .ql-editor so it matches email rendering without leaking to admin UI */
         #editor-container .ql-editor {
             font-family: 'Helvetica', 'Arial', sans-serif;
             background-color: #f4f4f4;
-            /* Match wrapper bg */
             padding: 20px;
         }
 
@@ -126,17 +256,13 @@
             background-color: #ef4444;
         }
 
-        /* Vermelho */
         .ql-editor .tag-medium {
             background-color: #eab308;
         }
 
-        /* Amarelo */
         .ql-editor .tag-low {
             background-color: #64748b;
         }
-
-        /* Cinza/Azul */
 
         .ql-editor .list-item {
             margin-bottom: 15px;
@@ -170,113 +296,214 @@
             font-size: 12px;
             color: #888888;
         }
-
-
-        /* General Admin UI Styles */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
     </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-    <!-- Navbar -->
-    <nav class="bg-white dark:bg-gray-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center gap-6">
-                    <span
-                        class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Admin Newsletter
-                    </span>
-                    <a href="index.html" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Voltar para
-                        Dashboard</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span id="admin-email" class="text-sm text-gray-500">...</span>
-                    <button id="logout-btn" class="text-sm text-red-600 hover:text-red-800">Sair</button>
-                </div>
+<body class="bg-[#FAFAF9] text-[#0A0A0B] min-h-screen flex flex-col">
+
+    <!-- Level 1: Dark Utility Bar -->
+    <div class="bg-[#0A0A0B] text-zinc-300 text-xs border-b border-zinc-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-2 h-2 rounded-full bg-[var(--cor-principal)] shrink-0" aria-hidden="true"></span>
+                <span class="font-black uppercase tracking-widest text-[10px] text-white truncate">
+                    Redação Trilha News · Painel Editorial
+                </span>
+            </div>
+            <div class="flex items-center gap-4 shrink-0">
+                <span id="admin-email" class="text-xs text-zinc-300 font-medium truncate max-w-[160px] sm:max-w-xs">...</span>
+                <span class="text-zinc-700" aria-hidden="true">|</span>
+                <button type="button" id="logout-btn"
+                    class="text-[11px] font-bold uppercase tracking-wider text-rose-400 hover:text-rose-300 transition-colors">
+                    Sair
+                </button>
             </div>
         </div>
-    </nav>
+    </div>
+
+    <!-- Level 2: Main Editorial Masthead -->
+    <header class="bg-white border-b-2 border-[#0A0A0B] sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5 min-w-0">
+                <a href="../index.html" target="_blank" rel="noopener noreferrer" class="flex flex-col shrink-0">
+                    <span class="text-2xl sm:text-3xl font-black tracking-tighter text-[#0A0A0B] leading-none">
+                        TRILHA<span class="text-[var(--cor-principal)]">NEWS</span>
+                    </span>
+                    <span class="text-[9px] tracking-[0.26em] text-zinc-500 uppercase font-bold mt-1">
+                        Portal &amp; Newsletter
+                    </span>
+                </a>
+                <span
+                    class="hidden sm:inline-flex items-center px-2 py-0.5 bg-[#0A0A0B] text-white text-[10px] font-black uppercase tracking-widest rounded-sm">
+                    Redação
+                </span>
+            </div>
+
+            <nav aria-label="Links do painel" class="flex items-center gap-2 sm:gap-3">
+                <a href="../index.html" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 border border-zinc-300 hover:border-[#0A0A0B] text-xs font-bold uppercase tracking-wider text-[#0A0A0B] rounded-sm transition-colors">
+                    Ver Portal <span aria-hidden="true">↗</span>
+                </a>
+                <a href="index.html"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 bg-[#0A0A0B] hover:bg-zinc-800 text-xs font-bold uppercase tracking-wider text-white rounded-sm transition-colors">
+                    <span aria-hidden="true">←</span> Dashboard
+                </a>
+            </nav>
+        </div>
+    </header>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
 
-        <!-- Tabs -->
-        <div class="border-b border-gray-200 dark:border-gray-700 mb-8">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button id="tab-compose-btn"
-                    class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors"
-                    aria-current="page">
-                    Nova Campanha
+        <!-- Section Tabs -->
+        <div class="border-b border-zinc-200 mb-8">
+            <nav class="-mb-px flex flex-wrap gap-6 sm:gap-8" aria-label="Seções do painel">
+                <button type="button" id="tab-compose-btn" aria-current="page"
+                    class="border-[#E11D48] text-[#0A0A0B] font-extrabold whitespace-nowrap py-3.5 px-1 border-b-2 text-xs sm:text-sm uppercase tracking-wider transition-colors">
+                    Nova Matéria
                 </button>
-                <button id="tab-history-btn"
-                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                    Histórico & Envios
+                <button type="button" id="tab-history-btn"
+                    class="border-transparent text-zinc-500 hover:text-[#0A0A0B] hover:border-zinc-300 whitespace-nowrap py-3.5 px-1 border-b-2 font-bold text-xs sm:text-sm uppercase tracking-wider transition-colors">
+                    Histórico &amp; Envios
                 </button>
-                <button id="tab-subscribers-btn"
-                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                    Inscritos & Importação
+                <button type="button" id="tab-subscribers-btn"
+                    class="border-transparent text-zinc-500 hover:text-[#0A0A0B] hover:border-zinc-300 whitespace-nowrap py-3.5 px-1 border-b-2 font-bold text-xs sm:text-sm uppercase tracking-wider transition-colors">
+                    Inscritos &amp; Importação
                 </button>
             </nav>
         </div>
 
-        <!-- Notification -->
-        <div id="status-message"
-            class="hidden fixed bottom-10 left-1/2 transform -translate-x-1/2 max-w-lg w-full shadow-2xl rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden z-50 transition-all duration-300">
-            <div class="p-4">
-                <div class="flex items-center justify-center">
-                    <div class="ml-3 w-0 flex-1 pt-0.5 text-center">
-                        <p id="status-text" class="text-sm font-medium text-gray-900"></p>
-                    </div>
-                </div>
+        <!-- Notification Toast -->
+        <div id="status-message" role="status" aria-live="polite"
+            class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 max-w-lg w-[calc(100%-2rem)] shadow-2xl rounded-sm pointer-events-auto z-50 transition-all duration-300">
+            <div class="px-5 py-3.5 flex items-center justify-center">
+                <p id="status-text" class="text-sm font-semibold text-center"></p>
             </div>
         </div>
 
         <!-- TAB: COMPOSE -->
-        <div id="tab-compose" class="space-y-6">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg p-6">
-                <h2 class="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">Escrever Newsletter</h2>
+        <section id="tab-compose" class="space-y-5">
 
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- Subject -->
-                    <div>
-                        <label for="email-subject"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assunto do
-                            Email</label>
-                        <input type="text" name="email-subject" id="email-subject"
-                            class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            placeholder="Ex: Dicas de Investimento para 2025">
+            <!-- Active Editing Banner -->
+            <div id="editing-banner"
+                class="hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0A0A0B] text-white px-5 py-3.5 rounded-sm border-l-4 border-[var(--cor-principal)]">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span
+                        class="px-2 py-0.5 bg-[var(--cor-principal)] text-white text-[10px] font-black uppercase tracking-widest rounded-sm shrink-0">
+                        Modo Edição
+                    </span>
+                    <span id="editing-banner-label" class="text-sm font-semibold text-zinc-100 truncate">
+                        Editando matéria existente
+                    </span>
+                </div>
+                <button type="button" id="cancel-edit-btn"
+                    class="self-start sm:self-auto px-3 py-1.5 border border-zinc-600 hover:border-white text-xs font-bold uppercase tracking-wider text-zinc-200 hover:text-white rounded-sm transition-colors shrink-0">
+                    Cancelar Edição / Nova Matéria
+                </button>
+            </div>
+
+            <div class="bg-white border border-zinc-200 border-t-2 border-t-[#0A0A0B] rounded-sm shadow-sm p-6 sm:p-8">
+                <form id="compose-form" method="POST" action="/api/sendNewsletter" novalidate
+                    aria-labelledby="compose-heading" class="space-y-6">
+
+                    <div class="pb-4 border-b border-zinc-200">
+                        <p class="text-[11px] font-black uppercase tracking-[0.18em] text-[var(--cor-principal)] mb-1">
+                            Composição Editorial
+                        </p>
+                        <h1 id="compose-heading"
+                            class="font-editorial text-2xl sm:text-3xl font-extrabold text-[#0A0A0B] tracking-tight leading-tight">
+                            Escrever &amp; Publicar Matéria
+                        </h1>
                     </div>
 
-                    <!-- Thumbnail URL -->
-                    <div>
-                        <label for="post-thumbnail"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL da Thumbnail
-                            (Opcional)</label>
-                        <input type="url" name="post-thumbnail" id="post-thumbnail"
-                            class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            placeholder="https://exemplo.com/imagem.jpg">
+                    <!-- Subject / Headline -->
+                    <div class="field">
+                        <label for="email-subject" class="field-label">
+                            Título da Matéria / Assunto do Email
+                            <span class="text-[var(--cor-principal)]" aria-hidden="true">*</span>
+                        </label>
+                        <input type="text" name="email-subject" id="email-subject" required
+                            data-error="subject-error" aria-invalid="false" enterkeyhint="next"
+                            class="field-control"
+                            placeholder="Ex: Banco Central sinaliza cortes graduais nos juros em 2026">
+                        <p id="subject-error" class="error-msg">
+                            <span role="img" aria-label="Erro"
+                                class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--cor-principal)] text-white text-[10px] font-black shrink-0">!</span>
+                            <span>Informe o título ou assunto antes de publicar.</span>
+                        </p>
                     </div>
 
-                    <!-- Editor -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Conteúdo</label>
-                        <div id="editor-container" class="h-96 bg-white text-black text-base"></div>
+                    <!-- Desk Category & Cover URL Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Category / Editoria -->
+                        <div class="field">
+                            <label for="post-category" class="field-label">
+                                Editoria / Categoria
+                                <span class="text-[var(--cor-principal)]" aria-hidden="true">*</span>
+                            </label>
+                            <select id="post-category" name="category" required
+                                data-error="category-error" aria-invalid="false"
+                                aria-describedby="category-cover-hint"
+                                class="field-control select-control">
+                                <option value="" disabled selected>Selecione uma editoria...</option>
+                                <option value="Economia">Economia</option>
+                                <option value="Investimentos">Investimentos</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                                <option value="Política">Política</option>
+                                <option value="Carreira">Carreira</option>
+                                <option value="Games">Games</option>
+                                <option value="Esportes">Esportes</option>
+                            </select>
+                            <p id="category-error" class="error-msg">
+                                <span role="img" aria-label="Erro"
+                                    class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--cor-principal)] text-white text-[10px] font-black shrink-0">!</span>
+                                <span>Selecione uma editoria para classificar a matéria no portal.</span>
+                            </p>
+                            <p id="category-cover-hint" class="text-xs text-zinc-500 leading-relaxed">
+                                Sem thumbnail customizada, o portal aplica automaticamente a capa editorial da editoria.
+                            </p>
+                        </div>
 
-                        <!-- Code View Container with Toolbar -->
+                        <!-- Thumbnail URL -->
+                        <div class="field">
+                            <label for="post-thumbnail" class="field-label">
+                                URL da Thumbnail (Opcional)
+                            </label>
+                            <input type="url" name="post-thumbnail" id="post-thumbnail"
+                                autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next"
+                                aria-describedby="thumbnail-hint"
+                                class="field-control"
+                                placeholder="https://exemplo.com/imagem-de-capa.jpg">
+                            <p id="thumbnail-hint" class="text-xs text-zinc-500 leading-relaxed">
+                                Opcional. Cole a URL completa caso queira sobrescrever a imagem padrão.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Content Editor -->
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <label class="field-label">Conteúdo da Matéria</label>
+                            <span class="text-[11px] font-medium text-zinc-500">
+                                Use <strong class="text-zinc-700">AI Import</strong> para Markdown/IA ou <strong class="text-zinc-700">HTML</strong> para código-fonte
+                            </span>
+                        </div>
+
+                        <div id="editor-container" class="h-96 bg-white text-[#0A0A0B] text-base"></div>
+
+                        <!-- Code View Container -->
                         <div id="code-view-container"
-                            class="hidden flex flex-col h-96 border border-gray-300 rounded-b-lg bg-gray-50 dark:bg-gray-900">
+                            class="hidden flex flex-col h-96 border border-zinc-500 rounded-sm bg-zinc-50 overflow-hidden">
                             <div
-                                class="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700">
-                                <span class="text-xs font-mono text-gray-500 uppercase">Editor de Código Fonte
-                                    (HTML)</span>
+                                class="flex items-center justify-between px-4 py-2 bg-[#0A0A0B] text-white border-b border-zinc-800">
+                                <span class="text-[11px] font-mono uppercase tracking-wider text-zinc-300">
+                                    Editor de Código Fonte (HTML)
+                                </span>
                                 <div class="flex gap-2">
-                                    <button id="force-render-btn"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded shadow-sm flex items-center gap-1 transition-colors">
+                                    <button type="button" id="force-render-btn"
+                                        class="bg-[var(--cor-principal)] hover:brightness-110 text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm flex items-center gap-1.5 transition-all">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -287,182 +514,228 @@
                                 </div>
                             </div>
                             <div class="flex flex-1 overflow-hidden">
-                                <textarea id="html-editor"
-                                    class="flex-1 h-full p-4 font-mono text-sm resize-none focus:outline-none bg-gray-50 dark:bg-gray-900 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700"
-                                    placeholder="<!-- Cole seu <style> e HTML completo aqui -->"></textarea>
+                                <textarea id="html-editor" aria-label="Código fonte HTML da matéria"
+                                    class="flex-1 h-full p-4 font-mono text-sm resize-none focus:outline-none bg-white text-[#0A0A0B] border-r border-zinc-200"
+                                    placeholder="<!-- Cole seu HTML ou conteúdo editorial aqui -->"></textarea>
 
-                                <!-- IFrame Preview (Initially Hidden until Render) -->
+                                <!-- IFrame Preview -->
                                 <iframe id="html-preview-frame" class="flex-1 h-full bg-white hidden"
-                                    title="Email Preview"></iframe>
+                                    title="Pré-visualização HTML"></iframe>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Actions -->
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex gap-4 w-full md:w-auto">
-                            <input type="email" id="test-email-input" placeholder="Email de teste"
-                                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full md:w-64 sm:text-sm border-gray-300 rounded-md p-2 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <button id="send-test-btn"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                    <!-- Form Actions Bar -->
+                    <div
+                        class="pt-6 border-t border-zinc-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <!-- Test Email Controls -->
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
+                            <label for="test-email-input" class="visually-hidden">Email de destino para teste</label>
+                            <input type="email" id="test-email-input" name="test-email"
+                                autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false"
+                                placeholder="Email de teste (ex: equipe@trilhacomigo.com)"
+                                class="field-control sm:w-72">
+                            <button type="button" id="send-test-btn"
+                                class="inline-flex items-center justify-center px-4 min-h-[48px] border border-zinc-800 bg-white hover:bg-zinc-100 text-xs font-extrabold uppercase tracking-wider text-[#0A0A0B] rounded-sm transition-colors whitespace-nowrap">
                                 Enviar Teste
                             </button>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="flex items-center gap-2 mr-2">
-                                <input type="checkbox" id="publish-only-check"
-                                    class="rounded text-blue-600 focus:ring-blue-500 border-gray-300">
-                                <label for="publish-only-check" class="text-sm text-gray-500">Publicar apenas no
-                                    Blog</label>
+
+                        <!-- Publish / Save Controls -->
+                        <div class="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+                            <div class="flex items-center gap-2.5 py-2 pr-1">
+                                <input type="checkbox" id="publish-only-check" name="publish-only"
+                                    class="w-4 h-4 rounded-sm border-zinc-400 cursor-pointer"
+                                    style="accent-color: #E11D48;">
+                                <label for="publish-only-check"
+                                    class="text-sm font-semibold text-zinc-700 cursor-pointer select-none">
+                                    Publicar apenas no Portal
+                                </label>
                             </div>
-                            <button id="save-draft-btn"
-                                class="text-gray-500 hover:text-gray-700 text-sm font-medium underline">Salvar
-                                Rascunho</button>
-                            <button id="send-all-btn"
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+
+                            <button type="button" id="save-draft-btn"
+                                class="inline-flex items-center justify-center px-4 min-h-[48px] border border-zinc-300 hover:border-[#0A0A0B] bg-white text-xs font-bold uppercase tracking-wider text-zinc-700 hover:text-[#0A0A0B] rounded-sm transition-colors">
+                                Salvar Rascunho
+                            </button>
+
+                            <button type="submit" id="send-all-btn"
+                                class="inline-flex items-center justify-center px-6 min-h-[48px] bg-[#0A0A0B] hover:bg-[var(--cor-principal)] text-xs font-black uppercase tracking-wider text-white rounded-sm shadow-sm transition-colors">
                                 Enviar para Todos
                             </button>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Polite Screen Reader Validation Summary -->
+                    <div id="form-error-live" class="visually-hidden" aria-live="polite"></div>
+                </form>
             </div>
-        </div>
+        </section>
 
         <!-- TAB: HISTORY -->
-        <div id="tab-history" class="hidden space-y-6">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg overflow-hidden">
+        <section id="tab-history" class="hidden space-y-6">
+            <div class="bg-white border border-zinc-200 border-t-2 border-t-[#0A0A0B] rounded-sm shadow-sm overflow-hidden">
                 <div
-                    class="px-4 py-5 sm:px-6 flex justify-between items-center bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Histórico de Envios</h3>
-                    <div class="flex gap-2">
-                        <!-- Import Posts Button -->
-                        <div class="relative">
-                            <input type="file" id="csv-posts-input" accept=".csv" class="hidden">
-                            <button onclick="document.getElementById('csv-posts-input').click()"
-                                class="text-sm text-gray-600 hover:text-gray-900 bg-white border border-gray-300 px-3 py-1.5 rounded shadow-sm">
-                                Importar Posts (CSV)
-                            </button>
-                        </div>
-                        <button id="refresh-history-btn"
-                            class="text-sm text-blue-600 hover:text-blue-800">Atualizar</button>
+                    class="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-zinc-50 border-b border-zinc-200">
+                    <div>
+                        <p class="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--cor-principal)]">
+                            Arquivo Editorial
+                        </p>
+                        <h2 class="font-editorial text-2xl font-extrabold text-[#0A0A0B] leading-tight">
+                            Histórico de Publicações &amp; Envios
+                        </h2>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <input type="file" id="csv-posts-input" accept=".csv" class="hidden">
+                        <button type="button" id="import-posts-csv-btn"
+                            class="inline-flex items-center px-3.5 py-2 bg-white border border-zinc-300 hover:border-[#0A0A0B] text-xs font-bold uppercase tracking-wider text-[#0A0A0B] rounded-sm transition-colors">
+                            Importar Posts (CSV)
+                        </button>
+                        <button type="button" id="refresh-history-btn"
+                            class="inline-flex items-center px-4 py-2 bg-[#0A0A0B] hover:bg-[var(--cor-principal)] text-xs font-bold uppercase tracking-wider text-white rounded-sm transition-colors">
+                            Atualizar
+                        </button>
                     </div>
                 </div>
+
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                    <table class="min-w-full divide-y divide-zinc-200">
+                        <thead class="bg-zinc-100/80 border-b border-zinc-200">
                             <tr>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Assunto</th>
+                                    class="px-6 py-3.5 text-left text-[11px] font-black text-zinc-700 uppercase tracking-wider">
+                                    Matéria / Assunto
+                                </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Data</th>
+                                    class="px-6 py-3.5 text-left text-[11px] font-black text-zinc-700 uppercase tracking-wider">
+                                    Editoria
+                                </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Enviados</th>
+                                    class="px-6 py-3.5 text-left text-[11px] font-black text-zinc-700 uppercase tracking-wider">
+                                    Data
+                                </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Status</th>
+                                    class="px-6 py-3.5 text-left text-[11px] font-black text-zinc-700 uppercase tracking-wider">
+                                    Enviados
+                                </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Ações</th>
+                                    class="px-6 py-3.5 text-left text-[11px] font-black text-zinc-700 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3.5 text-right text-[11px] font-black text-zinc-700 uppercase tracking-wider">
+                                    Ações
+                                </th>
                             </tr>
                         </thead>
-                        <tbody id="history-table-body"
-                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody id="history-table-body" class="bg-white divide-y divide-zinc-200">
                             <!-- Rows loaded via JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- TAB: SUBSCRIBERS -->
-        <div id="tab-subscribers" class="hidden space-y-6">
+        <section id="tab-subscribers" class="hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Stat Card -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-                    <div class="icon-stat p-5">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            </div>
-                            <div class="ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Inscritos</dt>
-                                    <dd class="text-3xl font-semibold text-gray-900 dark:text-white"
-                                        id="total-subscribers-count">-</dd>
-                                </dl>
-                            </div>
-                        </div>
+                <div
+                    class="bg-[#0A0A0B] text-white border border-[#0A0A0B] border-t-4 border-t-[var(--cor-principal)] rounded-sm shadow-sm p-6 flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-rose-400">
+                            Audiência Ativa
+                        </span>
+                        <span class="w-8 h-8 rounded-sm bg-zinc-900 border border-zinc-700 flex items-center justify-center text-white">
+                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </span>
                     </div>
+                    <dl class="mt-4">
+                        <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                            Total de Inscritos
+                        </dt>
+                        <dd class="font-editorial text-4xl font-extrabold text-white mt-1" id="total-subscribers-count">
+                            -
+                        </dd>
+                    </dl>
                 </div>
 
                 <!-- Import Card -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg col-span-2">
-                    <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Importar Inscritos (CSV)
-                        </h3>
-                        <div class="mt-2 max-w-xl text-sm text-gray-500">
-                            <p>Faça upload de um arquivo CSV contendo os emails dos seus inscritos. <br>
-                                <span class="text-xs text-gray-400">Emails já existentes serão atualizados (sem
-                                    duplicatas).</span>
-                            </p>
+                <div
+                    class="bg-white border border-zinc-200 border-t-2 border-t-[#0A0A0B] rounded-sm shadow-sm md:col-span-2 p-6">
+                    <p class="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--cor-principal)] mb-1">
+                        Base de Leitores
+                    </p>
+                    <h2 class="font-editorial text-xl font-extrabold text-[#0A0A0B]">
+                        Importar Inscritos (CSV)
+                    </h2>
+                    <p class="mt-1.5 text-sm text-zinc-600">
+                        Faça upload de um arquivo CSV contendo os emails dos inscritos.
+                        <span class="block text-xs text-zinc-500 mt-0.5">
+                            Emails já existentes serão atualizados sem criar duplicatas.
+                        </span>
+                    </p>
+                    <div class="mt-5 flex flex-col sm:flex-row sm:items-center gap-3">
+                        <div class="w-full sm:flex-1">
+                            <label for="csv-file-input" class="visually-hidden">Selecionar arquivo CSV de inscritos</label>
+                            <input type="file" id="csv-file-input" accept=".csv"
+                                class="block w-full text-sm text-zinc-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-sm file:border file:border-zinc-300 file:text-xs file:font-bold file:uppercase file:tracking-wider file:bg-zinc-100 file:text-[#0A0A0B] hover:file:bg-zinc-200 cursor-pointer" />
                         </div>
-                        <div class="mt-5 sm:flex sm:items-center">
-                            <div class="w-full sm:max-w-xs">
-                                <input type="file" id="csv-file-input" accept=".csv" class="block w-full text-sm text-gray-500
-                                  file:mr-4 file:py-2 file:px-4
-                                  file:rounded-full file:border-0
-                                  file:text-sm file:font-semibold
-                                  file:bg-blue-50 file:text-blue-700
-                                  hover:file:bg-blue-100
-                                " />
-                            </div>
-                            <button id="import-csv-btn"
-                                class="mt-3 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                Importar
-                            </button>
-                        </div>
+                        <button type="button" id="import-csv-btn"
+                            class="inline-flex items-center justify-center px-5 min-h-[44px] bg-[#0A0A0B] hover:bg-[var(--cor-principal)] text-xs font-black uppercase tracking-wider text-white rounded-sm transition-colors shrink-0">
+                            Importar CSV
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- List -->
-            <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+            <!-- Subscribers List -->
+            <div class="bg-white border border-zinc-200 border-t-2 border-t-[#0A0A0B] rounded-sm shadow-sm overflow-hidden">
                 <div
-                    class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Lista de Inscritos</h3>
-                    <div class="relative rounded-md shadow-sm">
-                        <input type="text" id="subscriber-search"
-                            class="focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
-                            placeholder="Buscar email...">
+                    class="px-6 py-5 border-b border-zinc-200 bg-zinc-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="font-editorial text-xl font-extrabold text-[#0A0A0B]">Lista de Inscritos</h2>
+                        <p class="text-xs text-zinc-500">Contatos cadastrados pelo portal ou importados via CSV.</p>
                     </div>
+                    <search class="w-full sm:w-72">
+                        <label for="subscriber-search" class="visually-hidden">Buscar inscrito por email</label>
+                        <input type="search" id="subscriber-search" name="subscriber-search"
+                            autocorrect="off" autocapitalize="none" spellcheck="false"
+                            class="field-control !min-h-[44px]"
+                            placeholder="Buscar email...">
+                    </search>
                 </div>
-                <!-- Scrollable Container -->
                 <div class="max-h-[600px] overflow-y-auto">
-                    <ul id="subscribers-list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <ul id="subscribers-list" class="divide-y divide-zinc-200">
                         <!-- Loaded via JS -->
                     </ul>
                 </div>
             </div>
-        </div>
+        </section>
 
     </main>
 
     <!-- Markdown/AI Import Modal -->
-    <div id="md-import-modal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 transition-opacity">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl h-[80vh] flex flex-col mx-4">
+    <div id="md-import-modal" role="dialog" aria-modal="true" aria-labelledby="md-modal-title"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-[#0A0A0B]/75 backdrop-blur-sm transition-opacity">
+        <div
+            class="bg-white border border-zinc-300 border-t-4 border-t-[#0A0A0B] rounded-sm shadow-2xl w-full max-w-5xl h-[82vh] flex flex-col mx-4 overflow-hidden">
             <!-- Modal Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Importar Conteúdo (Markdown/AI)</h3>
-                <button id="close-md-modal" class="text-gray-400 hover:text-gray-500 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-zinc-200 bg-white">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--cor-principal)]">
+                        Assistente de Redação
+                    </span>
+                    <h2 id="md-modal-title" class="font-editorial text-xl font-extrabold text-[#0A0A0B]">
+                        Importar Conteúdo (Markdown / IA)
+                    </h2>
+                </div>
+                <button type="button" id="close-md-modal" aria-label="Fechar modal"
+                    class="p-2 text-zinc-500 hover:text-[#0A0A0B] hover:bg-zinc-100 rounded-sm transition-colors">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -470,45 +743,49 @@
             </div>
 
             <!-- Modal Body -->
-            <div class="flex-1 flex overflow-hidden">
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 overflow-hidden">
                 <!-- Input Column -->
-                <div class="w-1/2 p-0 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+                <div class="border-b md:border-b-0 md:border-r border-zinc-200 flex flex-col overflow-hidden">
                     <div
-                        class="flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                        <span class="text-xs font-semibold text-gray-500 uppercase">Cole seu texto aqui</span>
-                        <!-- Quick Format Toggle -->
-                        <select id="import-format"
-                            class="text-xs border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-300">
-                            <option value="markdown" selected>Markdown (Gemini/ChatGPT)</option>
-                            <option value="html">HTML Puro (Renderizar)</option>
-                        </select>
+                        class="flex items-center justify-between px-4 py-2.5 bg-zinc-100 border-b border-zinc-200">
+                        <label for="md-input" class="text-[11px] font-black text-zinc-600 uppercase tracking-wider">
+                            Cole seu texto aqui
+                        </label>
+                        <div>
+                            <label for="import-format" class="visually-hidden">Formato de entrada</label>
+                            <select id="import-format"
+                                class="text-xs font-semibold border border-zinc-400 rounded-sm px-2.5 py-1 bg-white text-[#0A0A0B] focus:outline-none focus:border-[#0A0A0B]">
+                                <option value="markdown" selected>Markdown (Gemini/ChatGPT)</option>
+                                <option value="html">HTML Puro (Renderizar)</option>
+                            </select>
+                        </div>
                     </div>
                     <textarea id="md-input"
-                        class="flex-1 w-full p-4 resize-none border-none focus:ring-0 text-sm font-mono dark:bg-gray-800 dark:text-gray-300"
+                        class="flex-1 w-full p-4 resize-none border-none focus:outline-none text-sm font-mono bg-white text-[#0A0A0B]"
                         placeholder="# Cole aqui o output do Gemini/ChatGPT..."></textarea>
                 </div>
 
                 <!-- Preview Column -->
-                <div class="w-1/2 p-0 flex flex-col bg-gray-50 dark:bg-gray-900">
-                    <div
-                        class="flex items-center px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
-                        <span class="text-xs font-semibold text-gray-500 uppercase">Pré-visualização</span>
+                <div class="flex flex-col bg-[#FAFAF9] overflow-hidden">
+                    <div class="flex items-center px-4 py-2.5 border-b border-zinc-200 bg-zinc-100">
+                        <span class="text-[11px] font-black text-zinc-600 uppercase tracking-wider">
+                            Pré-visualização
+                        </span>
                     </div>
-                    <div id="md-preview" class="flex-1 p-6 overflow-y-auto prose prose-sm max-w-none dark:prose-invert">
-                        <p class="text-gray-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>
+                    <div id="md-preview" class="flex-1 p-6 overflow-y-auto prose prose-sm max-w-none">
+                        <p class="text-zinc-400 italic text-center mt-20">A pré-visualização aparecerá aqui...</p>
                     </div>
                 </div>
             </div>
 
             <!-- Modal Footer -->
-            <div
-                class="flex items-center justify-end px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-b-lg gap-3">
-                <button id="cancel-md-import"
-                    class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
+            <div class="flex items-center justify-end px-6 py-4 border-t border-zinc-200 bg-zinc-50 gap-3">
+                <button type="button" id="cancel-md-import"
+                    class="px-4 min-h-[44px] border border-zinc-300 hover:border-[#0A0A0B] rounded-sm text-xs font-bold uppercase tracking-wider text-zinc-700 bg-white hover:text-[#0A0A0B] transition-colors">
                     Cancelar
                 </button>
-                <button id="confirm-md-import"
-                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <button type="button" id="confirm-md-import"
+                    class="px-5 min-h-[44px] bg-[#0A0A0B] hover:bg-[var(--cor-principal)] rounded-sm text-xs font-black uppercase tracking-wider text-white transition-colors">
                     Inserir no Editor
                 </button>
             </div>
@@ -521,7 +798,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <!-- Module Scripts (Cache Busted) -->
     <script type="module">
-        import "./newsletter.js?v=3.3";
+        import "./newsletter.js?v=4.0";
     </script>
 </body>
 
