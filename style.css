@@ -10,6 +10,42 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+/* Modern editorial typography wrapping */
+h1,
+h2,
+h3,
+.news-headline {
+    text-wrap: balance;
+}
+
+.feed-excerpt,
+.editorial-copy p,
+.editorial-copy blockquote,
+.editorial-copy li {
+    text-wrap: pretty;
+}
+
+/* Defer off-screen rendering for below-the-fold feed cards only */
+.feed-card-deferred {
+    content-visibility: auto;
+    contain-intrinsic-size: auto none auto 220px;
+}
+
+/* Accessible keyboard focus indicator */
+:focus-visible {
+    outline: 2px solid var(--cor-principal);
+    outline-offset: 2px;
+}
+
+/* Current page indicator in navigation (not color alone) */
+nav a[aria-current="page"] {
+    color: var(--cor-principal);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+}
+
 .modal-enter {
     opacity: 0;
     transform: scale(0.95);
@@ -32,7 +68,6 @@ button:disabled {
     cursor: not-allowed;
     opacity: 0.6;
 }
-
 
 /* --- Custom Scrollbar --- */
 ::-webkit-scrollbar {
@@ -57,7 +92,6 @@ button:disabled {
 /* Estilos da nova barra lateral */
 aside nav a.sidebar-active {
     background-color: #4299E1;
-    /* Azul, como na imagem */
     color: white;
 }
 

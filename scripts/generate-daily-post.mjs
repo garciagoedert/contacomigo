@@ -12,6 +12,31 @@ const SCHEDULE_TABLE = {
     6: { 8: 'Economia', 10: 'Investimentos', 12: 'Tecnologia', 14: 'Política', 16: 'Carreira', 18: 'Games', 20: 'Esportes' }
 };
 
+const CATEGORY_COVERS = {
+    economia: ['/imgs/covers/economia-1.jpg', '/imgs/covers/economia-2.jpg'],
+    investimentos: ['/imgs/covers/investimentos-1.jpg', '/imgs/covers/investimentos-2.jpg'],
+    tecnologia: ['/imgs/covers/tecnologia-1.jpg', '/imgs/covers/tecnologia-2.jpg'],
+    politica: ['/imgs/covers/politica-1.jpg', '/imgs/covers/politica-2.jpg'],
+    carreira: ['/imgs/covers/carreira-1.jpg', '/imgs/covers/carreira-2.jpg'],
+    games: ['/imgs/covers/games-1.jpg', '/imgs/covers/games-2.jpg'],
+    esportes: ['/imgs/covers/esportes-1.jpg']
+};
+
+function getEditorialCoverUrl(category, slug) {
+    const key = String(category || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    const variants = CATEGORY_COVERS[key] || CATEGORY_COVERS.economia;
+    let sum = 0;
+    const text = String(slug || '');
+    for (let i = 0; i < text.length; i++) {
+        sum = (sum + text.charCodeAt(i)) % 1000003;
+    }
+    return `https://www.trilhacomigo.com${variants[sum % variants.length]}`;
+}
+
 const VALID_CATEGORIES = new Set([
     'Economia',
     'Investimentos',
@@ -251,7 +276,7 @@ async function run() {
     }
 
     if (checkRssOnly) {
-        console.log(`🖼️ Imagem real extraída (se disponível): ${realImageUrl || 'nenhuma (usará Pollinations)'}`);
+        console.log(`🖼️ Imagem real extraída (se disponível): ${realImageUrl || `nenhuma (usará capa editorial ${getEditorialCoverUrl(targetCategory, 'preview')})`}`);
         console.log('✅ Check RSS concluído com sucesso.');
         return;
     }
@@ -364,18 +389,16 @@ CONTEÚDO:
         articleData.category = targetCategory;
     }
 
+    const slug = buildSlug(articleData.subject);
+
     let finalThumbnail;
     if (realImageUrl) {
         finalThumbnail = realImageUrl;
         console.log('🖼️ Usando imagem real extraída do RSS.');
     } else {
-        const rawPrompt = articleData.imagePrompt || articleData.title;
-        const encodedPrompt = encodeURIComponent(`${rawPrompt} editorial news illustration flat vector high quality`);
-        finalThumbnail = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=630&nologo=true`;
-        console.log('🎨 Sem imagem no RSS; usando thumbnail gerada via Pollinations.');
+        finalThumbnail = getEditorialCoverUrl(targetCategory, slug);
+        console.log(`🖼️ Sem imagem no RSS; usando capa editorial local: ${finalThumbnail}`);
     }
-
-    const slug = buildSlug(articleData.subject);
 
     if (isDryRun) {
         console.log('🧪 DRY_RUN=true — resumo do artigo gerado:');

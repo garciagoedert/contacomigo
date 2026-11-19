@@ -4,28 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trilha News - Seu Portal de Economia e Finanças</title>
+    <title>Trilha News - Seu Portal de Economia, Negócios e Atualidades</title>
     <meta name="description"
-        content="Notícias, dicas e artigos sobre economia, investimentos e controle financeiro familiar. Powered by Trilha Comigo.">
+        content="Análises, notícias e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes. Trilha News.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://trilhacomigo.br/">
-    <meta property="og:title" content="Trilha News - Economia na Prática">
+    <meta property="og:url" content="https://www.trilhacomigo.com/">
+    <meta property="og:title" content="Trilha News - Economia e Inteligência de Mercado">
     <meta property="og:description"
-        content="Notícias, dicas e artigos sobre economia, investimentos e controle financeiro familiar.">
-    <meta property="og:image" content="https://trilhacomigo.br/imgs/14.png">
+        content="Análises, notícias e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes.">
+    <meta property="og:image" content="https://www.trilhacomigo.com/imgs/covers/economia-1.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://trilhacomigo.br/">
-    <meta property="twitter:title" content="Trilha News - Economia na Prática">
+    <meta property="twitter:url" content="https://www.trilhacomigo.com/">
+    <meta property="twitter:title" content="Trilha News - Economia e Inteligência de Mercado">
     <meta property="twitter:description"
-        content="Notícias, dicas e artigos sobre economia, investimentos e controle financeiro familiar.">
-    <meta property="twitter:image" content="https://trilhacomigo.br/imgs/14.png">
+        content="Análises, notícias e reportagens sobre economia, investimentos, tecnologia, política, carreira, games e esportes.">
+    <meta property="twitter:image" content="https://www.trilhacomigo.com/imgs/covers/economia-1.jpg">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://trilhacomigo.br/">
+    <link rel="canonical" href="https://www.trilhacomigo.com/">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -36,202 +36,178 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-KRNK2W5VPX');
     </script>
 
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Inter & Merriweather -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Inter:wght@400;500;600;700;800;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="imgs/favicon.png" type="image/png">
     <script src="analytics.js"></script>
-    <script src="https://cdn.pluggy.ai/pluggy-connect/v2/pluggy-connect.js"></script>
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            /* bg-gray-100 */
-        }
-
-        h1,
-        h2,
-        h3,
-        .serif-font {
-            font-family: 'Inter', sans-serif;
-            /* Keeping Inter for modern look, optionally switch to Merriweather for classic news feel */
         }
 
         .news-headline {
             font-family: 'Merriweather', serif;
-            /* Classic news feel for headlines */
-        }
-
-        .gradient-animate {
-            background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
-        }
-
-        .hover-lift {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .hover-lift:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Sticky Sidebar */
-        .sticky-sidebar {
-            position: sticky;
-            top: 100px;
         }
     </style>
 </head>
 
-<body class="text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-slate-900">
-
-
+<body class="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 min-h-screen flex flex-col">
 
     <!-- Header / Navbar -->
     <header
-        class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 dark:border-slate-800">
         <div class="container mx-auto px-4 md:px-6">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo Zone -->
-                <div class="flex items-center gap-6">
-                    <a href="index.html" class="flex flex-col">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Brand + Desktop Nav -->
+                <div class="flex items-center gap-6 min-w-0">
+                    <a href="index.html" class="flex flex-col shrink-0" aria-current="page">
                         <span
                             class="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
                                 class="text-[var(--cor-principal)]">NEWS</span></span>
                         <span
-                            class="text-[10px] tracking-[0.2em] text-gray-400 uppercase font-semibold">Intelligence</span>
+                            class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-0.5">Intelligence</span>
                     </a>
 
-                    <!-- Desktop Nav -->
-                    <nav
-                        class="hidden lg:flex items-center space-x-6 ml-8 text-sm font-semibold border-l border-gray-200 dark:border-gray-700 pl-8">
+                    <nav aria-label="Editorias"
+                        class="hidden lg:flex items-center space-x-1 ml-6 text-sm font-semibold border-l border-slate-200 dark:border-slate-700 pl-6">
                         <a href="artigos.html?category=Economia"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Economia</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Economia</a>
                         <a href="artigos.html?category=Investimentos"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Investimentos</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Investimentos</a>
                         <a href="artigos.html?category=Tecnologia"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Tecnologia</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Tecnologia</a>
                         <a href="artigos.html?category=Política"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Política</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Política</a>
                         <a href="artigos.html?category=Carreira"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Carreira</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Carreira</a>
                         <a href="artigos.html?category=Games"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Games</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Games</a>
                         <a href="artigos.html?category=Esportes"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Esportes</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Esportes</a>
                     </nav>
                 </div>
 
-                <!-- CTA Zone -->
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:flex flex-col items-end mr-2">
-                        <span class="text-xs text-gray-500 font-medium">Oferecimento</span>
-                        <img src="imgs/14.png" class="h-5 opacity-80" alt="Trilha Comigo">
-                    </div>
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3 shrink-0">
+                    <a href="podcast.html"
+                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
+                        Podcast
+                    </a>
+                    <a href="#newsletter-box"
+                        class="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wide hover:bg-[var(--cor-principal)] dark:hover:bg-[var(--cor-principal)] dark:hover:text-white transition-colors shadow-sm">
+                        Newsletter
+                    </a>
 
-                    <!-- Mobile Hamburger Menu Button -->
-                    <button id="mobile-menu-btn"
-                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-controls="mobile-menu"
+                        aria-expanded="false"
+                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden">
-        <!-- Backdrop -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 lg:hidden hidden" role="dialog" aria-modal="true"
+        aria-label="Menu de navegação">
         <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 
-        <!-- Menu Panel -->
         <div id="mobile-menu-panel"
             class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl transform translate-x-full transition-transform duration-300">
             <div class="flex flex-col h-full">
-                <!-- Header -->
-                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+                <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
                     <span class="text-xl font-black text-slate-900 dark:text-white">Menu</span>
-                    <button id="mobile-menu-close"
-                        class="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobile-menu-close" type="button" aria-label="Fechar menu"
+                        class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
 
-                <!-- Categories -->
                 <div class="flex-1 overflow-y-auto p-6">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Categorias</h3>
-                    <nav class="space-y-2">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Editorias</h3>
+                    <nav aria-label="Editorias mobile" class="space-y-2">
                         <a href="artigos.html?category=Economia"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-purple-600 text-2xl">💰</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Economia</span>
                         </a>
                         <a href="artigos.html?category=Investimentos"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-green-600 text-2xl">📈</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Investimentos</span>
                         </a>
                         <a href="artigos.html?category=Tecnologia"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-blue-600 text-2xl">💻</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Tecnologia</span>
                         </a>
                         <a href="artigos.html?category=Política"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-red-600 text-2xl">🏛️</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Política</span>
                         </a>
                         <a href="artigos.html?category=Carreira"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-yellow-600 text-2xl">💼</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Carreira</span>
                         </a>
                         <a href="artigos.html?category=Games"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-orange-600 text-2xl">🎮</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Games</span>
                         </a>
                         <a href="artigos.html?category=Esportes"
-                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group">
-                            <span class="text-red-600 text-2xl">⚽</span>
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
                             <span
                                 class="font-semibold text-slate-900 dark:text-white group-hover:text-[var(--cor-principal)]">Esportes</span>
                         </a>
                     </nav>
 
-                    <div class="border-t border-gray-200 dark:border-gray-800 my-6"></div>
+                    <div class="border-t border-slate-200 dark:border-slate-800 my-6"></div>
 
-
+                    <div class="space-y-2">
+                        <a href="podcast.html"
+                            class="flex items-center justify-between p-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold text-sm text-slate-800 dark:text-slate-100">
+                            <span>TrilhaCast Podcast</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                        <a href="newsletter.html"
+                            class="flex items-center justify-between p-3 rounded-lg bg-slate-900 text-white font-semibold text-sm">
+                            <span>Assinar Newsletter</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileMenuPanel = document.getElementById('mobile-menu-panel');
@@ -240,6 +216,7 @@
 
         function openMobileMenu() {
             mobileMenu.classList.remove('hidden');
+            mobileMenuBtn?.setAttribute('aria-expanded', 'true');
             setTimeout(() => {
                 mobileMenuPanel.classList.remove('translate-x-full');
             }, 10);
@@ -247,6 +224,7 @@
 
         function closeMobileMenu() {
             mobileMenuPanel.classList.add('translate-x-full');
+            mobileMenuBtn?.setAttribute('aria-expanded', 'false');
             setTimeout(() => {
                 mobileMenu.classList.add('hidden');
             }, 300);
@@ -257,121 +235,251 @@
         mobileMenuBackdrop?.addEventListener('click', closeMobileMenu);
     </script>
 
-    <!-- Main Content Grid -->
-    <main class="container mx-auto px-4 md:px-6 py-8">
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-6 pt-6 pb-16 flex-grow">
+
+        <!-- Editorial Context Bar -->
+        <div
+            class="flex flex-wrap items-center justify-between gap-3 pb-5 mb-8 border-b border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-2.5">
+                <span
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-[var(--cor-principal)] font-bold uppercase tracking-wider text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--cor-principal)]" aria-hidden="true"></span>
+                    Edição Diária
+                </span>
+                <span id="current-date-label" class="font-medium capitalize"></span>
+            </div>
+            <a href="artigos.html"
+                class="font-semibold text-slate-600 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors flex items-center gap-1">
+                Ver todas as matérias <span aria-hidden="true">→</span>
+            </a>
+        </div>
 
         <!-- Breaking News / Hero Section -->
         <section id="hero-section"
-            class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 border-b border-gray-200 dark:border-gray-800 pb-12">
-            <!-- Main Story (Left - 8 cols) -->
-            <div class="lg:col-span-8 group cursor-pointer" id="hero-main">
-                <div class="animate-pulse bg-gray-200 h-96 rounded-xl w-full"></div>
+            class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-14 pb-12 border-b border-slate-200/80 dark:border-slate-800">
+            <!-- Main Story (8 cols) -->
+            <div class="lg:col-span-8" id="hero-main">
+                <div class="animate-pulse bg-slate-200 dark:bg-slate-800 h-[460px] md:h-[520px] rounded-2xl w-full"></div>
             </div>
 
-            <!-- Secondary Stories (Right - 4 cols) -->
-            <div class="lg:col-span-4 flex flex-col gap-6" id="hero-side">
-                <div class="animate-pulse bg-gray-200 h-40 rounded-xl w-full"></div>
-                <div class="animate-pulse bg-gray-200 h-40 rounded-xl w-full"></div>
+            <!-- Secondary Stories (4 cols - aligned full height) -->
+            <div class="lg:col-span-4 grid grid-rows-2 gap-5 lg:h-[520px]" id="hero-side">
+                <div class="animate-pulse bg-slate-200 dark:bg-slate-800 rounded-2xl w-full min-h-[200px]"></div>
+                <div class="animate-pulse bg-slate-200 dark:bg-slate-800 rounded-2xl w-full min-h-[200px]"></div>
             </div>
         </section>
 
-        <!-- Two Column Layout: Feed + Sidebar -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Two Column Layout: Feed + Clean Sidebar -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
             <!-- Left Column: News Feed (8 cols) -->
             <div class="lg:col-span-8">
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
                     <h2
                         class="text-2xl font-black text-slate-900 dark:text-white border-l-4 border-[var(--cor-principal)] pl-4">
-                        Últimas Notícias</h2>
-                    <div class="flex gap-2">
-                        <button
-                            class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">←</button>
-                        <button
-                            class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">→</button>
-                    </div>
+                        Últimas Notícias
+                    </h2>
+                    <a href="artigos.html"
+                        class="text-xs font-bold uppercase tracking-wider text-[var(--cor-principal)] hover:underline">
+                        Explorar acervo →
+                    </a>
                 </div>
 
-                <div id="news-feed" class="flex flex-col gap-8">
-                    <!-- Feed Items injected via JS -->
-                    <div class="animate-pulse flex gap-4">
-                        <div class="w-1/3 bg-gray-200 h-32 rounded-lg"></div>
-                        <div class="w-2/3 space-y-2">
-                            <div class="h-4 bg-gray-200 w-3/4"></div>
-                            <div class="h-4 bg-gray-200 w-full"></div>
+                <!-- Quick Category Filters -->
+                <div id="home-category-filters" class="flex items-center gap-2 overflow-x-auto pb-3 mb-6">
+                    <button type="button" data-category=""
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition-colors">
+                        Todos
+                    </button>
+                    <button type="button" data-category="Economia"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Economia
+                    </button>
+                    <button type="button" data-category="Investimentos"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Investimentos
+                    </button>
+                    <button type="button" data-category="Tecnologia"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Tecnologia
+                    </button>
+                    <button type="button" data-category="Política"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Política
+                    </button>
+                    <button type="button" data-category="Carreira"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Carreira
+                    </button>
+                    <button type="button" data-category="Games"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Games
+                    </button>
+                    <button type="button" data-category="Esportes"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors">
+                        Esportes
+                    </button>
+                </div>
+
+                <div id="news-feed" class="flex flex-col gap-6">
+                    <!-- Feed Skeleton -->
+                    <div class="animate-pulse flex flex-col md:flex-row gap-5 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+                        <div class="w-full md:w-64 bg-slate-200 dark:bg-slate-700 h-44 rounded-xl shrink-0"></div>
+                        <div class="flex-1 space-y-3 py-2">
+                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-24"></div>
+                            <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
+                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-12 text-center">
+                <div class="mt-10 text-center">
                     <button type="button" onclick="window.location.href='artigos.html'"
-                        class="px-8 py-3 border-2 border-slate-200 dark:border-gray-700 font-bold rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        class="px-8 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-bold text-sm text-slate-800 dark:text-slate-100 rounded-full hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors shadow-sm">
                         Carregar Mais Notícias
                     </button>
                 </div>
             </div>
 
-            <!-- Right Column: Sidebar (4 cols) -->
+            <!-- Right Column: Clean Editorial Sidebar (4 cols) -->
             <aside class="lg:col-span-4">
-                <div class="sticky top-24 space-y-8">
+                <div class="sticky top-24 space-y-6">
 
-
-                    <!-- Sponsor / Ad Unit -->
-                    <div
-                        class="bg-gray-100 dark:bg-slate-800 rounded-2xl p-8 text-center relative overflow-hidden group border border-gray-200 dark:border-gray-700 mb-8">
+                    <!-- Premium Newsletter Card -->
+                    <div id="newsletter-box"
+                        class="bg-slate-900 text-white p-7 rounded-2xl shadow-lg relative overflow-hidden">
                         <div
-                            class="absolute top-0 right-0 bg-gray-200 dark:bg-gray-700 px-2 py-1 text-[10px] uppercase font-bold text-gray-500 rounded-bl-lg">
-                            Publicidade</div>
-                        <div
-                            class="w-full h-64 bg-white dark:bg-slate-900 rounded-xl flex flex-col items-center justify-center mb-4 border border-dashed border-gray-300 dark:border-gray-600 group-hover:border-[var(--cor-principal)] transition-colors">
-                            <span class="text-4xl mb-2">📢</span>
-                            <span class="text-sm font-bold text-gray-400">Espaço do Patrocinador</span>
-                            <span class="text-xs text-gray-400 mt-1">300x250</span>
+                            class="absolute -top-12 -right-12 w-36 h-36 bg-[var(--cor-principal)] opacity-25 rounded-full blur-2xl pointer-events-none">
                         </div>
-                        <p class="text-sm text-gray-500">Anuncie sua marca aqui e alcance milhares de investidores.</p>
-                        <a href="anuncie.html"
-                            class="mt-4 inline-block text-xs font-bold text-[var(--cor-principal)] hover:underline">Saiba
-                            mais -></a>
-                    </div>
-
-
-
-                    <!-- Newsletter Tiny Widget -->
-                    <div class="bg-gray-100 dark:bg-slate-800 p-6 rounded-2xl">
-                        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Newsletter Diária</h3>
-                        <p class="text-xs text-gray-500 mb-4">Receba as principais notícias do mercado toda manhã.</p>
-                        <form id="sidebar-newsletter-form" class="flex gap-2">
-                            <input id="sidebar-newsletter-email" type="email" required placeholder="Seu e-mail"
-                                class="flex-1 px-3 py-2 rounded-lg text-sm border border-gray-300 dark:border-gray-600 dark:bg-slate-900">
+                        <span
+                            class="inline-block text-[10px] font-bold uppercase tracking-widest text-rose-300 mb-2 relative z-10">Resumo
+                            Matinal</span>
+                        <h3 class="text-xl font-black text-white mb-2 relative z-10">Newsletter Diária</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-5 relative z-10">Receba os principais
+                            movimentos de economia, investimentos e tecnologia direto no seu e-mail.</p>
+                        <form id="sidebar-newsletter-form" class="space-y-3 relative z-10">
+                            <label for="sidebar-newsletter-email" class="sr-only">Seu e-mail</label>
+                            <input id="sidebar-newsletter-email" type="email" required placeholder="seu@email.com"
+                                autocomplete="email"
+                                class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:border-[var(--cor-principal)] focus:bg-white/15 transition-colors">
                             <button type="submit"
-                                class="bg-slate-900 text-white px-3 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-opacity">OK</button>
+                                class="w-full bg-[var(--cor-principal)] hover:brightness-110 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm">
+                                Inscrever-se gratuitamente
+                            </button>
                         </form>
-                        <p id="sidebar-newsletter-msg" class="text-xs mt-2 hidden"></p>
+                        <p id="sidebar-newsletter-msg" class="text-xs mt-3 hidden relative z-10"></p>
                     </div>
+
+                    <!-- Explore Editorials Card -->
+                    <div
+                        class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+                        <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white mb-4">
+                            Explorar Editorias
+                        </h3>
+                        <ul class="divide-y divide-slate-100 dark:divide-slate-700/70 text-sm">
+                            <li>
+                                <a href="artigos.html?category=Economia"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                                        Economia
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="artigos.html?category=Investimentos"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        Investimentos
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="artigos.html?category=Tecnologia"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                        Tecnologia
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="artigos.html?category=Política"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                        Política
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="artigos.html?category=Carreira"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                        Carreira
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="artigos.html?category=Games"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                        Games
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="artigos.html?category=Esportes"
+                                    class="flex items-center justify-between py-2.5 text-slate-700 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors group">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                                        Esportes
+                                    </span>
+                                    <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform"
+                                        aria-hidden="true">→</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </aside>
         </div>
 
-
-
         <!-- Dynamic Podcast Section (Index) -->
-        <section class="mt-20 mb-12" id="podcast-home-section" style="display:none;">
+        <section class="mt-20 mb-6" id="podcast-home-section" style="display:none;">
             <div class="bg-slate-900 rounded-3xl overflow-hidden relative text-white p-8 md:p-12">
-                <div class="absolute inset-0 bg-[url('imgs/podcast-bg.jpg')] bg-cover opacity-10 bg-center"></div>
                 <div class="relative z-10 flex flex-col md:flex-row items-center gap-10">
                     <div class="md:w-1/3">
-                        <img id="home-pod-img" src=""
-                            class="rounded-2xl shadow-2xl rotate-3 border-4 border-white/10 w-full max-w-sm mx-auto">
+                        <img id="home-pod-img" src="" alt="Capa do episódio TrilhaCast" loading="lazy"
+                            class="rounded-2xl shadow-2xl rotate-2 border-4 border-white/10 w-full max-w-sm mx-auto">
                     </div>
                     <div class="md:w-2/3 space-y-4 text-center md:text-left">
                         <h2 class="text-xs font-bold tracking-widest text-[#1DB954] uppercase">Novo Episódio do
                             TrilhaCast</h2>
                         <h3 id="home-pod-title" class="text-2xl md:text-4xl font-black leading-tight"></h3>
-                        <p id="home-pod-desc" class="text-gray-400 line-clamp-2"></p>
+                        <p id="home-pod-desc" class="feed-excerpt text-slate-300 line-clamp-2"></p>
                         <div class="pt-4 flex flex-col md:flex-row gap-4 justify-center md:justify-start">
-                            <a id="home-pod-link" href="#" target="_blank"
+                            <a id="home-pod-link" href="#" target="_blank" rel="noopener noreferrer"
                                 class="px-6 py-3 bg-[#1DB954] text-white font-bold rounded-full hover:brightness-110 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path
                                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
                                 </svg>
@@ -390,23 +498,26 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 mt-auto">
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-14 pb-8 mt-auto">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-                <div class="flex items-center gap-2 mb-4 md:mb-0">
-                    <img src="imgs/14.png" class="h-8 opacity-80" alt="Logo">
-                    <span class="font-bold text-gray-900 dark:text-white">Trilha News</span>
-                </div>
-                <div class="flex gap-8 text-sm font-medium text-gray-500">
-                    <a href="index.html" class="hover:text-[var(--cor-principal)]">Home</a>
-                    <a href="anuncie.html"
-                        class="hover:text-[var(--cor-principal)] text-[var(--cor-principal)]">Anuncie</a>
-                    <a href="#" class="hover:text-[var(--cor-principal)]">Política de Privacidade</a>
-                    <a href="#" class="hover:text-[var(--cor-principal)]">Termos de Uso</a>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                <a href="index.html" class="flex flex-col items-center md:items-start">
+                    <span
+                        class="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
+                            class="text-[var(--cor-principal)]">NEWS</span></span>
+                    <span class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-1">Economia
+                        &amp; Inteligência</span>
+                </a>
+                <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+                    <a href="index.html" class="hover:text-[var(--cor-principal)] transition-colors">Home</a>
+                    <a href="artigos.html" class="hover:text-[var(--cor-principal)] transition-colors">Artigos</a>
+                    <a href="podcast.html" class="hover:text-[var(--cor-principal)] transition-colors">Podcast</a>
+                    <a href="privacidade.html" class="hover:text-[var(--cor-principal)] transition-colors">Privacidade</a>
+                    <a href="termos.html" class="hover:text-[var(--cor-principal)] transition-colors">Termos de Uso</a>
                 </div>
             </div>
-            <div class="text-center text-xs text-gray-400">
-                &copy; 2026 Trilha Comigo. Todos os direitos reservados.
+            <div class="text-center text-xs text-slate-400">
+                &copy; 2026 Trilha News. Todos os direitos reservados.
             </div>
         </div>
     </footer>
@@ -414,12 +525,66 @@
     <!-- Logic -->
     <script src="newsletter-api.js"></script>
     <script>
+        function formatPostDate(pubDate) {
+            if (!(pubDate instanceof Date) || Number.isNaN(pubDate.getTime())) return 'Hoje';
+            return pubDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
 
+        function renderFeedList(container, feedPosts) {
+            container.innerHTML = '';
+
+            if (!feedPosts || feedPosts.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-2xl p-8 text-center">
+                        <p class="text-sm text-slate-500">Nenhuma matéria encontrada para esta editoria no momento.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            feedPosts.forEach(post => {
+                const date = formatPostDate(post.pubDate);
+                const badgeClasses = getCategoryBadgeClasses(post.category);
+                const html = `
+                    <a href="${post.link}"
+                        class="feed-card-deferred group flex flex-col md:flex-row bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 overflow-hidden hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-lg transition-all">
+                        <div class="w-full md:w-64 h-48 md:h-auto shrink-0 overflow-hidden relative bg-slate-200 dark:bg-slate-700">
+                            <img src="${post.thumbnail}" alt="${post.title}" loading="lazy"
+                                onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="flex-1 p-6 flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-2.5">
+                                <span class="${badgeClasses} text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">${post.category || 'Notícia'}</span>
+                                <span class="text-xs text-slate-400 font-medium">${date}</span>
+                            </div>
+                            <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-[var(--cor-principal)] transition-colors news-headline leading-snug">${post.title}</h3>
+                            <p class="feed-excerpt text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed">${post.description}</p>
+                            <span class="text-xs font-bold uppercase tracking-wider text-[var(--cor-principal)] flex items-center gap-1 mt-auto">
+                                Ler matéria <span class="group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </a>
+                `;
+                container.innerHTML += html;
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const dateLabel = document.getElementById('current-date-label');
+            if (dateLabel) {
+                dateLabel.textContent = new Date().toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
             const heroMainEl = document.getElementById('hero-main');
             const sideContainer = document.getElementById('hero-side');
             const feedContainer = document.getElementById('news-feed');
+            const filterButtons = document.querySelectorAll('#home-category-filters button');
 
             const sidebarForm = document.getElementById('sidebar-newsletter-form');
             const sidebarEmailInput = document.getElementById('sidebar-newsletter-email');
@@ -445,23 +610,24 @@
                         throw new Error(data.error || 'Erro ao inscrever.');
                     }
                     sidebarMsg.textContent = data.message || 'Inscrição realizada com sucesso!';
-                    sidebarMsg.className = 'text-xs mt-2 text-green-600 font-semibold';
+                    sidebarMsg.className = 'text-xs mt-3 text-emerald-300 font-semibold relative z-10';
                     sidebarForm.reset();
                 } catch (err) {
                     sidebarMsg.textContent = err.message || 'Não foi possível inscrever agora.';
-                    sidebarMsg.className = 'text-xs mt-2 text-red-600 font-semibold';
+                    sidebarMsg.className = 'text-xs mt-3 text-rose-300 font-semibold relative z-10';
                 } finally {
                     if (submitBtn) submitBtn.disabled = false;
                 }
             });
 
-            const posts = await fetchNewsletterPosts(10);
+            const posts = await fetchNewsletterPosts(12);
+            let initialFeedPosts = [];
 
             if (!posts || posts.length === 0) {
                 heroMainEl.innerHTML = `
-                    <div class="h-80 rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center p-8 text-center">
-                        <p class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">Não foi possível carregar as notícias agora</p>
-                        <p class="text-sm text-gray-500 mb-6">Verifique sua conexão ou tente recarregar a página em instantes.</p>
+                    <div class="h-80 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-8 text-center">
+                        <p class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-2">Não foi possível carregar as notícias agora</p>
+                        <p class="text-sm text-slate-500 mb-6">Verifique sua conexão ou tente recarregar a página em instantes.</p>
                         <button type="button" onclick="window.location.reload()"
                             class="px-6 py-2.5 bg-[var(--cor-principal)] text-white text-sm font-bold rounded-full hover:opacity-90 transition-opacity">
                             Tentar novamente
@@ -470,74 +636,97 @@
                 `;
                 sideContainer.innerHTML = '';
                 feedContainer.innerHTML = `
-                    <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 text-center">
-                        <p class="text-sm text-gray-500">Nenhuma notícia disponível no momento.</p>
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 text-center">
+                        <p class="text-sm text-slate-500">Nenhuma notícia disponível no momento.</p>
                     </div>
                 `;
             } else {
-                // 1. Hero Main (First Post)
+                // 1. Hero Main (First Post - LCP Image)
                 const mainPost = posts[0];
-                const heroMainHTML = `
-                    <a href="${mainPost.link}" class="relative h-[500px] w-full block rounded-2xl overflow-hidden hover:opacity-95 transition-opacity">
-                        <img src="${mainPost.thumbnail}" onerror="this.onerror=null;this.src='imgs/bannertrilha.png'" class="absolute inset-0 w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
-                            <span class="bg-[var(--cor-principal)] text-white text-xs font-bold px-3 py-1 rounded uppercase mb-4 inline-block">Destaque do Dia</span>
-                            <h2 class="text-3xl md:text-5xl font-black text-white mb-4 news-headline leading-tight drop-shadow-lg">${mainPost.title}</h2>
-                            <p class="text-gray-200 text-lg line-clamp-2 max-w-2xl font-medium shadow-black drop-shadow-md">${mainPost.description || 'Leia a matéria completa no Trilha News.'}</p>
+                const mainDate = formatPostDate(mainPost.pubDate);
+                const mainBadge = getCategoryBadgeClasses(mainPost.category);
+                heroMainEl.innerHTML = `
+                    <a href="${mainPost.link}" class="group relative h-[460px] md:h-[520px] w-full block rounded-2xl overflow-hidden shadow-md">
+                        <img src="${mainPost.thumbnail}" alt="${mainPost.title}" fetchpriority="high"
+                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-950/10"></div>
+                        <div class="absolute bottom-0 left-0 p-6 md:p-10 w-full">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="${mainBadge} text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">${mainPost.category || 'Destaque'}</span>
+                                <span class="text-xs font-medium text-slate-200">${mainDate}</span>
+                            </div>
+                            <h1 class="text-2xl md:text-4xl font-black text-white mb-3 news-headline leading-tight drop-shadow-sm">${mainPost.title}</h1>
+                            <p class="feed-excerpt text-slate-200 text-sm md:text-base line-clamp-2 max-w-2xl leading-relaxed">${mainPost.description}</p>
                         </div>
                     </a>
                 `;
-                heroMainEl.innerHTML = heroMainHTML;
 
-                // 2. Hero Side (Next 2 posts)
+                // 2. Hero Side (Next 2 posts filling full 520px desktop height)
                 const sidePosts = posts.slice(1, 3);
                 sideContainer.innerHTML = '';
 
                 sidePosts.forEach(post => {
+                    const sideDate = formatPostDate(post.pubDate);
+                    const sideBadge = getCategoryBadgeClasses(post.category);
                     const html = `
-                        <a href="${post.link}" class="group flex gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all h-full">
-                            <div class="w-1/3 aspect-square rounded-lg overflow-hidden flex-shrink-0">
-                                <img src="${post.thumbnail}" onerror="this.onerror=null;this.src='imgs/bannertrilha.png'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <a href="${post.link}" class="group flex gap-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-600 transition-all h-full">
+                            <div class="w-2/5 sm:w-40 lg:w-44 shrink-0 overflow-hidden bg-slate-200 dark:bg-slate-700">
+                                <img src="${post.thumbnail}" alt="${post.title}"
+                                    onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             </div>
-                            <div class="flex flex-col justify-center">
-                                <span class="text-[10px] font-bold text-[var(--cor-principal)] uppercase mb-1">${post.category || 'Análise'}</span>
-                                <h3 class="font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</h3>
+                            <div class="flex-1 py-4 pr-5 flex flex-col justify-between min-w-0">
+                                <div>
+                                    <span class="${sideBadge} inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2">${post.category || 'Análise'}</span>
+                                    <h2 class="text-sm md:text-base font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-3 news-headline group-hover:text-[var(--cor-principal)] transition-colors">${post.title}</h2>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2">
+                                    <span>${sideDate}</span>
+                                    <span class="font-bold text-[var(--cor-principal)] group-hover:translate-x-0.5 transition-transform" aria-hidden="true">Ler →</span>
+                                </div>
                             </div>
                         </a>
                     `;
                     sideContainer.innerHTML += html;
                 });
 
-                // 3. Feed (Remaining posts)
-                const feedPosts = posts.slice(3);
-                feedContainer.innerHTML = '';
-
-                if (feedPosts.length === 0) {
-                    feedContainer.innerHTML = '<p class="text-sm text-gray-500 py-4">Mais notícias em breve.</p>';
-                } else {
-                    feedPosts.forEach(post => {
-                        const date = post.pubDate instanceof Date ? post.pubDate.toLocaleDateString('pt-BR') : 'Hoje';
-                        const html = `
-                            <a href="${post.link}" class="group flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-xl transition-all">
-                                <div class="w-full md:w-1/3 h-48 md:h-auto rounded-xl overflow-hidden relative">
-                                    <img src="${post.thumbnail}" onerror="this.onerror=null;this.src='imgs/bannertrilha.png'" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                </div>
-                                <div class="flex-1 flex flex-col justify-center">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase">${post.category || 'Notícia'}</span>
-                                        <span class="text-xs text-gray-400">⏱ ${date}</span>
-                                    </div>
-                                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-[var(--cor-principal)] transition-colors news-headline">${post.title}</h3>
-                                    <p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-3 mb-4">${post.description}</p>
-                                    <span class="text-sm font-bold text-[var(--cor-principal)] flex items-center gap-1">Ler matéria completa <span class="group-hover:translate-x-1 transition-transform">→</span></span>
-                                </div>
-                            </a>
-                        `;
-                        feedContainer.innerHTML += html;
-                    });
-                }
+                // 3. Initial Feed (Remaining posts)
+                initialFeedPosts = posts.slice(3);
+                renderFeedList(feedContainer, initialFeedPosts);
             }
+
+            // Interactive Category Filters for Feed
+            const activeBtnClass = 'shrink-0 px-4 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition-colors';
+            const inactiveBtnClass = 'shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-[var(--cor-principal)] hover:text-[var(--cor-principal)] transition-colors';
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const selectedCategory = btn.getAttribute('data-category') || '';
+                    filterButtons.forEach(b => {
+                        b.className = b === btn ? activeBtnClass : inactiveBtnClass;
+                    });
+
+                    if (!selectedCategory) {
+                        renderFeedList(feedContainer, initialFeedPosts);
+                        return;
+                    }
+
+                    feedContainer.innerHTML = `
+                        <div class="animate-pulse flex flex-col md:flex-row gap-5 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+                            <div class="w-full md:w-64 bg-slate-200 dark:bg-slate-700 h-44 rounded-xl shrink-0"></div>
+                            <div class="flex-1 space-y-3 py-2">
+                                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-24"></div>
+                                <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
+                                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                            </div>
+                        </div>
+                    `;
+
+                    const filteredPosts = await fetchNewsletterPosts(12, selectedCategory);
+                    renderFeedList(feedContainer, filteredPosts);
+                });
+            });
 
             // Load Latest Podcast for Home Widget
             try {
@@ -545,10 +734,10 @@
                 if (episodes && episodes.length > 0) {
                     const ep = episodes[0];
                     document.getElementById('home-pod-title').textContent = ep.title;
-                    const cleanDesc = ep.description.replace(/<[^>]*>?/gm, ''); // Remove HTML from description
+                    const cleanDesc = ep.description.replace(/<[^>]*>?/gm, '');
                     document.getElementById('home-pod-desc').textContent = cleanDesc;
                     document.getElementById('home-pod-img').src = ep.thumbnail;
-                    document.getElementById('home-pod-link').href = ep.link; // Or spotify specific link if available in desc? Anchor usually provides general link
+                    document.getElementById('home-pod-link').href = ep.link;
                     document.getElementById('podcast-home-section').style.display = 'block';
                 }
             } catch (e) { console.error("Podcast widget error", e); }

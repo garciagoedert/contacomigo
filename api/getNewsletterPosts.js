@@ -1,6 +1,113 @@
 const PROJECT_ID = 'financeapp-6da16';
 const FIRESTORE_BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
+const CATEGORY_COVERS = {
+    economia: ['/imgs/covers/economia-1.jpg', '/imgs/covers/economia-2.jpg'],
+    investimentos: ['/imgs/covers/investimentos-1.jpg', '/imgs/covers/investimentos-2.jpg'],
+    tecnologia: ['/imgs/covers/tecnologia-1.jpg', '/imgs/covers/tecnologia-2.jpg'],
+    politica: ['/imgs/covers/politica-1.jpg', '/imgs/covers/politica-2.jpg'],
+    carreira: ['/imgs/covers/carreira-1.jpg', '/imgs/covers/carreira-2.jpg'],
+    games: ['/imgs/covers/games-1.jpg', '/imgs/covers/games-2.jpg'],
+    esportes: ['/imgs/covers/esportes-1.jpg']
+};
+
+function normalizeCategoryKey(category) {
+    return String(category || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+}
+
+function hashString(str) {
+    let sum = 0;
+    const text = String(str || '');
+    for (let i = 0; i < text.length; i++) {
+        sum = (sum + text.charCodeAt(i)) % 1000003;
+    }
+    return sum;
+}
+
+/**
+ * Resolve a reliable editorial thumbnail, replacing empty or legacy placeholder/rate-limited URLs
+ * with deterministic local category covers.
+ */
+function resolveThumbnail(rawThumbnail, category, slug) {
+    const candidate = typeof rawThumbnail === 'string' ? rawThumbnail.trim() : '';
+    const lower = candidate.toLowerCase();
+    const isLegacyBroken = !candidate
+        || lower.includes('pollinations.ai')
+        || lower.includes('article-placeholder.jpg');
+
+    if (!isLegacyBroken) {
+        return candidate;
+    }
+
+    const key = normalizeCategoryKey(category);
+    const variants = CATEGORY_COVERS[key] || CATEGORY_COVERS.economia;
+    return variants[hashString(slug) % variants.length];
+}
+
+function decodeHtmlEntities(text) {
+    return text
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#0?39;/gi, "'")
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&mdash;/gi, '—')
+        .replace(/&ndash;/gi, '–')
+        .replace(/&rsquo;/gi, '’')
+        .replace(/&lsquo;/gi, '‘')
+        .replace(/&ldquo;/gi, '“')
+        .replace(/&rdquo;/gi, '”');
+}
+
+function stripTags(html) {
+    return decodeHtmlEntities(String(html || '').replace(/<[^>]*>/g, ' '))
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * Extract a ~175-character plain-text excerpt from article HTML content without cutting words.
+ */
+function extractExcerpt(htmlContent, category) {
+    const fallback = `Análise e cobertura editorial sobre ${category || 'economia e mercados'} no Trilha News.`;
+    if (!htmlContent || typeof htmlContent !== 'string') {
+        return fallback;
+    }
+
+    let plain = '';
+    const paragraphMatches = htmlContent.match(/<p[^>]*>[\s\S]*?<\/p>/gi) || [];
+    for (const para of paragraphMatches) {
+        const text = stripTags(para);
+        if (text.length >= 40) {
+            plain = text;
+            break;
+        }
+    }
+
+    if (!plain) {
+        plain = stripTags(htmlContent);
+    }
+
+    if (!plain) {
+        return fallback;
+    }
+
+    const maxLen = 175;
+    if (plain.length <= maxLen) {
+        return plain;
+    }
+
+    const sliced = plain.slice(0, maxLen);
+    const lastSpace = sliced.lastIndexOf(' ');
+    const cut = (lastSpace > 110 ? sliced.slice(0, lastSpace) : sliced).replace(/[,;:\-–—\s]+$/, '');
+    return `${cut}...`;
+}
+
 /**
  * Decode a single Firestore REST Typed Value into a native JS value.
  */
@@ -80,6 +187,8 @@ module.exports = async function handler(req, res) {
             const doc = await resp.json();
             const data = decodeFields(doc.fields || {});
             data.slug = data.slug || cleanSlug;
+            data.thumbnail = resolveThumbnail(data.thumbnail, data.category, data.slug);
+            data.description = data.description || extractExcerpt(data.content, data.category);
 
             res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
             return res.status(200).json(data);
@@ -117,7 +226,7 @@ module.exports = async function handler(req, res) {
                 orderBy: [{ field: { fieldPath: 'sentAt' }, direction: 'DESCENDING' }],
                 limit: finalLimit,
                 select: {
-                    fields: ['title', 'thumbnail', 'sentAt', 'category', 'slug'].map(fieldPath => ({ fieldPath }))
+                    fields: ['title', 'thumbnail', 'sentAt', 'category', 'slug', 'content'].map(fieldPath => ({ fieldPath }))
                 }
             }
         };
@@ -150,10 +259,11 @@ module.exports = async function handler(req, res) {
                 posts.push({
                     slug: docSlug,
                     title: data.title || '',
-                    thumbnail: data.thumbnail || null,
+                    thumbnail: resolveThumbnail(data.thumbnail, data.category, docSlug),
                     sentAt: sentAtStr,
                     date: sentAtStr,
-                    category: data.category || null
+                    category: data.category || null,
+                    description: extractExcerpt(data.content, data.category)
                 });
             }
         }

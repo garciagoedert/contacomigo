@@ -52,52 +52,56 @@
 
     <!-- Header -->
     <header
-        class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200/80 dark:border-slate-800">
         <div class="container mx-auto px-4 md:px-6">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-6">
-                    <a href="index.html" class="flex flex-col">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <div class="flex items-center gap-6 min-w-0">
+                    <a href="index.html" class="flex flex-col shrink-0">
                         <span
                             class="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
                                 class="text-[var(--cor-principal)]">NEWS</span></span>
                         <span
-                            class="text-[10px] tracking-[0.2em] text-gray-400 uppercase font-semibold">Intelligence</span>
+                            class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-0.5">Intelligence</span>
                     </a>
-                    <nav
-                        class="hidden lg:flex items-center space-x-6 ml-8 text-sm font-semibold border-l border-gray-200 dark:border-gray-700 pl-8">
+                    <nav aria-label="Editorias"
+                        class="hidden lg:flex items-center space-x-1 ml-6 text-sm font-semibold border-l border-slate-200 dark:border-slate-700 pl-6">
                         <a href="artigos.html?category=Economia"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Economia</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Economia</a>
                         <a href="artigos.html?category=Investimentos"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Investimentos</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Investimentos</a>
                         <a href="artigos.html?category=Tecnologia"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Tecnologia</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Tecnologia</a>
                         <a href="artigos.html?category=Política"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Política</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Política</a>
                         <a href="artigos.html?category=Carreira"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Carreira</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Carreira</a>
                         <a href="artigos.html?category=Games"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Games</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Games</a>
                         <a href="artigos.html?category=Esportes"
-                            class="text-slate-900 dark:text-gray-200 hover:text-[var(--cor-principal)]">Esportes</a>
+                            class="px-3 py-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[var(--cor-principal)] transition-colors">Esportes</a>
                     </nav>
                 </div>
 
-                <!-- CTA Zone -->
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:flex flex-col items-end mr-2">
-                        <span class="text-xs text-gray-500 font-medium">Oferecimento</span>
-                        <img src="imgs/14.png" class="h-5 opacity-80" alt="Trilha Comigo">
-                    </div>
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3 shrink-0">
+                    <a href="podcast.html"
+                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[var(--cor-principal)] transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-[#1DB954]" aria-hidden="true"></span>
+                        Podcast
+                    </a>
+                    <a href="newsletter.html"
+                        class="hidden sm:inline-flex items-center px-4 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold uppercase tracking-wide hover:bg-[var(--cor-principal)] dark:hover:bg-[var(--cor-principal)] dark:hover:text-white transition-colors shadow-sm">
+                        Newsletter
+                    </a>
 
-                    <!-- Mobile Hamburger Menu Button -->
-                    <button id="mobile-menu-btn"
-                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-controls="mobile-menu"
+                        aria-expanded="false"
+                        class="lg:hidden p-2 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-
                 </div>
             </div>
         </div>
@@ -250,8 +254,8 @@
 
                     <!-- Thumbnail -->
                     <div id="thumbnail-container" class="mt-8 hidden">
-                        <img id="post-thumbnail" src="" alt="Capa do Artigo"
-                            onerror="this.onerror=null;this.src='imgs/bannertrilha.png'"
+                        <img id="post-thumbnail" src="" alt="Capa do Artigo" fetchpriority="high"
+                            onerror="this.onerror=null;this.src='/imgs/covers/economia-1.jpg'"
                             class="w-full h-auto max-h-[500px] object-cover rounded-xl shadow-sm">
                     </div>
                 </div>
@@ -339,23 +343,26 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 mt-auto">
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-14 pb-8 mt-auto">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-                <div class="flex items-center gap-2 mb-4 md:mb-0">
-                    <img src="imgs/14.png" class="h-8 opacity-80" alt="Logo">
-                    <span class="font-bold text-gray-900 dark:text-white">Trilha News</span>
-                </div>
-                <div class="flex gap-8 text-sm font-medium text-gray-500">
-                    <a href="index.html" class="hover:text-[var(--cor-principal)]">Home</a>
-                    <a href="anuncie.html"
-                        class="hover:text-[var(--cor-principal)] text-[var(--cor-principal)]">Anuncie</a>
-                    <a href="#" class="hover:text-[var(--cor-principal)]">Política de Privacidade</a>
-                    <a href="#" class="hover:text-[var(--cor-principal)]">Termos de Uso</a>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                <a href="index.html" class="flex flex-col items-center md:items-start">
+                    <span
+                        class="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">TRILHA<span
+                            class="text-[var(--cor-principal)]">NEWS</span></span>
+                    <span class="text-[10px] tracking-[0.2em] text-slate-400 uppercase font-semibold mt-1">Economia
+                        &amp; Inteligência</span>
+                </a>
+                <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+                    <a href="index.html" class="hover:text-[var(--cor-principal)] transition-colors">Home</a>
+                    <a href="artigos.html" class="hover:text-[var(--cor-principal)] transition-colors">Artigos</a>
+                    <a href="podcast.html" class="hover:text-[var(--cor-principal)] transition-colors">Podcast</a>
+                    <a href="privacidade.html" class="hover:text-[var(--cor-principal)] transition-colors">Privacidade</a>
+                    <a href="termos.html" class="hover:text-[var(--cor-principal)] transition-colors">Termos de Uso</a>
                 </div>
             </div>
-            <div class="text-center text-xs text-gray-400">
-                &copy; 2026 Trilha Comigo. Todos os direitos reservados.
+            <div class="text-center text-xs text-slate-400">
+                &copy; 2026 Trilha News. Todos os direitos reservados.
             </div>
         </div>
     </footer>
@@ -397,7 +404,11 @@
                 document.getElementById('post-title').textContent = data.title;
 
                 if (data.category) {
-                    document.getElementById('post-category').textContent = data.category;
+                    const catEl = document.getElementById('post-category');
+                    catEl.textContent = data.category;
+                    if (typeof getCategoryBadgeClasses === 'function') {
+                        catEl.className = `${getCategoryBadgeClasses(data.category)} text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider`;
+                    }
                 }
 
                 let dateStr = 'Data indisponível';
@@ -437,9 +448,9 @@
                                 padding: 20px;
                                 font-size: 18px;
                             }
-                            h1, h2, h3 { color: #111827; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; font-family: 'Inter', sans-serif; }
+                            h1, h2, h3 { color: #111827; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; font-family: 'Inter', sans-serif; text-wrap: balance; }
                             h2 { font-size: 1.8rem; }
-                            p { margin-bottom: 1.5em; color: #374151; }
+                            p { margin-bottom: 1.5em; color: #374151; text-wrap: pretty; }
                             strong { color: #111827; font-weight: 700; }
                             blockquote { 
                                 border-left: 5px solid #e11d48; /* Red/Primary Accent */
@@ -449,10 +460,11 @@
                                 margin: 2rem 0;
                                 color: #9f1239;
                                 font-style: italic;
+                                text-wrap: pretty;
                             }
                             img { border-radius: 12px; margin: 2rem auto; display: block; max-width: 100%; height: auto; }
                             ul, ol { margin-bottom: 1.5em; padding-left: 25px; }
-                            li { margin-bottom: 0.5em; }
+                            li { margin-bottom: 0.5em; text-wrap: pretty; }
                         </style>
                     </head>
                     <body>
